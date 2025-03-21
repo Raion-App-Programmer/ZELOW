@@ -6,7 +6,9 @@ import 'package:zelow/components/navbar.dart';
 import 'package:zelow/components/product_card.dart';
 import 'package:zelow/components/product_card_horizontal.dart';
 import 'package:zelow/components/widget_slider.dart';
+import 'package:zelow/pages/user/display_page.dart';
 import 'package:zelow/pages/user/flashsale_page.dart';
+import 'package:zelow/pages/user/surprisebox_page.dart';
 
 import '../../services/auth_service.dart';
 
@@ -48,7 +50,10 @@ class _HomePageUserState extends State<HomePageUser> {
                           BoxButton(
                             icon: Icons.location_on,
                             text: "Terdekat",
-                            onTap: () {},
+                            onTap: () {
+                              Navigator.push(context, 
+                              MaterialPageRoute(builder: (context)=> DisplayPage()));
+                            },
                           ),
                           SizedBox(
                             width: MediaQuery.of(context).size.width * 0.02,
@@ -56,7 +61,10 @@ class _HomePageUserState extends State<HomePageUser> {
                           BoxButton(
                             icon: Icons.shopping_bag_rounded,
                             text: "Surprise Bag",
-                            onTap: () {},
+                            onTap: () {
+                              Navigator.push(context, 
+                              MaterialPageRoute(builder: (context)=> SurpriseBoxPage()));
+                            },
                           ),
                           SizedBox(
                             width: MediaQuery.of(context).size.width * 0.02,
@@ -64,7 +72,10 @@ class _HomePageUserState extends State<HomePageUser> {
                           BoxButton(
                             icon: Icons.star,
                             text: "Paling Laris",
-                            onTap: () {},
+                            onTap: () {
+                              Navigator.push(context, 
+                              MaterialPageRoute(builder: (context)=> DisplayPage()));
+                            },
                           ),
                           SizedBox(
                             width: MediaQuery.of(context).size.width * 0.02,
@@ -72,7 +83,10 @@ class _HomePageUserState extends State<HomePageUser> {
                           BoxButton(
                             icon: Icons.food_bank_outlined,
                             text: "Rekomendasi",
-                            onTap: () {},
+                            onTap: () {
+                              Navigator.push(context, 
+                              MaterialPageRoute(builder: (context)=> DisplayPage()));
+                            },
                           ),
                         ],
                       ),

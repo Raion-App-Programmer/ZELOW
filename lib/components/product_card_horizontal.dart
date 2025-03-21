@@ -82,10 +82,10 @@ class DisplayCard extends StatelessWidget {
                   ),
                   const SizedBox(height: 6),
 
-                  // Box Rating, Jarak, Estimasi
+                  
                  Row(
                     children: [
-                      // Box Rating
+                      
                       Container(
                         padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                         decoration: BoxDecoration(
@@ -105,7 +105,7 @@ class DisplayCard extends StatelessWidget {
                       ),
                       const SizedBox(width: 6),
 
-                      // Box Jarak
+                     
                       Container(
                         padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
                         decoration: BoxDecoration(
@@ -124,7 +124,7 @@ class DisplayCard extends StatelessWidget {
                       ),
                       const SizedBox(width: 6),
 
-                      // Box Estimasi Waktu
+                      
                       Container(
                         padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
                         decoration: BoxDecoration(

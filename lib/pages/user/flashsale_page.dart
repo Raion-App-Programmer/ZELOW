@@ -187,23 +187,23 @@ class _FlashsalePageState extends State<FlashsalePage> {
                                 productData: {
                                   'id':
                                       (index + 1)
-                                          .toDouble(), // Ubah ke double jika perlu
+                                          .toDouble(), 
                                   'title':
                                       'Masakan Padang Roda Dua, Bendungan Sutami',
                                   'imageUrl': 'https://picsum.photos/200/200',
                                   'rating': 4.5,
                                   'reviewCount':
-                                      688.toDouble(), // Ubah ke double jika perlu
+                                      688.toDouble(), 
                                   'likeCount':
-                                      420.toDouble(), // Ubah ke double jika perlu
-                                  'price': 10000.toDouble(), // Ubah ke double
+                                      420.toDouble(),
+                                  'price': 10000.toDouble(), 
                                   'originalPrice':
-                                      12500.toDouble(), // Ubah ke double
+                                      12500.toDouble(), 
                                   'distance': '1.2 km',
                                   'discount': '20%',
                                   'sold':
                                       ((index + 1) * 5)
-                                          .toDouble(), // Ubah ke double
+                                          .toDouble(), 
                                   'reviews': [
                                     {
                                       'name': 'Nana Mirdad',
