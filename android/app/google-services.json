@@ -1,79 +1,26 @@
 {
   "project_info": {
-    "project_number": "735929071770",
-    "project_id": "zelow-d4440",
-    "storage_bucket": "zelow-d4440.firebasestorage.app"
+    "project_number": "471777658274",
+    "project_id": "zelow-dbf83",
+    "storage_bucket": "zelow-dbf83.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:735929071770:android:929f6092c21fbdec828723",
-        "android_client_info": {
-          "package_name": "com.example.team_fourteen"
-        }
-      },
-      "oauth_client": [
-        {
-          "client_id": "735929071770-f0m4833ff6u199p424ffstps4r35q7n3.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
-      "api_key": [
-        {
-          "current_key": "AIzaSyDqO_9v0GyOG7762HR3p8lpf1kdL0T4mnU"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "735929071770-9md1cjgsdqgmp8qa99vu8q7rsrt7t1i0.apps.googleusercontent.com",
-              "client_type": 3
-            },
-            {
-              "client_id": "735929071770-i5q88aks1a878m6jc2o3ipmg83vou8v2.apps.googleusercontent.com",
-              "client_type": 2,
-              "ios_info": {
-                "bundle_id": "com.example.teamFourteen"
-              }
-            }
-          ]
-        }
-      }
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:735929071770:android:8c5d8e5d3e44305d828723",
+        "mobilesdk_app_id": "1:471777658274:android:e6796263a142d5758ddefb",
         "android_client_info": {
           "package_name": "com.example.zelow"
         }
       },
-      "oauth_client": [
-        {
-          "client_id": "735929071770-f0m4833ff6u199p424ffstps4r35q7n3.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
+      "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyDqO_9v0GyOG7762HR3p8lpf1kdL0T4mnU"
+          "current_key": "AIzaSyCiniA-QWp53Mtdm6LyuySIBexL6JWY2vQ"
         }
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "735929071770-9md1cjgsdqgmp8qa99vu8q7rsrt7t1i0.apps.googleusercontent.com",
-              "client_type": 3
-            },
-            {
-              "client_id": "735929071770-i5q88aks1a878m6jc2o3ipmg83vou8v2.apps.googleusercontent.com",
-              "client_type": 2,
-              "ios_info": {
-                "bundle_id": "com.example.teamFourteen"
-              }
-            }
-          ]
+          "other_platform_oauth_client": []
         }
       }
     }
