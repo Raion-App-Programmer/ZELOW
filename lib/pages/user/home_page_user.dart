@@ -9,6 +9,7 @@ import 'package:zelow/components/widget_slider.dart';
 import 'package:zelow/pages/user/display_page.dart';
 import 'package:zelow/pages/user/flashsale_page.dart';
 import 'package:zelow/pages/user/surprisebox_page.dart';
+import 'package:zelow/pages/user/chat_page.dart';
 
 import '../../services/auth_service.dart';
 

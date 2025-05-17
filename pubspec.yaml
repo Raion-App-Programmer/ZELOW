@@ -43,6 +43,7 @@ dependencies:
   cloud_firestore: ^5.6.5
   flutter_mailer: ^3.0.0
   mailer: ^6.4.1
+  url_launcher: ^6.2.5
 
 dev_dependencies:
   flutter_test:
@@ -93,6 +94,10 @@ flutter:
   #       - asset: fonts/TrajanPro.ttf
   #       - asset: fonts/TrajanPro_Bold.ttf
   #         weight: 700
+  #   - family: Nunito
+  #     fonts:
+  #       - asset: fonts/Nunito-Regular.ttf
+  #       - asset: fonts/Nunito-Bold.ttf
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/to/font-from-package
