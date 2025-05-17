@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/rendering.dart';
 import 'package:zelow/components/constant.dart';
 import 'package:zelow/components/navbar.dart';
+import 'package:zelow/pages/auth/login_page.dart';
 import 'package:zelow/pages/user/display_profile.dart';
 
 class ProfilePage extends StatelessWidget {
@@ -159,9 +160,96 @@ class ProfilePage extends StatelessWidget {
                       leadingIcon: Image.asset('assets/images/voucher_icon.png'), 
                       description: 'Bahasa & Masukan'),
                       SizedBox(height: 32,),
-                      IconTextMaker(
-                        leadingIcon: Image.asset('assets/images/mdi_logout.png'), 
-                        description: 'Keluar')
+                      GestureDetector(
+                        onTap: () {
+                          showDialog(
+                            context: context, 
+                            builder: (BuildContext context) {
+                              return SizedBox(
+                                width: 300,
+                                height: 160,
+                                child: AlertDialog(
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadiusDirectional.circular(16),
+                                    ),
+                                  backgroundColor: Color(0xffFEFEFE),
+                                  title: Column(
+                                    children: [
+                                      Text(
+                                        'Keluar',
+                                        style: blackTextStyle.copyWith(
+                                          fontWeight: FontWeight.w800,
+                                          fontSize: 18,
+                                          color: Color(0xff252525),
+                                        ),
+                                      ),
+                                      SizedBox(height: 4,),
+                                      Text(
+                                        'Yakin nih mau keluar? :(',
+                                        style: greyTextStyle.copyWith(
+                                          color: Color(0xff929292),
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.w400,
+                                        ),
+                                      ),
+                                      SizedBox(height: 20,),
+                                      Row(
+                                        children: [
+                                          Expanded(
+                                            child: ElevatedButton(
+                                              style: ElevatedButton.styleFrom(
+                                                backgroundColor: Color(0xff06C474),
+                                                elevation: 0,
+                                                fixedSize: Size.fromHeight(34),
+                                              ),
+                                              onPressed: () {
+                                                FirebaseAuth.instance.signOut();
+                                                Navigator.pushAndRemoveUntil(
+                                                  context,
+                                                  MaterialPageRoute(builder: (context) => LoginPage()),
+                                                  (route) => false,
+                                                );
+                                              },
+                                              child: Text(
+                                                'Keluar',
+                                                style: whiteTextStyle,
+                                              ),
+                                            ),
+                                          ),
+                                          SizedBox(width: 16), // space between the two buttons
+                                          Expanded(
+                                            child: ElevatedButton(
+                                              style: ElevatedButton.styleFrom(
+                                                backgroundColor: Colors.white,
+                                                elevation: 0,
+                                                fixedSize: Size.fromHeight(34),
+                                                side: BorderSide(
+                                                  color: Color(0xff06C474),
+                                                  width: 1,
+                                                ),
+                                              ),
+                                              onPressed: () {
+                                                Navigator.of(context).pop(); // close the dialog
+                                              },
+                                              child: Text(
+                                                'Batal',
+                                                style: greenTextStyle,
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              );
+                            }
+                            );
+                        },
+                        child: IconTextMaker(
+                          leadingIcon: Image.asset('assets/images/mdi_logout.png'), 
+                          description: 'Keluar'),
+                      )
                 ],
               ),
             ),
