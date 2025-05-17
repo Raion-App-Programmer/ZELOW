@@ -8,12 +8,14 @@ import 'package:zelow/components/product_card_horizontal.dart';
 import 'package:zelow/components/widget_slider.dart';
 import 'package:zelow/pages/user/display_page.dart';
 import 'package:zelow/pages/user/flashsale_page.dart';
+import 'package:zelow/pages/user/search_page.dart';
 import 'package:zelow/pages/user/surprisebox_page.dart';
 
 import '../../services/auth_service.dart';
 
 class HomePageUser extends StatefulWidget {
   const HomePageUser({super.key});
+  static List previousSearchs = [];
 
   @override
   State<HomePageUser> createState() => _HomePageUserState();
@@ -51,8 +53,12 @@ class _HomePageUserState extends State<HomePageUser> {
                             icon: Icons.location_on,
                             text: "Terdekat",
                             onTap: () {
-                              Navigator.push(context, 
-                              MaterialPageRoute(builder: (context)=> DisplayPage()));
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => DisplayPage(),
+                                ),
+                              );
                             },
                           ),
                           SizedBox(
@@ -62,8 +68,12 @@ class _HomePageUserState extends State<HomePageUser> {
                             icon: Icons.shopping_bag_rounded,
                             text: "Surprise Bag",
                             onTap: () {
-                              Navigator.push(context, 
-                              MaterialPageRoute(builder: (context)=> SurpriseBoxPage()));
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => SurpriseBoxPage(),
+                                ),
+                              );
                             },
                           ),
                           SizedBox(
@@ -73,8 +83,12 @@ class _HomePageUserState extends State<HomePageUser> {
                             icon: Icons.star,
                             text: "Paling Laris",
                             onTap: () {
-                              Navigator.push(context, 
-                              MaterialPageRoute(builder: (context)=> DisplayPage()));
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => DisplayPage(),
+                                ),
+                              );
                             },
                           ),
                           SizedBox(
@@ -84,8 +98,12 @@ class _HomePageUserState extends State<HomePageUser> {
                             icon: Icons.food_bank_outlined,
                             text: "Rekomendasi",
                             onTap: () {
-                              Navigator.push(context, 
-                              MaterialPageRoute(builder: (context)=> DisplayPage()));
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => DisplayPage(),
+                                ),
+                              );
                             },
                           ),
                         ],
@@ -192,9 +210,7 @@ class _HomePageUserState extends State<HomePageUser> {
                         ],
                       ),
                       SizedBox(
-                        height:
-                            MediaQuery.of(context).size.height *
-                            0.20, 
+                        height: MediaQuery.of(context).size.height * 0.20,
                         child: SingleChildScrollView(
                           scrollDirection: Axis.horizontal,
                           child: Row(
@@ -290,6 +306,12 @@ class _HomePageUserState extends State<HomePageUser> {
                 ],
               ),
               child: TextField(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => SearchPage()),
+                  );
+                },
                 decoration: InputDecoration(
                   hintText: "Lagi pengen makan apa?",
                   prefixIcon: Icon(Icons.search, color: zelow),
