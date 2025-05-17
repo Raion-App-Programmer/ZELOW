@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/rendering.dart';
 import 'package:zelow/components/constant.dart';
 import 'package:zelow/components/navbar.dart';
+import 'package:zelow/pages/user/edit_profile.dart';
 
 class DisplayProfile extends StatelessWidget{
   const DisplayProfile({super.key});
@@ -112,7 +113,15 @@ class DisplayProfile extends StatelessWidget{
                   )
                 ),
                 SizedBox(width: 8),
-                Image.asset('assets/images/pen.png'),
+                GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context, MaterialPageRoute(
+                        builder: (context) => EditProfile())
+                      );
+                  },
+                  child: Image.asset('assets/images/pen.png')
+                  ),
               ],
             ),
             SizedBox(height: 10),
