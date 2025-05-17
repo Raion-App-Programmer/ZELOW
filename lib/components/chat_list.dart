@@ -17,7 +17,7 @@ class chatList extends StatelessWidget{
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: (){
-        bukaWhatsapp(nomor: '081806615372', pesan: 'h-halo saya ingin bertanya 👉👈');
+        bukaWhatsapp(nomor: '081806615372', pesan: 'h-haloo saya ingin bertanya 👉👈');
       },
       child: Column(
         children: [
