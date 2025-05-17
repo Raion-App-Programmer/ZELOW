@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/rendering.dart';
 import 'package:zelow/components/constant.dart';
 import 'package:zelow/components/navbar.dart';
+import 'package:zelow/pages/user/display_profile.dart';
 
 class ProfilePage extends StatelessWidget {
   const ProfilePage({Key? key}) : super(key: key);
@@ -71,18 +72,26 @@ class ProfilePage extends StatelessWidget {
                             ),
                             Text(email),
                             SizedBox(height: 8,),
-                            Row(
-                              children: [
-                                Image.asset('assets/images/pen.png'),
-                                SizedBox(width: 3.41,),
-                                Text(
-                                  'Edit profil',
-                                  style: greyTextStyle.copyWith(
-                                    decoration: TextDecoration.underline,
-                  
-                                  ),
-                                )
-                              ],
+                            GestureDetector(
+                              onTap: () {
+                                Navigator.push(
+                                  context, MaterialPageRoute(
+                                    builder: (context) => DisplayProfile()) 
+                                );
+                              },
+                              child: Row(
+                                children: [
+                                  Image.asset('assets/images/pen.png'),
+                                  SizedBox(width: 3.41,),
+                                  Text(
+                                    'Edit profil',
+                                    style: greyTextStyle.copyWith(
+                                      decoration: TextDecoration.underline,
+                                                
+                                    ),
+                                  )
+                                ],
+                              ),
                             )
                         ],
                       ),
