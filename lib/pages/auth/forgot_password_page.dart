@@ -55,7 +55,7 @@ class _ForgotPWPageState extends State<ForgotPWPage> {
             ),
             const SizedBox(height: 15),
             Text(
-              'Forgot password?',
+              'Lupa Kata Sandi?',
               style: blackTextStyle.copyWith(
                 fontSize: MediaQuery.of(context).size.width * 0.07,
                 fontWeight: FontWeight.bold,
@@ -63,23 +63,24 @@ class _ForgotPWPageState extends State<ForgotPWPage> {
             ),
             const SizedBox(height: 10),
             Text(
-              'Don’t worry! Enter your email to reset password.',
-              style: greenTextStyle.copyWith(
+              'Tidak masalah. Kamu bisa isikan emailmu dan kami akan mengirimkan kode ke emailmu!',
+              style: whiteTextStyle.copyWith(
                 fontSize: MediaQuery.of(context).size.width * 0.035,
               ),
             ),
             const SizedBox(height: 73),
             Text(
-              'Email address',
+              'Email',
               style: blackTextStyle.copyWith(
-                fontSize: MediaQuery.of(context).size.width * 0.04,
+                fontSize: MediaQuery.of(context).size.width * 0.05,
+                fontWeight: FontWeight.bold,
               ),
             ),
             const SizedBox(height: 8),
             TextField(
               controller: _emailController,
               decoration: InputDecoration(
-                hintText: 'Enter your email address',
+                hintText: 'Masukkan alamat email',
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(24),
                 ),
@@ -101,10 +102,10 @@ class _ForgotPWPageState extends State<ForgotPWPage> {
                     _isLoading
                         ? const CircularProgressIndicator(color: Colors.white)
                         : Text(
-                          'Send code',
+                          'Kirim Kode',
                           style: whiteTextStyle.copyWith(
-                            fontSize: MediaQuery.of(context).size.width * 0.04,
-                            fontWeight: FontWeight.w500,
+                            fontSize: 15,
+                            fontWeight: FontWeight.bold,
                           ),
                         ),
               ),
