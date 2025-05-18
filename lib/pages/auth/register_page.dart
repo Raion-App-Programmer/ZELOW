@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:zelow/components/constant.dart';
 import 'package:zelow/pages/auth/login_page.dart';
-
 import '../../services/auth_service.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class SignUp extends StatefulWidget {
   const SignUp({super.key});
@@ -64,21 +64,21 @@ class _SignUpState extends State<SignUp> {
       backgroundColor: Colors.white,
       body: SingleChildScrollView(
         child: Padding(
-          padding: EdgeInsets.only(left: 20, right: 20, top: 10),
+          padding: EdgeInsets.only(left: 25, right: 25, top: 25),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Center(
                 child: Image.asset(
                   "assets/images/zelow samping.png",
-                  height: 200,
-                  width: 200,
+                  height: 130,
+                  width: 180,
                 ),
               ),
               Text(
                 'Sign Up',
                 style: blackTextStyle.copyWith(
-                  fontSize: MediaQuery.of(context).size.width * 0.05,
+                  fontSize: MediaQuery.of(context).size.width * 0.06,
                   fontWeight: FontWeight.bold,
                 ),
               ),
@@ -89,11 +89,11 @@ class _SignUpState extends State<SignUp> {
                   Text(
                     "Email",
                     style: blackTextStyle.copyWith(
-                      fontSize: MediaQuery.of(context).size.width * 0.035,
+                      fontSize: MediaQuery.of(context).size.width * 0.04,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  const SizedBox(height: 5),
+                  const SizedBox(height: 10),
                   TextField(
                     decoration: InputDecoration(
                       border: OutlineInputBorder(
@@ -102,7 +102,7 @@ class _SignUpState extends State<SignUp> {
                       ),
                       hintText: "Email",
                       hintStyle: greyTextStyle.copyWith(
-                        fontSize: MediaQuery.of(context).size.width * 0.03,
+                        fontSize: MediaQuery.of(context).size.width * 0.035,
                         fontWeight: FontWeight.w400,
                       ),
                       fillColor: const Color(0xffEFEFEF),
@@ -111,24 +111,24 @@ class _SignUpState extends State<SignUp> {
                     controller: _emailController,
                     keyboardType: TextInputType.emailAddress,
                   ),
-                  SizedBox(height: MediaQuery.of(context).size.height * 0.05),
+                  SizedBox(height: MediaQuery.of(context).size.height * 0.025),
                   Text(
-                    "Fullname",
+                    "Nama Lengkap",
                     style: blackTextStyle.copyWith(
-                      fontSize: MediaQuery.of(context).size.width * 0.035,
+                      fontSize: MediaQuery.of(context).size.width * 0.04,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  const SizedBox(height: 5),
+                  const SizedBox(height: 10),
                   TextField(
                     decoration: InputDecoration(
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(24),
                         borderSide: BorderSide.none,
                       ),
-                      hintText: "Fullname",
+                      hintText: "Nama Lengkap",
                       hintStyle: greyTextStyle.copyWith(
-                        fontSize: MediaQuery.of(context).size.width * 0.03,
+                        fontSize: MediaQuery.of(context).size.width * 0.035,
                         fontWeight: FontWeight.w400,
                       ),
                       fillColor: const Color(0xffEFEFEF),
@@ -136,15 +136,15 @@ class _SignUpState extends State<SignUp> {
                     ),
                     controller: _fullnameController,
                   ),
-                  SizedBox(height: MediaQuery.of(context).size.height * 0.05),
+                  SizedBox(height: MediaQuery.of(context).size.height * 0.02),
                   Text(
                     "Username",
                     style: blackTextStyle.copyWith(
-                      fontSize: MediaQuery.of(context).size.width * 0.035,
+                      fontSize: MediaQuery.of(context).size.width * 0.04,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  const SizedBox(height: 5),
+                  const SizedBox(height: 10),
                   TextField(
                     decoration: InputDecoration(
                       border: OutlineInputBorder(
@@ -153,7 +153,7 @@ class _SignUpState extends State<SignUp> {
                       ),
                       hintText: "Username",
                       hintStyle: greyTextStyle.copyWith(
-                        fontSize: MediaQuery.of(context).size.width * 0.03,
+                        fontSize: MediaQuery.of(context).size.width * 0.035,
                         fontWeight: FontWeight.w400,
                       ),
                       fillColor: const Color(0xffEFEFEF),
@@ -161,15 +161,15 @@ class _SignUpState extends State<SignUp> {
                     ),
                     controller: _usernameController,
                   ),
-                  SizedBox(height: MediaQuery.of(context).size.height * 0.03),
+                  SizedBox(height: MediaQuery.of(context).size.height * 0.02),
                   Text(
                     "Password",
                     style: blackTextStyle.copyWith(
-                      fontSize: MediaQuery.of(context).size.width * 0.035,
+                      fontSize: MediaQuery.of(context).size.width * 0.04,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  const SizedBox(height: 5),
+                  const SizedBox(height: 10),
                   TextField(
                     decoration: InputDecoration(
                       border: OutlineInputBorder(
@@ -178,7 +178,7 @@ class _SignUpState extends State<SignUp> {
                       ),
                       hintText: "Password",
                       hintStyle: greyTextStyle.copyWith(
-                        fontSize: MediaQuery.of(context).size.width * 0.03,
+                        fontSize: MediaQuery.of(context).size.width * 0.035,
                         fontWeight: FontWeight.w400,
                       ),
                       fillColor: Color(0xffEFEFEF),
@@ -187,7 +187,7 @@ class _SignUpState extends State<SignUp> {
                     obscureText: true,
                     controller: _passwordController,
                   ),
-                  SizedBox(height: MediaQuery.of(context).size.height * 0.05),
+                  SizedBox(height: MediaQuery.of(context).size.height * 0.02),
                   Text(
                     "Role",
                     style: blackTextStyle.copyWith(
@@ -195,9 +195,9 @@ class _SignUpState extends State<SignUp> {
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  const SizedBox(height: 5),
+                  const SizedBox(height: 10),
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 15),
+                    padding: const EdgeInsets.symmetric(horizontal: 30),
                     decoration: BoxDecoration(
                       color: const Color(0xffEFEFEF),
                       borderRadius: BorderRadius.circular(24),
@@ -207,9 +207,9 @@ class _SignUpState extends State<SignUp> {
                       child: DropdownButton<String>(
                         value: selectedRole,
                         hint: Text(
-                          "Select Role",
+                          "Pilih Role",
                           style: greyTextStyle.copyWith(
-                            fontSize: MediaQuery.of(context).size.width * 0.03,
+                            fontSize: MediaQuery.of(context).size.width * 0.035,
                             fontWeight: FontWeight.w400,
                           ),
                         ),
@@ -238,7 +238,7 @@ class _SignUpState extends State<SignUp> {
                   ),
                 ],
               ),
-              SizedBox(height: MediaQuery.of(context).size.width * 0.25),
+              SizedBox(height: MediaQuery.of(context).size.width * 0.1),
               GestureDetector(
                 onTap: isLoading ? null : _handleSignUp,
                 child: Container(
@@ -250,9 +250,10 @@ class _SignUpState extends State<SignUp> {
                   child: Center(
                     child: Text(
                       "Sign Up",
-                      style: whiteTextStyle.copyWith(
+                      style: GoogleFonts.poppins(
                         fontSize: MediaQuery.of(context).size.width * 0.04,
                         fontWeight: FontWeight.w600,
+                        color: Colors.white,
                       ),
                     ),
                   ),
@@ -260,23 +261,33 @@ class _SignUpState extends State<SignUp> {
               ),
               SizedBox(height: MediaQuery.of(context).size.width * 0.025),
               Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text('Already have an account?',
-                style: greyTextStyle.copyWith(fontSize: 12, fontWeight: FontWeight.normal),),
-                
-                TextButton(
-                  onPressed: () {
-                    Navigator.push(context, 
-                  MaterialPageRoute(builder: (context)=> LoginPage()),
-                  );
-                  },
-                  child: Text('Log in',
-                  style: greenTextStyle.copyWith(fontSize: 12, fontWeight: FontWeight.bold),
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    'Sudah punya akun?',
+                    style: greyTextStyle.copyWith(
+                      fontSize: 15,
+                      fontWeight: FontWeight.normal,
+                    ),
                   ),
-                )
-              ],
-            )
+
+                  TextButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => LoginPage()),
+                      );
+                    },
+                    child: Text(
+                      'Log In',
+                      style: greenTextStyle.copyWith(
+                        fontSize: 15,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ],
           ),
         ),
