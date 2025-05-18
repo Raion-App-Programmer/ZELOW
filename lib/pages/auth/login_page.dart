@@ -222,13 +222,23 @@ class _LoginPageState extends State<LoginPage> {
                           SignInButton.mini(
                             buttonSize: ButtonSize.medium,
                             buttonType: ButtonType.googleDark,
-                            onPressed: () {},
+                            onPressed: _isLoading ? null : () {
+                              setState(() {
+                                _errorMessage = '';
+                              });
+                              AuthService().signInWithGoogle(context, _setError, _setLoading);
+                            },
                           ),
                           SizedBox(width: 20),
                           SignInButton.mini(
                             buttonSize: ButtonSize.medium,
                             buttonType: ButtonType.facebook,
-                            onPressed: () {},
+                            onPressed: _isLoading ? null : () {
+                              setState(() {
+                                _errorMessage = '';
+                              });
+                              AuthService().signInWithFacebook(context, _setError, _setLoading); // Panggil metode Facebook
+                            },
                           ),
                         ],
                       ),
