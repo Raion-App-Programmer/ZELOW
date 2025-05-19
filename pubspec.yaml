@@ -61,6 +61,11 @@ dev_dependencies:
 # The following section is specific to Flutter packages.
 flutter:
 
+  fonts:
+    - family: nunito  # Nama custom untuk font family
+      fonts:
+        - asset: assets/fonts/Nunito.ttf
+
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
   # the material Icons class.
