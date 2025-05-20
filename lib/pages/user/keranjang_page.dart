@@ -20,13 +20,18 @@ class _KeranjangKuState extends State<KeranjangKu> {
         backgroundColor: Color(0xff06C474),
         toolbarHeight: 92,
         elevation: 0,
-        leading: IconButton(
+        leading: Padding(
+    padding: const EdgeInsets.only(top: 20.0),
+        child: IconButton(
           icon: Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () {
             Navigator.pop(context);
           },
         ),
-        title: Text(
+        ),
+        title: Padding(
+    padding: const EdgeInsets.only(top: 20.0),
+        child: Text(
           "KeranjangKu",
           style: TextStyle(
             fontSize: MediaQuery.of(context).size.width * 0.05,
@@ -34,8 +39,10 @@ class _KeranjangKuState extends State<KeranjangKu> {
             color: Colors.white,
           ),
         ),
+        ),
         centerTitle: true,
       ),
+
 
       body: SingleChildScrollView(
         child: Column(
