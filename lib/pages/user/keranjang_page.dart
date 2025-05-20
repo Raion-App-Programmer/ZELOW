@@ -21,7 +21,7 @@ class _KeranjangKuState extends State<KeranjangKu> {
         toolbarHeight: 92,
         elevation: 0,
         leading: Padding(
-    padding: const EdgeInsets.only(top: 20.0),
+    padding: const EdgeInsets.only(top: 25.0),
         child: IconButton(
           icon: Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () {
@@ -30,7 +30,7 @@ class _KeranjangKuState extends State<KeranjangKu> {
         ),
         ),
         title: Padding(
-    padding: const EdgeInsets.only(top: 20.0),
+    padding: const EdgeInsets.only(top: 25.0),
         child: Text(
           "KeranjangKu",
           style: TextStyle(
