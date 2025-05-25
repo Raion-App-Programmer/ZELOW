@@ -4,6 +4,7 @@ import 'package:sign_button/create_button.dart';
 import 'package:zelow/components/constant.dart';
 import 'package:zelow/pages/auth/forgot_password_page.dart';
 import 'package:zelow/pages/auth/register_page.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import '../../services/auth_service.dart';
 
@@ -71,8 +72,8 @@ class _LoginPageState extends State<LoginPage> {
           SingleChildScrollView(
             child: Padding(
               padding: EdgeInsets.only(
-                left: 20,
-                right: 20,
+                left: 25,
+                right: 25,
                 top: MediaQuery.of(context).size.width * 0.25,
               ),
               child: Column(
@@ -81,8 +82,8 @@ class _LoginPageState extends State<LoginPage> {
                   Center(
                     child: Image(
                       image: AssetImage("assets/images/zelowbottom.png"),
-                      height: 200,
-                      width: 200,
+                      height: 180,
+                      width: 180,
                     ),
                   ),
                   SizedBox(height: MediaQuery.of(context).size.width * 0.05),
@@ -92,11 +93,11 @@ class _LoginPageState extends State<LoginPage> {
                       Text(
                         "Email",
                         style: blackTextStyle.copyWith(
-                          fontSize: MediaQuery.of(context).size.width * 0.035,
+                          fontSize: MediaQuery.of(context).size.width * 0.04,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                      const SizedBox(height: 5),
+                      const SizedBox(height: 10),
                       TextField(
                         decoration: InputDecoration(
                           border: OutlineInputBorder(
@@ -119,11 +120,11 @@ class _LoginPageState extends State<LoginPage> {
                       Text(
                         "Password",
                         style: blackTextStyle.copyWith(
-                          fontSize: MediaQuery.of(context).size.width * 0.035,
+                          fontSize: MediaQuery.of(context).size.width * 0.04,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                      const SizedBox(height: 5),
+                      const SizedBox(height: 10),
                       TextField(
                         decoration: InputDecoration(
                           border: OutlineInputBorder(
@@ -141,7 +142,7 @@ class _LoginPageState extends State<LoginPage> {
                         controller: _passwordController,
                         obscureText: true,
                       ),
-                      const SizedBox(height: 15),
+                      const SizedBox(height: 20),
                       GestureDetector(
                         onTap: () {
                           Navigator.push(
@@ -154,7 +155,7 @@ class _LoginPageState extends State<LoginPage> {
                         child: Text(
                           'Forgot password?',
                           style: greenTextStyle.copyWith(
-                            fontSize: MediaQuery.of(context).size.width * 0.03,
+                            fontSize: MediaQuery.of(context).size.width * 0.035,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
@@ -173,10 +174,11 @@ class _LoginPageState extends State<LoginPage> {
                           child: Center(
                             child: Text(
                               "Login",
-                              style: whiteTextStyle.copyWith(
+                              style: GoogleFonts.poppins(
                                 fontSize:
                                     MediaQuery.of(context).size.width * 0.04,
                                 fontWeight: FontWeight.w600,
+                                color: Colors.white,
                               ),
                             ),
                           ),
@@ -198,7 +200,7 @@ class _LoginPageState extends State<LoginPage> {
                             Padding(
                               padding: EdgeInsets.symmetric(horizontal: 10),
                               child: Text(
-                                "or login with",
+                                "atau masuk dengan",
                                 style: TextStyle(color: Colors.black),
                               ),
                             ),
@@ -220,13 +222,23 @@ class _LoginPageState extends State<LoginPage> {
                           SignInButton.mini(
                             buttonSize: ButtonSize.medium,
                             buttonType: ButtonType.googleDark,
-                            onPressed: () {},
+                            onPressed: _isLoading ? null : () {
+                              setState(() {
+                                _errorMessage = '';
+                              });
+                              AuthService().signInWithGoogle(context, _setError, _setLoading);
+                            },
                           ),
                           SizedBox(width: 20),
                           SignInButton.mini(
                             buttonSize: ButtonSize.medium,
                             buttonType: ButtonType.facebook,
-                            onPressed: () {},
+                            onPressed: _isLoading ? null : () {
+                              setState(() {
+                                _errorMessage = '';
+                              });
+                              AuthService().signInWithFacebook(context, _setError, _setLoading); // Panggil metode Facebook
+                            },
                           ),
                         ],
                       ),
@@ -237,11 +249,11 @@ class _LoginPageState extends State<LoginPage> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text(
-                            "You don't have an account?",
+                            "Belum punya akun? ",
                             style: blackTextStyle.copyWith(
                               fontSize:
-                                  MediaQuery.of(context).size.width * 0.03,
-                              fontWeight: FontWeight.w400,
+                                  MediaQuery.of(context).size.width * 0.035,
+                              fontWeight: FontWeight.normal,
                             ),
                           ),
                           GestureDetector(
@@ -254,10 +266,10 @@ class _LoginPageState extends State<LoginPage> {
                               );
                             },
                             child: Text(
-                              " Sign Up",
+                              "Sign Up",
                               style: greenTextStyle.copyWith(
                                 fontSize:
-                                    MediaQuery.of(context).size.width * 0.03,
+                                    MediaQuery.of(context).size.width * 0.035,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
