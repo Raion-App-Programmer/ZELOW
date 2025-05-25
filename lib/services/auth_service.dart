@@ -99,6 +99,7 @@ class AuthService {
           'username': username,
           'role': role,
           'isVerified': false,
+          'userId' : user.uid
         });
 
         if (context.mounted) {

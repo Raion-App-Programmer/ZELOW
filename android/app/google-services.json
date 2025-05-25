@@ -12,20 +12,7 @@
           "package_name": "com.example.zelow"
         }
       },
-      "oauth_client": [
-        {
-          "client_id": "471777658274-0linqt1ifqctdh67ce7kufef293m8i6b.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.example.zelow",
-            "certificate_hash": "b155ca96e556ae878f47cf333e028e0396a3e3f4"
-          }
-        },
-        {
-          "client_id": "471777658274-kre1gc8agvbcgg1k7d4pcgedbsfr6l4l.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
+      "oauth_client": [],
       "api_key": [
         {
           "current_key": "AIzaSyCiniA-QWp53Mtdm6LyuySIBexL6JWY2vQ"
@@ -33,19 +20,7 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "471777658274-kre1gc8agvbcgg1k7d4pcgedbsfr6l4l.apps.googleusercontent.com",
-              "client_type": 3
-            },
-            {
-              "client_id": "471777658274-vk2svdt6edv08jemkkc5qlus8fucs9t0.apps.googleusercontent.com",
-              "client_type": 2,
-              "ios_info": {
-                "bundle_id": "com.example.zelow"
-              }
-            }
-          ]
+          "other_platform_oauth_client": []
         }
       }
     }
