@@ -6,11 +6,13 @@ import 'package:zelow/components/navbar.dart';
 import 'package:zelow/components/product_card.dart';
 import 'package:zelow/components/product_card_horizontal.dart';
 import 'package:zelow/components/widget_slider.dart';
+import 'package:zelow/models/toko_model.dart';
 import 'package:zelow/pages/user/display_page.dart';
 import 'package:zelow/pages/user/flashsale_page.dart';
 import 'package:zelow/pages/user/surprisebox_page.dart';
 
 import '../../services/auth_service.dart';
+import '../../services/toko_service.dart';
 
 class HomePageUser extends StatefulWidget {
   const HomePageUser({super.key});
@@ -20,8 +22,96 @@ class HomePageUser extends StatefulWidget {
 }
 
 class _HomePageUserState extends State<HomePageUser> {
-  void _handleLogout() {
-    AuthService().logout(context);
+  final TokoServices _tokoService = TokoServices();
+
+  // Widget _buildRekomendasiToko() {
+  //   return FutureBuilder<Toko?>(
+  //       future: _tokoService.getTokoRekomendasi()
+  //       builder: builder
+  //   );
+  // }
+
+  Widget _buildSectionTitle(
+      BuildContext context,
+      String title,
+      VoidCallback onSeeAllPressed
+  ){
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Padding(padding: EdgeInsets.only(left: 16),
+          child: Text(
+            title,
+            style: blackTextStyle.copyWith(
+              fontSize: MediaQuery.of(context).size.width * 0.04,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ),
+        Padding(padding: EdgeInsets.only(right: 16),
+          child: TextButton(
+            onPressed: onSeeAllPressed,
+            child: Text(
+              'Lihat Semua',
+              style: greenTextStyle.copyWith(
+                fontSize: MediaQuery.of(context).size.width * 0.03,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildTokoHorizontal(Future<List<Toko>> futureToko, String sectionTypeForNavigation) {
+    return SizedBox(
+      height: MediaQuery.of(context).size.height * 0.22,
+      child: FutureBuilder(
+        future: futureToko,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(child: CircularProgressIndicator(color: zelow,));
+          }
+
+          if (snapshot.hasError) {
+            print("Error fetching toko list for $sectionTypeForNavigation: ${snapshot.error}");
+            return Center(child: Text('Gagat memuat data toko.'),);
+          }
+
+          if (!snapshot.hasData || snapshot.data!.isEmpty) {
+            return Center(child: Text('Tidadk ada toko tersedia.'),);
+          }
+
+          final tokoList = snapshot.data!;
+          return ListView.builder(
+            scrollDirection: Axis.horizontal,
+            itemCount: tokoList.length,
+            itemBuilder: (context, index) {
+              final toko = tokoList[index];
+              return Container(
+                width: MediaQuery.of(context).size.width * 0.40,
+                margin: const EdgeInsets.symmetric(horizontal: 4),
+                child: ProductCard(
+                  imageUrl: toko.gambar,
+                  rating: toko.rating,
+                  restaurantName: toko.nama,
+                  distance: '${toko.jarak} km',
+                  estimatedTime: toko.waktu,
+                  onTap: () {
+                    // Navigator.push(
+                    //   context,
+                    //   MaterialPageRoute(
+                    //     builder: (context) => DisplayPage(),
+                    //   ),
+                  }
+                ),
+              );
+            }
+          );
+        }
+      ),
+    );
   }
 
   @override
