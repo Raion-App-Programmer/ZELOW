@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:zelow/components/constant.dart';
-import 'package:zelow/pages/auth/verif_forgot_pw_page.dart';
 import 'package:zelow/services/auth_service.dart';
 
 class ForgotPWPage extends StatefulWidget {
@@ -15,28 +14,28 @@ class _ForgotPWPageState extends State<ForgotPWPage> {
   final AuthService _authService = AuthService();
   bool _isLoading = false;
 
-  void _sendResetOTP() async {
+  void _sendResetEmail() async {
     setState(() => _isLoading = true);
 
-    await _authService.sendPasswordResetOTP(
+    await _authService.sendPasswordResetEmail(
       _emailController.text.trim(),
-      (error) {
+          (error) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text(error), backgroundColor: Colors.red),
         );
         setState(() => _isLoading = false);
       },
-      (loading) => setState(() => _isLoading = loading),
+          (loading) => setState(() => _isLoading = loading),
     );
 
-    if (mounted) {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder:
-              (context) => VerifPwPage(email: _emailController.text.trim()),
+    if (mounted && _isLoading == false) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Email reset password telah dikirim. Periksa kotak masuk atau spam Anda.'),
+          backgroundColor: Colors.green,
         ),
       );
+      Navigator.pop(context); // Kembali ke halaman login setelah sukses
     }
   }
 
@@ -55,7 +54,7 @@ class _ForgotPWPageState extends State<ForgotPWPage> {
             ),
             const SizedBox(height: 15),
             Text(
-              'Forgot password?',
+              'Lupa Kata Sandi?',
               style: blackTextStyle.copyWith(
                 fontSize: MediaQuery.of(context).size.width * 0.07,
                 fontWeight: FontWeight.bold,
@@ -63,23 +62,24 @@ class _ForgotPWPageState extends State<ForgotPWPage> {
             ),
             const SizedBox(height: 10),
             Text(
-              'Don’t worry! Enter your email to reset password.',
-              style: greenTextStyle.copyWith(
+              'Tidak masalah. Kamu bisa isikan emailmu dan kami akan mengirimkan kode ke emailmu!',
+              style: whiteTextStyle.copyWith(
                 fontSize: MediaQuery.of(context).size.width * 0.035,
               ),
             ),
             const SizedBox(height: 73),
             Text(
-              'Email address',
+              'Email',
               style: blackTextStyle.copyWith(
-                fontSize: MediaQuery.of(context).size.width * 0.04,
+                fontSize: MediaQuery.of(context).size.width * 0.05,
+                fontWeight: FontWeight.bold,
               ),
             ),
             const SizedBox(height: 8),
             TextField(
               controller: _emailController,
               decoration: InputDecoration(
-                hintText: 'Enter your email address',
+                hintText: 'Masukkan alamat email',
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(24),
                 ),
@@ -90,7 +90,7 @@ class _ForgotPWPageState extends State<ForgotPWPage> {
               width: double.infinity,
               height: 44,
               child: ElevatedButton(
-                onPressed: _isLoading ? null : _sendResetOTP,
+                onPressed: _isLoading ? null : _sendResetEmail,
                 style: ElevatedButton.styleFrom(
                   backgroundColor: zelow,
                   shape: RoundedRectangleBorder(
@@ -101,10 +101,10 @@ class _ForgotPWPageState extends State<ForgotPWPage> {
                     _isLoading
                         ? const CircularProgressIndicator(color: Colors.white)
                         : Text(
-                          'Send code',
+                          'Kirim Kode',
                           style: whiteTextStyle.copyWith(
-                            fontSize: MediaQuery.of(context).size.width * 0.04,
-                            fontWeight: FontWeight.w500,
+                            fontSize: 15,
+                            fontWeight: FontWeight.bold,
                           ),
                         ),
               ),
