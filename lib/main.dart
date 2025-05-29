@@ -8,6 +8,7 @@ import 'package:zelow/pages/user/home_page_user.dart';
 import 'package:zelow/pages/user/infoproduk_page.dart';
 import 'package:zelow/pages/user/pesanan_page.dart';
 import 'package:zelow/pages/user/profile_page.dart';
+import 'package:zelow/pages/user/toko_page.dart';
 
 import 'pages/splash_page.dart';
 
@@ -22,6 +23,7 @@ void main() async {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
+  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -35,6 +37,7 @@ class MyApp extends StatelessWidget {
         '/flashsale': (context) => FlashsalePage(),
         '/pesanan': (context) => PesananPage(orders: [],),
         '/profile': (context)=> ProfilePage(),
+        '/toko': (context)=> TokoPageUser()
       },
     );
   }
