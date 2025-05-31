@@ -12,7 +12,7 @@ import 'pages/splash_page.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
+  // await Firebase.initializeApp();
   runApp(const MyApp());
 }
 
@@ -23,7 +23,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      initialRoute: '/login_page',
+      initialRoute: '/splash',
       debugShowCheckedModeBanner: false,
       routes: {
         '/splash': (context) => SplashPage(),
@@ -31,8 +31,8 @@ class MyApp extends StatelessWidget {
         '/home_page_umkm': (context) => HomePageUmkm(),
         '/login_page': (context) => LoginPage(),
         '/flashsale': (context) => FlashsalePage(),
-        '/pesanan': (context) => PesananPage(orders: [],),
-        '/profile': (context)=> ProfilePage(),
+        '/pesanan': (context) => PesananPage(orders: []),
+        '/profile': (context) => ProfilePage(),
       },
     );
   }
