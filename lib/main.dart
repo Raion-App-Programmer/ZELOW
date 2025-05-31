@@ -8,6 +8,7 @@ import 'package:zelow/pages/user/home_page_user.dart';
 import 'package:zelow/pages/user/pesanan_page.dart';
 import 'package:zelow/pages/user/profile_page.dart';
 import 'package:zelow/pages/user/toko_page.dart';
+import 'package:zelow/pages/user/chat_page.dart';
 
 import 'pages/splash_page.dart';
 
@@ -37,6 +38,7 @@ class MyApp extends StatelessWidget {
         '/pesanan': (context) => PesananPage(orders: [],),
         '/profile': (context)=> ProfilePage(),
         '/toko': (context)=> TokoPageUser()
+        '/chat': (context)=> chatPage(),
       },
     );
   }
