@@ -8,6 +8,7 @@ import 'package:zelow/components/product_card_horizontal.dart';
 import 'package:zelow/components/widget_slider.dart';
 import 'package:zelow/pages/user/display_page.dart';
 import 'package:zelow/pages/user/flashsale_page.dart';
+import 'package:zelow/pages/user/rekomendasi_page.dart';
 import 'package:zelow/pages/user/search_page.dart';
 import 'package:zelow/pages/user/surprisebox_page.dart';
 import 'package:zelow/pages/user/chat_page.dart';
@@ -102,7 +103,7 @@ class _HomePageUserState extends State<HomePageUser> {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => DisplayPage(),
+                                  builder: (context) => RekomendasiPage(),
                                 ),
                               );
                             },

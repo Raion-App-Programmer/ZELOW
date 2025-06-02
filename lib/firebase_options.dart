@@ -41,50 +41,47 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyBkPnIBY_pm7Hje5ES-v8Zq4ODNReBcjeo',
-    appId: '1:735929071770:web:061389658b1824ec828723',
-    messagingSenderId: '735929071770',
-    projectId: 'zelow-d4440',
-    authDomain: 'zelow-d4440.firebaseapp.com',
-    storageBucket: 'zelow-d4440.firebasestorage.app',
-    measurementId: 'G-MYR76QN1YF',
+    apiKey: 'AIzaSyDunGIPLmrsDkj51nn8dVKrrWt6xK4SOlo',
+    appId: '1:471777658274:web:0e7e06fa25f21dbf8ddefb',
+    messagingSenderId: '471777658274',
+    projectId: 'zelow-dbf83',
+    authDomain: 'zelow-dbf83.firebaseapp.com',
+    storageBucket: 'zelow-dbf83.firebasestorage.app',
   );
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyDqO_9v0GyOG7762HR3p8lpf1kdL0T4mnU',
-    appId: '1:735929071770:android:8c5d8e5d3e44305d828723',
-    messagingSenderId: '735929071770',
-    projectId: 'zelow-d4440',
-    storageBucket: 'zelow-d4440.firebasestorage.app',
+    apiKey: 'AIzaSyCiniA-QWp53Mtdm6LyuySIBexL6JWY2vQ',
+    appId: '1:471777658274:android:e6796263a142d5758ddefb',
+    messagingSenderId: '471777658274',
+    projectId: 'zelow-dbf83',
+    storageBucket: 'zelow-dbf83.firebasestorage.app',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyCKuuKwkQ2RjvDRe4iCWWIWK_jZEH6xsYk',
-    appId: '1:735929071770:ios:986f08045451dbdd828723',
-    messagingSenderId: '735929071770',
-    projectId: 'zelow-d4440',
-    storageBucket: 'zelow-d4440.firebasestorage.app',
-    iosClientId: '735929071770-sm0uapnatthmatao9qr0qmfiasurrlso.apps.googleusercontent.com',
+    apiKey: 'AIzaSyAXcTJFs45XGk8TYBhq4u6hJslhIJuMKF0',
+    appId: '1:471777658274:ios:8c0810e64d48276e8ddefb',
+    messagingSenderId: '471777658274',
+    projectId: 'zelow-dbf83',
+    storageBucket: 'zelow-dbf83.firebasestorage.app',
     iosBundleId: 'com.example.zelow',
   );
 
   static const FirebaseOptions macos = FirebaseOptions(
-    apiKey: 'AIzaSyCKuuKwkQ2RjvDRe4iCWWIWK_jZEH6xsYk',
-    appId: '1:735929071770:ios:986f08045451dbdd828723',
-    messagingSenderId: '735929071770',
-    projectId: 'zelow-d4440',
-    storageBucket: 'zelow-d4440.firebasestorage.app',
-    iosClientId: '735929071770-sm0uapnatthmatao9qr0qmfiasurrlso.apps.googleusercontent.com',
+    apiKey: 'AIzaSyAXcTJFs45XGk8TYBhq4u6hJslhIJuMKF0',
+    appId: '1:471777658274:ios:8c0810e64d48276e8ddefb',
+    messagingSenderId: '471777658274',
+    projectId: 'zelow-dbf83',
+    storageBucket: 'zelow-dbf83.firebasestorage.app',
     iosBundleId: 'com.example.zelow',
   );
 
   static const FirebaseOptions windows = FirebaseOptions(
-    apiKey: 'AIzaSyBkPnIBY_pm7Hje5ES-v8Zq4ODNReBcjeo',
-    appId: '1:735929071770:web:1bb253863d9d2c27828723',
-    messagingSenderId: '735929071770',
-    projectId: 'zelow-d4440',
-    authDomain: 'zelow-d4440.firebaseapp.com',
-    storageBucket: 'zelow-d4440.firebasestorage.app',
-    measurementId: 'G-RVH8DLCX67',
+    apiKey: 'AIzaSyDunGIPLmrsDkj51nn8dVKrrWt6xK4SOlo',
+    appId: '1:471777658274:web:e945bb70781def278ddefb',
+    messagingSenderId: '471777658274',
+    projectId: 'zelow-dbf83',
+    authDomain: 'zelow-dbf83.firebaseapp.com',
+    storageBucket: 'zelow-dbf83.firebasestorage.app',
   );
+
 }
