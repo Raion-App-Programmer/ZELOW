@@ -12,6 +12,7 @@ import 'package:zelow/pages/user/rekomendasi_page.dart';
 import 'package:zelow/pages/user/search_page.dart';
 import 'package:zelow/pages/user/surprisebox_page.dart';
 import 'package:zelow/pages/user/chat_page.dart';
+import 'package:zelow/pages/user/toko_page.dart';
 
 import '../../services/auth_service.dart';
 
@@ -170,7 +171,14 @@ class _HomePageUserState extends State<HomePageUser> {
                                     stock: 12,
                                     sold: 5,
                                     onTap: () {
-                                      // navigasi ke checkout
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder:
+                                              (context) =>
+                                                  TokoPageUser(), // arahkan ke page toko
+                                        ),
+                                      );
                                     },
                                   ),
                                 ),
@@ -198,7 +206,12 @@ class _HomePageUserState extends State<HomePageUser> {
                             padding: EdgeInsets.only(right: 16),
                             child: TextButton(
                               onPressed: () {
-                                //navigasi ke semua
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => DisplayPage(),
+                                  ),
+                                );
                               },
                               child: Text(
                                 'Lihat Semua',

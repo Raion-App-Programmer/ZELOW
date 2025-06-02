@@ -42,88 +42,102 @@ class _TokoPageUserState extends State<TokoPageUser> {
                     children: [
                       SizedBox(
                         height:
-                            MediaQuery.of(context).size.height * 0.24, // Tinggi slider
+                            MediaQuery.of(context).size.height *
+                            0.25, // Tinggi slider
                         child: HeaderToko(),
                       ),
                       SizedBox(
                         width: double.infinity,
                         child: Padding(
-                          padding: const EdgeInsets.only(left: 10.0, right: 10.0),
+                          padding: const EdgeInsets.only(
+                            top: 10.0,
+                            left: 10.0,
+                            right: 10.0,
+                          ),
                           child: Column(
                             mainAxisSize: MainAxisSize.min,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                'Masakan Padang Roda  Dua, Bendungan Sutami',
+                                'Masakan Padang Roda Dua, Bendungan Sutami',
                                 textAlign: TextAlign.start,
                                 style: TextStyle(
                                   fontFamily: 'nunito',
-                                    fontSize: 24,
-                                  fontWeight: FontWeight.bold,
+                                  fontSize: 24,
+                                  fontWeight: FontWeight.w700,
                                 ),
                               ),
                               Text(
                                 'Aneka masakan padang, Nasi padang, Rendang',
                                 style: TextStyle(
                                   fontFamily: 'nunito',
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.w500
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w500,
                                 ),
                               ),
 
                               Padding(
                                 padding: const EdgeInsets.all(15.0),
                                 child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
                                   children: [
                                     Row(
                                       children: [
-                                        Icon(Icons.star, color: Color(0xFFFFC837),),
+                                        Icon(
+                                          Icons.star,
+                                          color: Color(0xFFFFC837),
+                                        ),
                                         Text(
                                           "4.9",
                                           style: TextStyle(
                                             fontFamily: 'nunito',
                                             fontSize: 16,
-                                            fontWeight: FontWeight.w500
+                                            fontWeight: FontWeight.w600,
+                                            color: Color(0xFF676767),
                                           ),
-                                        )
+                                        ),
                                       ],
                                     ),
                                     Row(
                                       children: [
-                                        Icon(Icons.location_on_outlined, color: Color(0xFF676767)),
+                                        Icon(
+                                          Icons.location_on_outlined,
+                                          color: Color(0xFF676767),
+                                        ),
                                         Text(
                                           "2.4 km",
                                           style: TextStyle(
-                                              fontFamily: 'nunito',
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.w500,
-                                            color: Color(0xFF676767)
+                                            fontFamily: 'nunito',
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.w600,
+                                            color: Color(0xFF676767),
                                           ),
-                                        )
+                                        ),
                                       ],
                                     ),
 
                                     Row(
                                       children: [
-                                        Icon(Icons.access_time, color: Color(0xFF676767)),
+                                        Icon(
+                                          Icons.access_time,
+                                          color: Color(0xFF676767),
+                                        ),
                                         Text(
                                           "10-25 min",
                                           style: TextStyle(
-                                              fontFamily: 'nunito',
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.w500,
-                                              color: Color(0xFF676767)
+                                            fontFamily: 'nunito',
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.w600,
+                                            color: Color(0xFF676767),
                                           ),
-                                        )
+                                        ),
                                       ],
-                                    )
+                                    ),
                                   ],
                                 ),
                               ),
-                              Divider(
-                                thickness: 1,
-                              )
+                              Divider(thickness: 1),
                             ],
                           ),
                         ),
@@ -138,12 +152,12 @@ class _TokoPageUserState extends State<TokoPageUser> {
                               VoucherTokoCard(),
                               VoucherTokoCard(),
                               VoucherTokoCard(),
-                              VoucherTokoCard()
+                              VoucherTokoCard(),
                             ],
                           ),
                         ),
                       ),
-                      
+
                       SingleChildScrollView(
                         scrollDirection: Axis.horizontal,
                         child: Padding(
@@ -153,40 +167,40 @@ class _TokoPageUserState extends State<TokoPageUser> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               FilterTokoButton(
-                                  text: 'Favorit',
-                                  onPressed: (){},
-                                  isSelected: false
+                                text: 'Favorit',
+                                onPressed: () {},
+                                isSelected: false,
                               ),
                               FilterTokoButton(
-                                  text: 'Makanan',
-                                  onPressed: (){},
-                                  isSelected: false
+                                text: 'Makanan',
+                                onPressed: () {},
+                                isSelected: false,
                               ),
                               FilterTokoButton(
-                                  text: 'Minuman',
-                                  onPressed: (){},
-                                  isSelected: false
+                                text: 'Minuman',
+                                onPressed: () {},
+                                isSelected: false,
                               ),
                               FilterTokoButton(
-                                  text: 'Flash Sale',
-                                  onPressed: (){},
-                                  isSelected: false
+                                text: 'Flash Sale',
+                                onPressed: () {},
+                                isSelected: false,
                               ),
                               FilterTokoButton(
-                                  text: 'Tambahan',
-                                  onPressed: (){},
-                                  isSelected: false
+                                text: 'Tambahan',
+                                onPressed: () {},
+                                isSelected: false,
                               ),
                               FilterTokoButton(
-                                  text: 'Filter',
-                                  onPressed: (){},
-                                  isSelected: false
+                                text: 'Filter',
+                                onPressed: () {},
+                                isSelected: false,
                               ),
                             ],
                           ),
                         ),
                       ),
-                      
+
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -196,7 +210,7 @@ class _TokoPageUserState extends State<TokoPageUser> {
                               'Flash Sale',
                               style: blackTextStyle.copyWith(
                                 fontSize:
-                                    MediaQuery.of(context).size.width * 0.04,
+                                    MediaQuery.of(context).size.width * 0.045,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
@@ -207,7 +221,7 @@ class _TokoPageUserState extends State<TokoPageUser> {
                           SizedBox(
                             child: ListView.builder(
                               padding: EdgeInsets.zero,
-                              itemCount: 3, // Jumlah restoran
+                              itemCount: 3, // Jumlah flash sale
                               shrinkWrap: true,
                               physics:
                                   const NeverScrollableScrollPhysics(), // Scroll bawaan dari Parent
@@ -215,7 +229,7 @@ class _TokoPageUserState extends State<TokoPageUser> {
                                 return ProductTokoCard(
                                   imageUrl: 'assets/images/mie ayam.jpg',
                                   restaurantName: 'Nasi padang saus tiram',
-                                  description: '6RBterjual | Disukai oleh 342',
+                                  description: '6rb terjual | Disukai oleh 342',
                                   harga: 12.000,
                                   onTap: () {
                                     // Aksi ketika diklik
@@ -225,32 +239,33 @@ class _TokoPageUserState extends State<TokoPageUser> {
                             ),
                           ),
 
-
                           Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 16,
+                              vertical: 8,
+                            ),
                             child: Text(
                               'Makanan',
                               style: blackTextStyle.copyWith(
                                 fontSize:
-                                MediaQuery.of(context).size.width * 0.04,
+                                    MediaQuery.of(context).size.width * 0.045,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
                           ),
 
-
                           SizedBox(
                             child: ListView.builder(
                               padding: EdgeInsets.zero,
-                              itemCount: 3, // Jumlah restoran
+                              itemCount: 3, // Jumlah makanan
                               shrinkWrap: true,
                               physics:
-                              const NeverScrollableScrollPhysics(), // Scroll bawaan dari Parent
+                                  const NeverScrollableScrollPhysics(), // Scroll bawaan dari Parent
                               itemBuilder: (context, index) {
                                 return ProductTokoCard(
                                   imageUrl: 'assets/images/naspad.jpg',
                                   restaurantName: 'Rendang',
-                                  description: '6RBterjual | Disukai oleh 342',
+                                  description: '6rb terjual | Disukai oleh 342',
                                   harga: 12.000,
                                   onTap: () {
                                     // Aksi ketika diklik
@@ -259,6 +274,7 @@ class _TokoPageUserState extends State<TokoPageUser> {
                               },
                             ),
                           ),
+                          const SizedBox(height: 30),
                         ],
                       ),
                     ],
