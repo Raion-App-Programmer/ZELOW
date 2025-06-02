@@ -26,12 +26,16 @@ class FlashCard extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        width: 120, 
+        width: 140,
         margin: const EdgeInsets.symmetric(vertical: 6, horizontal: 3),
         padding: const EdgeInsets.all(6),
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(8),
+          border: Border.all(
+            color: Colors.grey.shade300,
+            width: 0.5,
+          ),
           boxShadow: [
             BoxShadow(
               color: Colors.black.withOpacity(0.05),
@@ -43,14 +47,14 @@ class FlashCard extends StatelessWidget {
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisSize: MainAxisSize.min, 
+          mainAxisSize: MainAxisSize.min,
           children: [
             // **Gambar Produk (Dikecilin)**
             ClipRRect(
               borderRadius: BorderRadius.circular(6),
               child: Image.asset(
                 imageUrl,
-                height: 80, 
+                height: 100,
                 width: double.infinity,
                 fit: BoxFit.cover,
               ),
@@ -61,7 +65,7 @@ class FlashCard extends StatelessWidget {
             Text(
               title,
               style: blackTextStyle.copyWith(
-                fontSize: 10, 
+                fontSize: 10,
                 fontWeight: FontWeight.bold,
               ),
               maxLines: 2,
@@ -73,7 +77,7 @@ class FlashCard extends StatelessWidget {
             Text(
               price,
               style: greenTextStyle.copyWith(
-                fontSize: 10, 
+                fontSize: 10,
                 fontWeight: FontWeight.bold,
               ),
             ),
@@ -86,7 +90,7 @@ class FlashCard extends StatelessWidget {
                 value: progress,
                 backgroundColor: Colors.grey[300],
                 color: zelow,
-                minHeight: 6, 
+                minHeight: 6,
               ),
             ),
             const SizedBox(height: 2),

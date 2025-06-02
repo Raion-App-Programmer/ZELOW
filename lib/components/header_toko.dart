@@ -13,6 +13,7 @@ class HeaderToko extends StatefulWidget {
 
 class _HeaderTokoState extends State<HeaderToko> {
   bool isFavorite = false;
+
   @override
   Widget build(BuildContext context) {
     return Stack(
@@ -99,7 +100,7 @@ class _HeaderTokoState extends State<HeaderToko> {
     );
   }
 
-  // Fungsi untuk membuat tombol bulat putih
+  // Widget tombol bulat putih
   Widget _buildIconButton(IconData icon) {
     return Container(
       width: 40,
@@ -108,7 +109,7 @@ class _HeaderTokoState extends State<HeaderToko> {
         shape: BoxShape.circle,
         color: Colors.white,
       ),
-      child: Icon(icon, color: zelow), // Ikon hijau
+      child: Icon(icon, color: zelow),
     );
   }
 }

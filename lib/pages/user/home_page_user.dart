@@ -9,13 +9,18 @@ import 'package:zelow/components/widget_slider.dart';
 import 'package:zelow/models/toko_model.dart';
 import 'package:zelow/pages/user/display_page.dart';
 import 'package:zelow/pages/user/flashsale_page.dart';
+import 'package:zelow/pages/user/rekomendasi_page.dart';
+import 'package:zelow/pages/user/search_page.dart';
 import 'package:zelow/pages/user/surprisebox_page.dart';
+import 'package:zelow/pages/user/chat_page.dart';
+import 'package:zelow/pages/user/toko_page.dart';
 import 'package:zelow/pages/user/toko_page.dart';
 
 import '../../services/toko_service.dart';
 
 class HomePageUser extends StatefulWidget {
   const HomePageUser({super.key});
+  static List previousSearchs = [];
 
   @override
   State<HomePageUser> createState() => _HomePageUserState();
@@ -131,7 +136,7 @@ class _HomePageUserState extends State<HomePageUser> {
                   child: Column(
                     children: [
                       SizedBox(
-                        height: MediaQuery.of(context).size.height * 0.02,
+                        height: MediaQuery.of(context).size.height * 0.04,
                       ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -149,18 +154,22 @@ class _HomePageUserState extends State<HomePageUser> {
                             },
                           ),
                           SizedBox(
-                            width: MediaQuery.of(context).size.width * 0.02,
+                            width: MediaQuery.of(context).size.width * 0.03,
                           ),
                           BoxButton(
                             icon: Icons.shopping_bag_rounded,
                             text: "Surprise Bag",
                             onTap: () {
-                              Navigator.push(context, 
-                              MaterialPageRoute(builder: (context)=> SurpriseBoxPage()));
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => SurpriseBoxPage(),
+                                ),
+                              );
                             },
                           ),
                           SizedBox(
-                            width: MediaQuery.of(context).size.width * 0.02,
+                            width: MediaQuery.of(context).size.width * 0.03,
                           ),
                           BoxButton(
                             icon: Icons.star,
@@ -175,7 +184,7 @@ class _HomePageUserState extends State<HomePageUser> {
                             },
                           ),
                           SizedBox(
-                            width: MediaQuery.of(context).size.width * 0.02,
+                            width: MediaQuery.of(context).size.width * 0.03,
                           ),
                           BoxButton(
                             icon: Icons.food_bank_outlined,
@@ -192,7 +201,7 @@ class _HomePageUserState extends State<HomePageUser> {
                         ],
                       ),
                       SizedBox(
-                        height: MediaQuery.of(context).size.height * 0.02,
+                        height: MediaQuery.of(context).size.height * 0.01,
                       ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -203,7 +212,7 @@ class _HomePageUserState extends State<HomePageUser> {
                               'Zeflash',
                               style: blackTextStyle.copyWith(
                                 fontSize:
-                                    MediaQuery.of(context).size.width * 0.04,
+                                    MediaQuery.of(context).size.width * 0.05,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
@@ -223,7 +232,7 @@ class _HomePageUserState extends State<HomePageUser> {
                                 'Lihat Semua',
                                 style: greenTextStyle.copyWith(
                                   fontSize:
-                                      MediaQuery.of(context).size.width * 0.03,
+                                      MediaQuery.of(context).size.width * 0.04,
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
@@ -233,7 +242,7 @@ class _HomePageUserState extends State<HomePageUser> {
                       ),
 
                       SizedBox(
-                        height: MediaQuery.of(context).size.height * 0.2,
+                        height: 185,
                         child: SingleChildScrollView(
                           scrollDirection: Axis.horizontal,
                           child: Row(
@@ -347,7 +356,7 @@ class _HomePageUserState extends State<HomePageUser> {
                               'Rekomendasi Untukmu',
                               style: blackTextStyle.copyWith(
                                 fontSize:
-                                    MediaQuery.of(context).size.width * 0.04,
+                                    MediaQuery.of(context).size.width * 0.05,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
@@ -388,7 +397,7 @@ class _HomePageUserState extends State<HomePageUser> {
           ),
 
           Positioned(
-            top: MediaQuery.of(context).size.height * 0.23,
+            top: MediaQuery.of(context).size.height * 0.27,
             left: 20,
             right: 20,
             child: Container(
@@ -406,12 +415,18 @@ class _HomePageUserState extends State<HomePageUser> {
                 ],
               ),
               child: TextField(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => SearchPage()),
+                  );
+                },
                 decoration: InputDecoration(
                   hintText: "Lagi pengen makan apa?",
                   prefixIcon: Icon(Icons.search, color: zelow),
                   border: InputBorder.none,
                   contentPadding: const EdgeInsets.symmetric(
-                    vertical: 10,
+                    vertical: 8,
                     horizontal: 20,
                   ),
                 ),

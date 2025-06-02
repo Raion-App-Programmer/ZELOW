@@ -7,6 +7,8 @@ import 'package:zelow/components/flashsale_container.dart';
 import 'package:zelow/components/flassale_button.dart';
 import 'package:zelow/components/navbar.dart';
 import 'package:zelow/pages/user/infoproduk_page.dart';
+import 'package:zelow/pages/user/keranjang_page.dart';
+import 'package:zelow/pages/user/search_page.dart';
 
 class FlashsalePage extends StatefulWidget {
   const FlashsalePage({super.key});
@@ -20,6 +22,41 @@ class _FlashsalePageState extends State<FlashsalePage> {
   int _selectedCategory = 0;
   int _selectedTab = 0;
   Duration _remainingTime = const Duration(hours: 1);
+
+  // hitung waktu flash sale tersisa
+  Duration getRemainingFlashSaleTime() {
+    final now = DateTime.now();
+    final today = DateTime(now.year, now.month, now.day);
+
+    final List<Map<String, DateTime>> timeSlots = [
+      {
+        'start': today.add(const Duration(hours: 0)),
+        'end': today.add(const Duration(hours: 9)),
+      },
+      {
+        'start': today.add(const Duration(hours: 9)),
+        'end': today.add(const Duration(hours: 12)),
+      },
+      {
+        'start': today.add(const Duration(hours: 12)),
+        'end': today.add(const Duration(hours: 18)),
+      },
+      {
+        'start': today.add(const Duration(hours: 18)),
+        'end': today.add(const Duration(days: 1)), // sampai 00:00 besok
+      },
+    ];
+
+    for (var slot in timeSlots) {
+      final start = slot['start']!;
+      final end = slot['end']!;
+      if (now.isAfter(start) && now.isBefore(end)) {
+        return end.difference(now);
+      }
+    }
+
+    return timeSlots[0]['end']!.difference(now);
+  }
 
   void _onTabSelected(int index) {
     setState(() {
@@ -39,6 +76,9 @@ class _FlashsalePageState extends State<FlashsalePage> {
   @override
   void initState() {
     super.initState();
+
+    _remainingTime = getRemainingFlashSaleTime();
+
     Timer.periodic(const Duration(seconds: 1), (timer) {
       if (_remainingTime.inSeconds > 0) {
         setState(() {
@@ -46,6 +86,9 @@ class _FlashsalePageState extends State<FlashsalePage> {
         });
       } else {
         timer.cancel();
+        setState(() {
+          _remainingTime = getRemainingFlashSaleTime();
+        });
       }
     });
   }
@@ -73,7 +116,7 @@ class _FlashsalePageState extends State<FlashsalePage> {
           Row(
             children: [
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 5),
+                padding: const EdgeInsets.symmetric(horizontal: 1),
                 child: CircleAvatar(
                   backgroundColor: white,
                   child: IconButton(
@@ -83,12 +126,17 @@ class _FlashsalePageState extends State<FlashsalePage> {
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 5),
+                padding: const EdgeInsets.symmetric(horizontal: 10),
                 child: CircleAvatar(
                   backgroundColor: white,
                   child: IconButton(
                     icon: Icon(Icons.shopping_bag_rounded, color: zelow),
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => KeranjangKu()),
+                      );
+                    },
                   ),
                 ),
               ),
@@ -109,6 +157,12 @@ class _FlashsalePageState extends State<FlashsalePage> {
                 border: Border.all(color: zelow, width: 1),
               ),
               child: TextField(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => SearchPage()),
+                  );
+                },
                 decoration: InputDecoration(
                   hintText: 'Lagi pengen makan apa',
                   hintStyle: greyTextStyle,
@@ -121,26 +175,31 @@ class _FlashsalePageState extends State<FlashsalePage> {
           ),
           FlashSaleTabs(onTabSelected: _onTabSelected),
           SizedBox(
-            height: 100,
+            height: 80,
             child: SingleChildScrollView(
               scrollDirection: Axis.horizontal,
-              child: Row(
-                children: List.generate(
-                  _categories.length,
-                  (index) => FlashSaleBoxButton(
-                    icon: _categories[index]["icon"],
-                    text: _categories[index]["text"],
-                    isSelected: _selectedCategory == index,
-                    onPressed: () {
-                      setState(() {
-                        _selectedCategory = index;
-                      });
-                    },
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8),
+                child: Row(
+                  children: List.generate(
+                    _categories.length,
+                    (index) => FlashSaleBoxButton(
+                      icon: _categories[index]["icon"],
+                      text: _categories[index]["text"],
+                      isSelected: _selectedCategory == index,
+                      onPressed: () {
+                        setState(() {
+                          _selectedCategory = index;
+                        });
+                      },
+                    ),
                   ),
                 ),
               ),
             ),
           ),
+          SizedBox(height: 10),
+
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
             child: Row(
@@ -185,25 +244,18 @@ class _FlashsalePageState extends State<FlashsalePage> {
                           builder:
                               (context) => ProductInfoPage(
                                 productData: {
-                                  'id':
-                                      (index + 1)
-                                          .toDouble(), 
+                                  'id': (index + 1).toDouble(),
                                   'title':
                                       'Masakan Padang Roda Dua, Bendungan Sutami',
                                   'imageUrl': 'https://picsum.photos/200/200',
                                   'rating': 4.5,
-                                  'reviewCount':
-                                      688.toDouble(), 
-                                  'likeCount':
-                                      420.toDouble(),
-                                  'price': 10000.toDouble(), 
-                                  'originalPrice':
-                                      12500.toDouble(), 
+                                  'reviewCount': 688.toDouble(),
+                                  'likeCount': 420.toDouble(),
+                                  'price': 10000.toDouble(),
+                                  'originalPrice': 12500.toDouble(),
                                   'distance': '1.2 km',
                                   'discount': '20%',
-                                  'sold':
-                                      ((index + 1) * 5)
-                                          .toDouble(), 
+                                  'sold': ((index + 1) * 5).toDouble(),
                                   'reviews': [
                                     {
                                       'name': 'Nana Mirdad',

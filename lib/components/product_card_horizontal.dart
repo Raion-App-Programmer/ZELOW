@@ -93,28 +93,30 @@ class DisplayCard extends StatelessWidget {
                   // Deskripsi Singkat
                   Text(
                     description,
-                    style: const TextStyle(
-                      fontSize: 12,
-                      color: Colors.grey,
-                    ),
+                    style: const TextStyle(fontSize: 12, color: Colors.grey),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),
                   const SizedBox(height: 6),
 
-                  
-                 Row(
+                  Row(
                     children: [
-                      
                       Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 6,
+                          vertical: 2,
+                        ),
                         decoration: BoxDecoration(
                           color: zelow.withOpacity(0.3),
                           borderRadius: BorderRadius.circular(12),
                         ),
                         child: Row(
                           children: [
-                            const Icon(Icons.star, color: Colors.yellow, size: 14),
+                            const Icon(
+                              Icons.star,
+                              color: Colors.yellow,
+                              size: 14,
+                            ),
                             const SizedBox(width: 4),
                             Text(
                               rating.toStringAsFixed(1),
@@ -125,9 +127,11 @@ class DisplayCard extends StatelessWidget {
                       ),
                       const SizedBox(width: 6),
 
-                     
                       Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 6,
+                          vertical: 4,
+                        ),
                         decoration: BoxDecoration(
                           color: zelow.withOpacity(0.3),
                           borderRadius: BorderRadius.circular(12),
@@ -144,9 +148,11 @@ class DisplayCard extends StatelessWidget {
                       ),
                       const SizedBox(width: 6),
 
-                      
                       Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 6,
+                          vertical: 4,
+                        ),
                         decoration: BoxDecoration(
                           color: zelow.withOpacity(0.3),
                           borderRadius: BorderRadius.circular(12),
@@ -156,14 +162,13 @@ class DisplayCard extends StatelessWidget {
                             const SizedBox(width: 4),
                             Text(
                               estimatedTime,
-                              style:  TextStyle(color: zelow, fontSize: 12),
+                              style: TextStyle(color: zelow, fontSize: 12),
                             ),
                           ],
                         ),
                       ),
                     ],
                   ),
-
                 ],
               ),
             ),
