@@ -36,7 +36,7 @@ class _SliderWidgetState extends State<SliderWidget> {
             height: MediaQuery
                 .of(context)
                 .size
-                .height * 0.25, // Tinggi slider
+                .height * 0.3, // Tinggi slider
             child: PageView.builder(
               itemCount: imgList.length,
               onPageChanged: (index) {
@@ -58,7 +58,7 @@ class _SliderWidgetState extends State<SliderWidget> {
         ),
 
         Positioned(
-          bottom: 65,
+          bottom: 50,
           left: 0,
           right: 0,
           child: Container(
@@ -84,7 +84,7 @@ class _SliderWidgetState extends State<SliderWidget> {
 
         // Tombol Notifikasi & Keranjang di Pojok Kanan Atas
         Positioned(
-          top: 20,
+          top: 40,
           right: 10,
           child: Row(
             children: [
@@ -106,7 +106,7 @@ class _SliderWidgetState extends State<SliderWidget> {
           ),
         ),
         Positioned(
-          top: 20,
+          top: 40,
           left: 10,
           child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
@@ -120,7 +120,7 @@ class _SliderWidgetState extends State<SliderWidget> {
                 Icon(Icons.location_on, color: Colors.white), // Ikon lokasi
                 const SizedBox(width: 8),
                 Text(
-                  "Jl. Cibaduyut", // Alamat dummy
+                  "Jl. Cibaduyut No. 10", // Alamat dummy
                   style: TextStyle(color: Colors.white, fontSize: MediaQuery
                       .of(context)
                       .size

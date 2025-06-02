@@ -46,7 +46,7 @@ class _HomePageUserState extends State<HomePageUser> {
                   child: Column(
                     children: [
                       SizedBox(
-                        height: MediaQuery.of(context).size.height * 0.02,
+                        height: MediaQuery.of(context).size.height * 0.04,
                       ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -64,7 +64,7 @@ class _HomePageUserState extends State<HomePageUser> {
                             },
                           ),
                           SizedBox(
-                            width: MediaQuery.of(context).size.width * 0.02,
+                            width: MediaQuery.of(context).size.width * 0.03,
                           ),
                           BoxButton(
                             icon: Icons.shopping_bag_rounded,
@@ -79,7 +79,7 @@ class _HomePageUserState extends State<HomePageUser> {
                             },
                           ),
                           SizedBox(
-                            width: MediaQuery.of(context).size.width * 0.02,
+                            width: MediaQuery.of(context).size.width * 0.03,
                           ),
                           BoxButton(
                             icon: Icons.star,
@@ -94,7 +94,7 @@ class _HomePageUserState extends State<HomePageUser> {
                             },
                           ),
                           SizedBox(
-                            width: MediaQuery.of(context).size.width * 0.02,
+                            width: MediaQuery.of(context).size.width * 0.03,
                           ),
                           BoxButton(
                             icon: Icons.food_bank_outlined,
@@ -111,7 +111,7 @@ class _HomePageUserState extends State<HomePageUser> {
                         ],
                       ),
                       SizedBox(
-                        height: MediaQuery.of(context).size.height * 0.02,
+                        height: MediaQuery.of(context).size.height * 0.01,
                       ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -122,7 +122,7 @@ class _HomePageUserState extends State<HomePageUser> {
                               'Zeflash',
                               style: blackTextStyle.copyWith(
                                 fontSize:
-                                    MediaQuery.of(context).size.width * 0.04,
+                                    MediaQuery.of(context).size.width * 0.05,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
@@ -142,7 +142,7 @@ class _HomePageUserState extends State<HomePageUser> {
                                 'Lihat Semua',
                                 style: greenTextStyle.copyWith(
                                   fontSize:
-                                      MediaQuery.of(context).size.width * 0.03,
+                                      MediaQuery.of(context).size.width * 0.04,
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
@@ -151,33 +151,34 @@ class _HomePageUserState extends State<HomePageUser> {
                         ],
                       ),
                       SizedBox(
-                        height: MediaQuery.of(context).size.height * 0.2,
+                        height: 185,
                         child: SingleChildScrollView(
                           scrollDirection: Axis.horizontal,
                           child: Row(
-                            children: List.generate(
-                              10,
-                              (index) => Padding(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 1,
-                                ),
-                                child: FlashCard(
-                                  imageUrl: 'assets/images/mie ayam.jpg',
-                                  title: 'Mie Ayam Ceker',
-                                  price: 'Rp.10.000',
-                                  stock: 12,
-                                  sold: 5,
-                                  onTap: () {
-                                    // navigasi ke checkout
-                                  },
+                            children: [
+                              const SizedBox(width: 8),
+                              ...List.generate(
+                                10,
+                                (index) => Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 2,
+                                  ),
+                                  child: FlashCard(
+                                    imageUrl: 'assets/images/mie ayam.jpg',
+                                    title: 'Mie Ayam Ceker',
+                                    price: 'Rp.10.000',
+                                    stock: 12,
+                                    sold: 5,
+                                    onTap: () {
+                                      // navigasi ke checkout
+                                    },
+                                  ),
                                 ),
                               ),
-                            ),
+                              const SizedBox(width: 8),
+                            ],
                           ),
                         ),
-                      ),
-                      SizedBox(
-                        height: MediaQuery.of(context).size.height * 0.01,
                       ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -188,7 +189,7 @@ class _HomePageUserState extends State<HomePageUser> {
                               'Terdekat',
                               style: blackTextStyle.copyWith(
                                 fontSize:
-                                    MediaQuery.of(context).size.width * 0.04,
+                                    MediaQuery.of(context).size.width * 0.05,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
@@ -203,7 +204,7 @@ class _HomePageUserState extends State<HomePageUser> {
                                 'Lihat Semua',
                                 style: greenTextStyle.copyWith(
                                   fontSize:
-                                      MediaQuery.of(context).size.width * 0.03,
+                                      MediaQuery.of(context).size.width * 0.04,
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
@@ -212,34 +213,39 @@ class _HomePageUserState extends State<HomePageUser> {
                         ],
                       ),
                       SizedBox(
-                        height: MediaQuery.of(context).size.height * 0.20,
+                        height: 193,
                         child: SingleChildScrollView(
                           scrollDirection: Axis.horizontal,
                           child: Row(
-                            children: List.generate(
-                              10,
-                              (index) => Padding(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 0.5,
-                                ),
-                                child: SizedBox(
-                                  width:
-                                      MediaQuery.of(context).size.width *
-                                      0.42, // 42% dari layar
-                                  child: ProductCard(
-                                    imageUrl: 'assets/images/mie ayam.jpg',
-                                    rating: 4.5,
-                                    restaurantName: 'Nina Rasa',
-                                    distance: '1.2 km',
-                                    estimatedTime: '25 min',
-                                    onTap: () {},
+                            children: [
+                              const SizedBox(width: 8),
+                              ...List.generate(
+                                10,
+                                (index) => Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 4,
+                                  ),
+                                  child: SizedBox(
+                                    width:
+                                        MediaQuery.of(context).size.width *
+                                        0.42,
+                                    child: ProductCard(
+                                      imageUrl: 'assets/images/mie ayam.jpg',
+                                      rating: 4.5,
+                                      restaurantName: 'Nina Rasa',
+                                      distance: '1.2 km',
+                                      estimatedTime: '25 min',
+                                      onTap: () {},
+                                    ),
                                   ),
                                 ),
                               ),
-                            ),
+                              const SizedBox(width: 8),
+                            ],
                           ),
                         ),
                       ),
+
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -249,7 +255,7 @@ class _HomePageUserState extends State<HomePageUser> {
                               'Rekomendasi Untukmu',
                               style: blackTextStyle.copyWith(
                                 fontSize:
-                                    MediaQuery.of(context).size.width * 0.04,
+                                    MediaQuery.of(context).size.width * 0.05,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
@@ -290,7 +296,7 @@ class _HomePageUserState extends State<HomePageUser> {
           ),
 
           Positioned(
-            top: MediaQuery.of(context).size.height * 0.23,
+            top: MediaQuery.of(context).size.height * 0.27,
             left: 20,
             right: 20,
             child: Container(
@@ -319,7 +325,7 @@ class _HomePageUserState extends State<HomePageUser> {
                   prefixIcon: Icon(Icons.search, color: zelow),
                   border: InputBorder.none,
                   contentPadding: const EdgeInsets.symmetric(
-                    vertical: 10,
+                    vertical: 8,
                     horizontal: 20,
                   ),
                 ),
