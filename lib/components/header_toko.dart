@@ -78,17 +78,22 @@ class _HeaderTokoState extends State<HeaderToko> {
         Positioned(
           top: 20,
           left: 10,
-          child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Icon(Icons.arrow_back, color: Colors.white, size: 35), // Ikon lokasi
-                const SizedBox(width: 8),
-                
-              ],
+          child: GestureDetector(
+            onTap: () {
+              Navigator.pop(context);
+            },
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(Icons.arrow_back, color: Colors.white, size: 35), // Ikon lokasi
+                  const SizedBox(width: 8),
+                ],
+              ),
             ),
           ),
+
         ),
       ],
     );

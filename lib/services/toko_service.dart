@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:zelow/models/toko_model.dart';
-import 'package:zelow/models/produk_model.dart';
 
 class TokoServices {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -32,7 +31,7 @@ class TokoServices {
   }
 
   Future<List<Toko>> getAllTokoTerdekat({int limit = 5}) async {
-    return getTokoList(orderByField: 'rating', isDecending: true);
+    return getTokoList(orderByField: 'jarak', isDecending: false);
   }
 
   Future<List<Toko>> getAllTokoPalingLaris({int limit = 5}) async {
@@ -46,18 +45,6 @@ class TokoServices {
 
     if (doc.exists) {
       return Toko.fromFirestore(doc);
-    }
-    return null;
-  }
-
-  Future<Toko?> getTokoRekomendasi() async {
-    // Ambil beberapa (misal 5 acak berdasarkan ID) lalu pilih satu di client
-    // Firestore tidak mendukung random query secara langsung dengan mudah.
-    // Ini adalah pendekatan sederhana.
-    QuerySnapshot snapshot = await _firestore.collection(_tokoCollection).limit(10).get(); // Ambil 10
-    if (snapshot.docs.isNotEmpty) {
-      final randomList = snapshot.docs..shuffle(); // Acak daftarnya
-      return Toko.fromFirestore(randomList.first); // Ambil yang pertama setelah diacak
     }
     return null;
   }

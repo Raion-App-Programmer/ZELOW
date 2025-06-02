@@ -24,11 +24,11 @@ class ProductCard extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        margin: const EdgeInsets.symmetric(vertical: 4, horizontal: 3),
-        padding: const EdgeInsets.all(8),
+        margin: const EdgeInsets.symmetric(vertical: 6, horizontal: 3),
+        padding: const EdgeInsets.all(6.0),
         decoration: BoxDecoration(
           color: Colors.white,
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(8),
           boxShadow: [
             BoxShadow(
               color: Colors.black.withOpacity(0.1),
@@ -42,40 +42,38 @@ class ProductCard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
           children: [
-            // Stack untuk gambar dan rating di pojok kiri bawah
+
             Stack(
               children: [
-                // Gambar Produk
                 ClipRRect(
                   borderRadius: BorderRadius.circular(8),
-                  child: Image.network( // Menggunakan Image.network
+                  child: Image.network(
                     imageUrl,
-                    height: 90,
+                    height: 80.0,
                     width: double.infinity,
                     fit: BoxFit.cover,
-                    // Menambahkan loadingBuilder untuk menunjukkan progres saat gambar dimuat
                     loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent? loadingProgress) {
                       if (loadingProgress == null) return child; // Gambar sudah termuat
                       return Container(
-                        height: 90, // Sesuaikan dengan tinggi gambar
+                        height: 90,
                         width: double.infinity,
-                        color: Colors.grey[200], // Warna placeholder saat loading
+                        color: Colors.grey[200],
                         child: Center(
                           child: CircularProgressIndicator(
                             value: loadingProgress.expectedTotalBytes != null
                                 ? loadingProgress.cumulativeBytesLoaded / loadingProgress.expectedTotalBytes!
                                 : null,
-                            color: zelow, // Warna indikator loading
+                            color: zelow,
                           ),
                         ),
                       );
                     },
-                    // Menambahkan errorBuilder untuk menangani jika URL gambar error atau gambar tidak ditemukan
+
                     errorBuilder: (BuildContext context, Object exception, StackTrace? stackTrace) {
                       return Container(
-                        height: 90, // Sesuaikan dengan tinggi gambar
+                        height: 90,
                         width: double.infinity,
-                        color: Colors.grey[300], // Warna placeholder jika error
+                        color: Colors.grey[300],
                         child: Icon(
                           Icons.broken_image_outlined,
                           color: Colors.grey[600],
@@ -104,12 +102,10 @@ class ProductCard extends StatelessWidget {
                         const Icon(Icons.star, color: Colors.yellow, size: 12),
                         const SizedBox(width: 3),
                         Text(
-                          rating.toStringAsFixed(
-                            1,
-                          ), // Menampilkan rating dengan 1 desimal
+                          rating.toStringAsFixed(1,), // Menampilkan rating dengan 1 desimal
                           style: const TextStyle(
                             color: Colors.white,
-                            fontSize: 11,
+                            fontSize: 10.0,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
@@ -119,16 +115,16 @@ class ProductCard extends StatelessWidget {
                 ),
               ],
             ),
-            const SizedBox(height: 8),
+            const SizedBox(height: 6),
 
             // Nama Resto
             Text(
               restaurantName,
               style: blackTextStyle.copyWith(
-                fontSize: MediaQuery.of(context).size.width * 0.035,
+                fontSize: 9,
                 fontWeight: FontWeight.bold,
               ),
-              maxLines: 1,
+              maxLines: 2,
               overflow: TextOverflow.ellipsis,
             ),
             const SizedBox(height: 4),

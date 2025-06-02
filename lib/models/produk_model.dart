@@ -2,12 +2,12 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Produk {
   final String id;
-  final String nama; // Nama item produk di dalam toko
+  final String nama;
   final String deskripsi;
   final String gambar;
-  final double harga; // Harga item produk
-  final double rating; // Rating spesifik item produk (jika ada)
-  final int jumlahPenilaian; // Jumlah penilaian spesifik item produk (jika ada)
+  final double harga;
+  final double rating;
+  final int jumlahPenilaian;
 
   Produk({
     required this.id,

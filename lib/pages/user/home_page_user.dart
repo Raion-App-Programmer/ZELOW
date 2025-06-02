@@ -66,7 +66,7 @@ class _HomePageUserState extends State<HomePageUser> {
 
   Widget _buildTokoHorizontal(Future<List<Toko>> futureToko, String sectionTypeForNavigation) {
     return SizedBox(
-      height: MediaQuery.of(context).size.height * 0.22,
+      height: MediaQuery.of(context).size.height * 0.17,
       child: FutureBuilder<List<Toko>>(
         future: futureToko,
         builder: (context, snapshot) {
@@ -85,11 +85,10 @@ class _HomePageUserState extends State<HomePageUser> {
           return ListView.builder(
             scrollDirection: Axis.horizontal,
             itemCount: tokoList.length,
-            padding: const EdgeInsets.symmetric(horizontal: 12.0),
             itemBuilder: (context, index) {
               final toko = tokoList[index];
               return Container(
-                width: MediaQuery.of(context).size.width * 0.40,
+                width: 120.0,
                 margin: const EdgeInsets.symmetric(horizontal: 4.0),
                 child: ProductCard(
                   imageUrl: toko.gambar,
@@ -99,10 +98,9 @@ class _HomePageUserState extends State<HomePageUser> {
                   estimatedTime: toko.waktu,
                   onTap: () {
                     print('Toko ${toko.nama} diklik. ID: ${toko.id}');
-                    Navigator.push(
-                        context,
+                    Navigator.push(context,
                         MaterialPageRoute(
-                          builder: (context) => TokoPageUser(toko: toko),
+                          builder: (context) => TokoPageUser(tokoData: toko),
                         )
                     );
                   },
@@ -111,58 +109,6 @@ class _HomePageUserState extends State<HomePageUser> {
             },
           );
         },
-      ),
-    );
-  }
-
-  Widget _buildRekomendasiToko() {
-    return Padding(
-      padding: const EdgeInsets.all(16.0), // Padding untuk seluruh blok rekomendasi
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            'Rekomendasi Untukmu',
-            style: blackTextStyle.copyWith(
-              fontSize: MediaQuery.of(context).size.width * 0.04,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          const SizedBox(height: 8),
-          FutureBuilder<Toko?>(
-            future: _tokoService.getTokoRekomendasi(),
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return SizedBox(height: 120, child: Center(child: CircularProgressIndicator(color: zelow)));
-              }
-              if (snapshot.hasError) {
-                print("Error fetching rekomendasi: ${snapshot.error}");
-                return SizedBox(height: 120, child: Center(child: Text('Gagal memuat rekomendasi.')));
-              }
-              if (!snapshot.hasData || snapshot.data == null) {
-                return SizedBox(height: 120, child: Center(child: Text('Tidak ada rekomendasi.')));
-              }
-              final toko = snapshot.data!;
-              return DisplayCard(
-                imageUrl: toko.gambar,
-                restaurantName: toko.nama,
-                description: toko.deskripsi,
-                rating: toko.rating,
-                distance: '${toko.jarak} km',
-                estimatedTime: toko.waktu,
-                onTap: () {
-                  print('Toko rekomendasi ${toko.nama} diklik. ID: ${toko.id}');
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => TokoPageUser(toko: toko),
-                    ),
-                  );
-                },
-              );
-            },
-          ),
-        ],
       ),
     );
   }

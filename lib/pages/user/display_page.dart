@@ -151,7 +151,7 @@ class _DisplayPageState extends State<DisplayPage> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => TokoPageUser(toko: toko),
+                        builder: (context) => TokoPageUser(tokoData: toko),
                       ),
                     );
                   },

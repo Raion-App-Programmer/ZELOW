@@ -5,9 +5,9 @@ class Toko {
   final String nama;
   final String gambar;
   final double rating;
-  final num jarak; // Menggunakan num untuk fleksibilitas dari Firestore (bisa int/double)
+  final num jarak;
   final String waktu;
-  final int jumlahPenilaian; // Nama field di Firestore: jpenilaian
+  final int jumlahPenilaian;
   final String deskripsi;
 
   const Toko({

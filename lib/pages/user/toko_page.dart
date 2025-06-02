@@ -19,21 +19,15 @@ import '../../models/toko_model.dart';
 import '../../services/auth_service.dart';
 
 class TokoPageUser extends StatefulWidget {
-  final Toko toko;
+  final Toko tokoData;
 
-  const TokoPageUser({super.key, required this.toko});
+  const TokoPageUser({super.key, required this.tokoData});
 
   @override
   State<TokoPageUser> createState() => _TokoPageUserState();
 }
 
 class _TokoPageUserState extends State<TokoPageUser> {
-  // Backend
-  final TokoServices _tokoService = TokoServices();
-
-  void _handleLogout() {
-    AuthService().logout(context);
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -50,7 +44,7 @@ class _TokoPageUserState extends State<TokoPageUser> {
                       SizedBox(
                         height:
                             MediaQuery.of(context).size.height * 0.24,
-                        child: HeaderToko(imageUrl: widget.toko.gambar),
+                        child: HeaderToko(imageUrl: widget.tokoData.gambar),
                       ),
                       SizedBox(
                         width: double.infinity,
@@ -61,7 +55,7 @@ class _TokoPageUserState extends State<TokoPageUser> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                widget.toko.nama,
+                                widget.tokoData.nama,
                                 textAlign: TextAlign.start,
                                 style: TextStyle(
                                   fontFamily: 'nunito',
@@ -70,7 +64,7 @@ class _TokoPageUserState extends State<TokoPageUser> {
                                 ),
                               ),
                               Text(
-                                widget.toko.deskripsi,
+                                widget.tokoData.deskripsi,
                                 style: TextStyle(
                                   fontFamily: 'nunito',
                                   fontSize: 12,
@@ -87,7 +81,7 @@ class _TokoPageUserState extends State<TokoPageUser> {
                                       children: [
                                         Icon(Icons.star, color: Color(0xFFFFC837),),
                                         Text(
-                                          widget.toko.rating.toStringAsFixed(1),
+                                          widget.tokoData.rating.toStringAsFixed(1),
                                           style: TextStyle(
                                             fontFamily: 'nunito',
                                             fontSize: 16,
@@ -100,7 +94,7 @@ class _TokoPageUserState extends State<TokoPageUser> {
                                       children: [
                                         Icon(Icons.location_on_outlined, color: Color(0xFF676767)),
                                         Text(
-                                          "${widget.toko.jarak} km",
+                                          "${widget.tokoData.jarak} km",
                                           style: TextStyle(
                                               fontFamily: 'nunito',
                                               fontSize: 16,
@@ -115,7 +109,7 @@ class _TokoPageUserState extends State<TokoPageUser> {
                                       children: [
                                         Icon(Icons.access_time, color: Color(0xFF676767)),
                                         Text(
-                                          widget.toko.waktu,
+                                          widget.tokoData.waktu,
                                           style: TextStyle(
                                               fontFamily: 'nunito',
                                               fontSize: 16,

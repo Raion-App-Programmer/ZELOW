@@ -26,7 +26,7 @@ class DisplayCard extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        width: MediaQuery.of(context).size.width * 0.9, // Lebar card panjang
+        width: MediaQuery.of(context).size.width * 0.7, // Lebar card panjang
         margin: const EdgeInsets.symmetric(vertical: 2, horizontal: 12),
         padding: const EdgeInsets.all(10),
         decoration: BoxDecoration(
