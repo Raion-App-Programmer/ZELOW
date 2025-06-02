@@ -2,7 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:zelow/components/constant.dart';
 
 class HeaderToko extends StatefulWidget {
-  const HeaderToko({super.key});
+  // Backend
+  final String imageUrl;
+
+  const HeaderToko({super.key, required this.imageUrl});
 
   @override
   _HeaderTokoState createState() => _HeaderTokoState();
@@ -14,20 +17,31 @@ class _HeaderTokoState extends State<HeaderToko> {
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        Positioned(
-          bottom: 20,
-          left: 0,
-          right: 0,
-          child: Container(
-            color: Colors.transparent,
-            width: double.infinity,
-            child:
-            Image.asset(
-              'assets/images/toko_header_dummy.png', // gambar header dummy
-              fit: BoxFit.cover
-            ),
-          ),
+        Positioned.fill(
+          child: Image.network(
+            widget.imageUrl,
+            fit: BoxFit.cover,
+            errorBuilder: (context, error, stackTrace) {
+              return Image.asset(
+                'assets/images/toko_header_dummy.png',
+                fit: BoxFit.cover,
+              );
+            },
+
+            loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent? loadingProgress) {
+              if (loadingProgress == null) return child;
+              return Center(
+                child: CircularProgressIndicator(
+                  value: loadingProgress.expectedTotalBytes != null
+                      ? loadingProgress.cumulativeBytesLoaded / loadingProgress.expectedTotalBytes!
+                      : null,
+                  color: zelow,
+                ),
+              );
+            },
+          )
         ),
+
         //mainAxisAlignment: MainAxisAlignment.center,
         // Tombol Search, Favorite dan Share pojok atas
         Positioned(
@@ -70,7 +84,8 @@ class _HeaderTokoState extends State<HeaderToko> {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Icon(Icons.arrow_back, color: Colors.white, size: 35), // Ikon lokasi
-                const SizedBox(width: 8)
+                const SizedBox(width: 8),
+                
               ],
             ),
           ),

@@ -49,4 +49,16 @@ class TokoServices {
     }
     return null;
   }
+
+  Future<Toko?> getTokoRekomendasi() async {
+    // Ambil beberapa (misal 5 acak berdasarkan ID) lalu pilih satu di client
+    // Firestore tidak mendukung random query secara langsung dengan mudah.
+    // Ini adalah pendekatan sederhana.
+    QuerySnapshot snapshot = await _firestore.collection(_tokoCollection).limit(10).get(); // Ambil 10
+    if (snapshot.docs.isNotEmpty) {
+      final randomList = snapshot.docs..shuffle(); // Acak daftarnya
+      return Toko.fromFirestore(randomList.first); // Ambil yang pertama setelah diacak
+    }
+    return null;
+  }
 }

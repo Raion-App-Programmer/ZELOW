@@ -13,17 +13,24 @@ import 'package:zelow/components/widget_slider.dart';
 import 'package:zelow/pages/user/display_page.dart';
 import 'package:zelow/pages/user/flashsale_page.dart';
 import 'package:zelow/pages/user/surprisebox_page.dart';
+import 'package:zelow/services/toko_service.dart';
 
+import '../../models/toko_model.dart';
 import '../../services/auth_service.dart';
 
 class TokoPageUser extends StatefulWidget {
-  const TokoPageUser({super.key});
+  final Toko toko;
+
+  const TokoPageUser({super.key, required this.toko});
 
   @override
   State<TokoPageUser> createState() => _TokoPageUserState();
 }
 
 class _TokoPageUserState extends State<TokoPageUser> {
+  // Backend
+  final TokoServices _tokoService = TokoServices();
+
   void _handleLogout() {
     AuthService().logout(context);
   }
@@ -42,8 +49,8 @@ class _TokoPageUserState extends State<TokoPageUser> {
                     children: [
                       SizedBox(
                         height:
-                            MediaQuery.of(context).size.height * 0.24, // Tinggi slider
-                        child: HeaderToko(),
+                            MediaQuery.of(context).size.height * 0.24,
+                        child: HeaderToko(imageUrl: widget.toko.gambar),
                       ),
                       SizedBox(
                         width: double.infinity,
@@ -54,7 +61,7 @@ class _TokoPageUserState extends State<TokoPageUser> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                'Masakan Padang Roda  Dua, Bendungan Sutami',
+                                widget.toko.nama,
                                 textAlign: TextAlign.start,
                                 style: TextStyle(
                                   fontFamily: 'nunito',
@@ -63,7 +70,7 @@ class _TokoPageUserState extends State<TokoPageUser> {
                                 ),
                               ),
                               Text(
-                                'Aneka masakan padang, Nasi padang, Rendang',
+                                widget.toko.deskripsi,
                                 style: TextStyle(
                                   fontFamily: 'nunito',
                                   fontSize: 12,
@@ -80,7 +87,7 @@ class _TokoPageUserState extends State<TokoPageUser> {
                                       children: [
                                         Icon(Icons.star, color: Color(0xFFFFC837),),
                                         Text(
-                                          "4.9",
+                                          widget.toko.rating.toStringAsFixed(1),
                                           style: TextStyle(
                                             fontFamily: 'nunito',
                                             fontSize: 16,
@@ -93,7 +100,7 @@ class _TokoPageUserState extends State<TokoPageUser> {
                                       children: [
                                         Icon(Icons.location_on_outlined, color: Color(0xFF676767)),
                                         Text(
-                                          "2.4 km",
+                                          "${widget.toko.jarak} km",
                                           style: TextStyle(
                                               fontFamily: 'nunito',
                                               fontSize: 16,
@@ -108,7 +115,7 @@ class _TokoPageUserState extends State<TokoPageUser> {
                                       children: [
                                         Icon(Icons.access_time, color: Color(0xFF676767)),
                                         Text(
-                                          "10-25 min",
+                                          widget.toko.waktu,
                                           style: TextStyle(
                                               fontFamily: 'nunito',
                                               fontSize: 16,

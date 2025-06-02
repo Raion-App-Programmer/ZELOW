@@ -48,11 +48,41 @@ class ProductCard extends StatelessWidget {
                 // Gambar Produk
                 ClipRRect(
                   borderRadius: BorderRadius.circular(8),
-                  child: Image.asset(
+                  child: Image.network( // Menggunakan Image.network
                     imageUrl,
                     height: 90,
                     width: double.infinity,
                     fit: BoxFit.cover,
+                    // Menambahkan loadingBuilder untuk menunjukkan progres saat gambar dimuat
+                    loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent? loadingProgress) {
+                      if (loadingProgress == null) return child; // Gambar sudah termuat
+                      return Container(
+                        height: 90, // Sesuaikan dengan tinggi gambar
+                        width: double.infinity,
+                        color: Colors.grey[200], // Warna placeholder saat loading
+                        child: Center(
+                          child: CircularProgressIndicator(
+                            value: loadingProgress.expectedTotalBytes != null
+                                ? loadingProgress.cumulativeBytesLoaded / loadingProgress.expectedTotalBytes!
+                                : null,
+                            color: zelow, // Warna indikator loading
+                          ),
+                        ),
+                      );
+                    },
+                    // Menambahkan errorBuilder untuk menangani jika URL gambar error atau gambar tidak ditemukan
+                    errorBuilder: (BuildContext context, Object exception, StackTrace? stackTrace) {
+                      return Container(
+                        height: 90, // Sesuaikan dengan tinggi gambar
+                        width: double.infinity,
+                        color: Colors.grey[300], // Warna placeholder jika error
+                        child: Icon(
+                          Icons.broken_image_outlined,
+                          color: Colors.grey[600],
+                          size: 40,
+                        ),
+                      );
+                    },
                   ),
                 ),
 
@@ -98,6 +128,8 @@ class ProductCard extends StatelessWidget {
                 fontSize: MediaQuery.of(context).size.width * 0.035,
                 fontWeight: FontWeight.bold,
               ),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
             ),
             const SizedBox(height: 4),
 
