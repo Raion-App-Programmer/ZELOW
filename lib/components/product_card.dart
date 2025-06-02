@@ -3,10 +3,10 @@ import 'package:zelow/components/constant.dart';
 
 class ProductCard extends StatelessWidget {
   final String imageUrl;
-  final double rating; // Rating produk
-  final String restaurantName; // Nama resto
-  final String distance; // Jarak resto
-  final String estimatedTime; // Estimasi waktu pengantaran
+  final double rating;
+  final String restaurantName;
+  final String distance;
+  final String estimatedTime;
   final VoidCallback onTap;
 
   const ProductCard({
@@ -53,7 +53,7 @@ class ProductCard extends StatelessWidget {
                     width: double.infinity,
                     fit: BoxFit.cover,
                     loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent? loadingProgress) {
-                      if (loadingProgress == null) return child; // Gambar sudah termuat
+                      if (loadingProgress == null) return child;
                       return Container(
                         height: 90,
                         width: double.infinity,
@@ -84,7 +84,7 @@ class ProductCard extends StatelessWidget {
                   ),
                 ),
 
-                // Badge Rating di pojok kiri bawah
+
                 Positioned(
                   bottom: 8,
                   left: 8,
@@ -102,7 +102,7 @@ class ProductCard extends StatelessWidget {
                         const Icon(Icons.star, color: Colors.yellow, size: 12),
                         const SizedBox(width: 3),
                         Text(
-                          rating.toStringAsFixed(1,), // Menampilkan rating dengan 1 desimal
+                          rating.toStringAsFixed(1,),
                           style: const TextStyle(
                             color: Colors.white,
                             fontSize: 10.0,
@@ -117,7 +117,6 @@ class ProductCard extends StatelessWidget {
             ),
             const SizedBox(height: 6),
 
-            // Nama Resto
             Text(
               restaurantName,
               style: blackTextStyle.copyWith(
@@ -129,7 +128,7 @@ class ProductCard extends StatelessWidget {
             ),
             const SizedBox(height: 4),
 
-            // Box kecil untuk jarak dan estimasi waktu di bawah kiri resto name
+
             Row(
               children: [
                 Container(
@@ -138,7 +137,7 @@ class ProductCard extends StatelessWidget {
                     vertical: 3,
                   ),
                   decoration: BoxDecoration(
-                    color: zelow.withOpacity(0.3), // Warna zelow dengan opacity
+                    color: zelow.withOpacity(0.3),
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Row(
@@ -167,7 +166,7 @@ class ProductCard extends StatelessWidget {
                   child: Row(
                     children: [
                       Text(
-                        estimatedTime,
+                        "$estimatedTime min",
                         style: TextStyle(
                           fontSize: 9,
                           color: zelow,

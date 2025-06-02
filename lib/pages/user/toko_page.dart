@@ -109,7 +109,7 @@ class _TokoPageUserState extends State<TokoPageUser> {
                                       children: [
                                         Icon(Icons.access_time, color: Color(0xFF676767)),
                                         Text(
-                                          widget.tokoData.waktu,
+                                          "${widget.tokoData.waktu} min",
                                           style: TextStyle(
                                               fontFamily: 'nunito',
                                               fontSize: 16,

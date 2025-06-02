@@ -88,8 +88,8 @@ class _HomePageUserState extends State<HomePageUser> {
             itemBuilder: (context, index) {
               final toko = tokoList[index];
               return Container(
-                width: 120.0,
-                margin: const EdgeInsets.symmetric(horizontal: 4.0),
+                width: 130.0,
+                margin: const EdgeInsets.symmetric(horizontal: 2.0),
                 child: ProductCard(
                   imageUrl: toko.gambar,
                   rating: toko.rating,
@@ -123,7 +123,7 @@ class _HomePageUserState extends State<HomePageUser> {
             children: [
               SizedBox(
                 height:
-                  MediaQuery.of(context).size.height * 0.3, // Tinggi slider
+                  MediaQuery.of(context).size.height * 0.3,
                 child: SliderWidget(),
               ),
               Expanded(
@@ -354,9 +354,9 @@ class _HomePageUserState extends State<HomePageUser> {
                           ),
                           const SizedBox(height: 8),
 
-                          // List Card ke BAWAH
+
                           SizedBox(
-                            height: 400, // Biar bisa scroll kalau banyak
+                            height: 400,
                             child: ListView.builder(
                               padding: EdgeInsets.zero,
                               itemCount: 5, // Jumlah restoran
