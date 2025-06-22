@@ -13,20 +13,21 @@ import 'package:zelow/components/widget_slider.dart';
 import 'package:zelow/pages/user/display_page.dart';
 import 'package:zelow/pages/user/flashsale_page.dart';
 import 'package:zelow/pages/user/surprisebox_page.dart';
+import 'package:zelow/services/toko_service.dart';
 
+import '../../models/toko_model.dart';
 import '../../services/auth_service.dart';
 
 class TokoPageUser extends StatefulWidget {
-  const TokoPageUser({super.key});
+  final Toko tokoData;
+
+  const TokoPageUser({super.key, required this.tokoData});
 
   @override
   State<TokoPageUser> createState() => _TokoPageUserState();
 }
 
 class _TokoPageUserState extends State<TokoPageUser> {
-  void _handleLogout() {
-    AuthService().logout(context);
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -43,8 +44,8 @@ class _TokoPageUserState extends State<TokoPageUser> {
                       SizedBox(
                         height:
                             MediaQuery.of(context).size.height *
-                            0.25, // Tinggi slider
-                        child: HeaderToko(),
+                            0.25,
+                        child: HeaderToko(imageUrl: widget.tokoData.gambar),
                       ),
                       SizedBox(
                         width: double.infinity,
@@ -59,7 +60,7 @@ class _TokoPageUserState extends State<TokoPageUser> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                'Masakan Padang Roda Dua, Bendungan Sutami',
+                                widget.tokoData.nama,
                                 textAlign: TextAlign.start,
                                 style: TextStyle(
                                   fontFamily: 'nunito',
@@ -68,7 +69,7 @@ class _TokoPageUserState extends State<TokoPageUser> {
                                 ),
                               ),
                               Text(
-                                'Aneka masakan padang, Nasi padang, Rendang',
+                                widget.tokoData.deskripsi,
                                 style: TextStyle(
                                   fontFamily: 'nunito',
                                   fontSize: 14,
@@ -89,7 +90,7 @@ class _TokoPageUserState extends State<TokoPageUser> {
                                           color: Color(0xFFFFC837),
                                         ),
                                         Text(
-                                          "4.9",
+                                          widget.tokoData.rating.toStringAsFixed(1),
                                           style: TextStyle(
                                             fontFamily: 'nunito',
                                             fontSize: 16,
@@ -106,7 +107,7 @@ class _TokoPageUserState extends State<TokoPageUser> {
                                           color: Color(0xFF676767),
                                         ),
                                         Text(
-                                          "2.4 km",
+                                          "${widget.tokoData.jarak} km",
                                           style: TextStyle(
                                             fontFamily: 'nunito',
                                             fontSize: 16,
@@ -124,7 +125,7 @@ class _TokoPageUserState extends State<TokoPageUser> {
                                           color: Color(0xFF676767),
                                         ),
                                         Text(
-                                          "10-25 min",
+                                          "${widget.tokoData.waktu} min",
                                           style: TextStyle(
                                             fontFamily: 'nunito',
                                             fontSize: 16,
