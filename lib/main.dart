@@ -39,7 +39,6 @@ class MyApp extends StatelessWidget {
         '/profile': (context) => ProfilePage(),
         '/pesanan': (context) => PesananPage(orders: [],),
         '/profile': (context)=> ProfilePage(),
-        '/toko': (context)=> TokoPageUser(),
         '/chat': (context)=> chatPage(),
       },
     );

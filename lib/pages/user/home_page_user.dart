@@ -37,23 +37,25 @@ class _HomePageUserState extends State<HomePageUser> {
   // }
 
   Widget _buildSectionTitle(
-      BuildContext context,
-      String title,
-      VoidCallback onSeeAllPressed
-  ){
+    BuildContext context,
+    String title,
+    VoidCallback onSeeAllPressed,
+  ) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Padding(padding: EdgeInsets.only(left: 16),
+        Padding(
+          padding: EdgeInsets.only(left: 16),
           child: Text(
             title,
             style: blackTextStyle.copyWith(
-              fontSize: MediaQuery.of(context).size.width * 0.04,
+              fontSize: MediaQuery.of(context).size.width * 0.05,
               fontWeight: FontWeight.bold,
             ),
           ),
         ),
-        Padding(padding: EdgeInsets.only(right: 16),
+        Padding(
+          padding: EdgeInsets.only(right: 16),
           child: TextButton(
             onPressed: onSeeAllPressed,
             child: Text(
@@ -69,21 +71,26 @@ class _HomePageUserState extends State<HomePageUser> {
     );
   }
 
-  Widget _buildTokoHorizontal(Future<List<Toko>> futureToko, String sectionTypeForNavigation) {
+  Widget _buildTokoHorizontal(
+    Future<List<Toko>> futureToko,
+    String sectionTypeForNavigation,
+  ) {
     return SizedBox(
-      height: MediaQuery.of(context).size.height * 0.17,
+      height: 160,
       child: FutureBuilder<List<Toko>>(
         future: futureToko,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator(color: zelow,));
+            return Center(child: CircularProgressIndicator(color: zelow));
           }
           if (snapshot.hasError) {
-            print("Error fetching toko list for $sectionTypeForNavigation: ${snapshot.error}");
-            return Center(child: Text('Gagat memuat data toko.'),);
+            print(
+              "Error fetching toko list for $sectionTypeForNavigation: ${snapshot.error}",
+            );
+            return Center(child: Text('Gagat memuat data toko.'));
           }
           if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            return Center(child: Text('Tidadk ada toko tersedia.'),);
+            return Center(child: Text('Tidak ada toko tersedia.'));
           }
           final tokoList = snapshot.data!;
 
@@ -103,10 +110,11 @@ class _HomePageUserState extends State<HomePageUser> {
                   estimatedTime: toko.waktu,
                   onTap: () {
                     print('Toko ${toko.nama} diklik. ID: ${toko.id}');
-                    Navigator.push(context,
-                        MaterialPageRoute(
-                          builder: (context) => TokoPageUser(tokoData: toko),
-                        )
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => TokoPageUser(tokoData: toko),
+                      ),
                     );
                   },
                 ),
@@ -127,8 +135,7 @@ class _HomePageUserState extends State<HomePageUser> {
           Column(
             children: [
               SizedBox(
-                height:
-                  MediaQuery.of(context).size.height * 0.3,
+                height: MediaQuery.of(context).size.height * 0.3,
                 child: SliderWidget(),
               ),
               Expanded(
@@ -148,8 +155,12 @@ class _HomePageUserState extends State<HomePageUser> {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => DisplayPage(pageTitle: "Terdekat", fetchType: "terdekat_full")
-                                )
+                                  builder:
+                                      (context) => DisplayPage(
+                                        pageTitle: "Terdekat",
+                                        fetchType: "terdekat_full",
+                                      ),
+                                ),
                               );
                             },
                           ),
@@ -176,10 +187,14 @@ class _HomePageUserState extends State<HomePageUser> {
                             text: "Paling Laris",
                             onTap: () {
                               Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => DisplayPage(pageTitle: "Paling Laris", fetchType: "paling_laris_full")
-                                  )
+                                context,
+                                MaterialPageRoute(
+                                  builder:
+                                      (context) => DisplayPage(
+                                        pageTitle: "Paling Laris",
+                                        fetchType: "paling_laris_full",
+                                      ),
+                                ),
                               );
                             },
                           ),
@@ -191,10 +206,14 @@ class _HomePageUserState extends State<HomePageUser> {
                             text: "Rekomendasi",
                             onTap: () {
                               Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => DisplayPage(pageTitle: "Semua Rekomendasi", fetchType: "rekomendasi_full")
-                                  )
+                                context,
+                                MaterialPageRoute(
+                                  builder:
+                                      (context) => DisplayPage(
+                                        pageTitle: "Semua Rekomendasi",
+                                        fetchType: "rekomendasi_full",
+                                      ),
+                                ),
                               );
                             },
                           ),
@@ -308,44 +327,50 @@ class _HomePageUserState extends State<HomePageUser> {
                       //   height:
                       //       MediaQuery.of(context).size.height *
                       //       0.20,
-                        // child: SingleChildScrollView(
-                        //   scrollDirection: Axis.horizontal,
-                        //   child: Row(
-                        //     children: List.generate(
-                        //       10,
-                        //       (index) => Padding(
-                        //         padding: const EdgeInsets.symmetric(
-                        //           horizontal: 0.5,
-                        //         ),
-                        //         child: SizedBox(
-                        //           width:
-                        //               MediaQuery.of(context).size.width *
-                        //               0.42, // 42% dari layar
-                        //           child: ProductCard(
-                        //             imageUrl: 'assets/images/mie ayam.jpg',
-                        //             rating: 4.5,
-                        //             restaurantName: 'Nina Rasa',
-                        //             distance: '1.2 km',
-                        //             estimatedTime: '25 min',
-                        //             onTap: () {},
-                        //           ),
-                        //         ),
-                        //       ),
-                        //     ),
-                        //   ),
-                        // ),
+                      // child: SingleChildScrollView(
+                      //   scrollDirection: Axis.horizontal,
+                      //   child: Row(
+                      //     children: List.generate(
+                      //       10,
+                      //       (index) => Padding(
+                      //         padding: const EdgeInsets.symmetric(
+                      //           horizontal: 0.5,
+                      //         ),
+                      //         child: SizedBox(
+                      //           width:
+                      //               MediaQuery.of(context).size.width *
+                      //               0.42, // 42% dari layar
+                      //           child: ProductCard(
+                      //             imageUrl: 'assets/images/mie ayam.jpg',
+                      //             rating: 4.5,
+                      //             restaurantName: 'Nina Rasa',
+                      //             distance: '1.2 km',
+                      //             estimatedTime: '25 min',
+                      //             onTap: () {},
+                      //           ),
+                      //         ),
+                      //       ),
+                      //     ),
+                      //   ),
                       // ),
-
+                      // ),
                       _buildSectionTitle(context, 'Terdekat', () {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => DisplayPage(pageTitle: "Terdekat", fetchType: "terdekat_full")
-                          )
+                            builder:
+                                (context) => DisplayPage(
+                                  pageTitle: "Terdekat",
+                                  fetchType: "terdekat_full",
+                                ),
+                          ),
                         );
                       }),
-                      _buildTokoHorizontal(_tokoService.getAllTokoTerdekat(), "terdekat"),
-
+                      _buildTokoHorizontal(
+                        _tokoService.getAllTokoTerdekat(),
+                        "terdekat",
+                      ),
+                      SizedBox(height: 16),
 
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -362,7 +387,6 @@ class _HomePageUserState extends State<HomePageUser> {
                             ),
                           ),
                           const SizedBox(height: 8),
-
 
                           SizedBox(
                             height: 400,
@@ -421,14 +445,12 @@ class _HomePageUserState extends State<HomePageUser> {
                     MaterialPageRoute(builder: (context) => SearchPage()),
                   );
                 },
+                textAlignVertical: TextAlignVertical.center,
                 decoration: InputDecoration(
                   hintText: "Lagi pengen makan apa?",
                   prefixIcon: Icon(Icons.search, color: zelow),
                   border: InputBorder.none,
-                  contentPadding: const EdgeInsets.symmetric(
-                    vertical: 8,
-                    horizontal: 20,
-                  ),
+                  contentPadding: const EdgeInsets.symmetric(horizontal: 20),
                 ),
               ),
             ),
