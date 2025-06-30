@@ -26,56 +26,77 @@ class _NavbarBottomUMKMState extends State<NavbarBottomUMKM> {
       Navigator.pushReplacementNamed(context, '/...');
     } else if (index == 3) {
       Navigator.pushReplacementNamed(context, '/...');
-    } 
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Container(
       height: 80,
-        decoration: BoxDecoration(
-          boxShadow: [
-            BoxShadow(
-              color: Color(0x1A383838),
-              offset: Offset(0, -4),
-              blurRadius: 12,
-            ),
-          ],
-        ),
+      decoration: BoxDecoration(
+        boxShadow: [
+          BoxShadow(
+            color: Color(0x1A383838),
+            offset: Offset(0, -4),
+            blurRadius: 12,
+          ),
+        ],
+      ),
       child: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
         showUnselectedLabels: true,
         backgroundColor: white,
         items: <BottomNavigationBarItem>[
-           BottomNavigationBarItem(
-                icon: SvgPicture.asset('assets/images/Home.svg'),
-                label: 'Beranda',
+          BottomNavigationBarItem(
+            icon: SvgPicture.asset(
+              'assets/images/Home.svg',
+              colorFilter: ColorFilter.mode(
+                widget.selectedItem == 0 ? Color(0xFF06C474) : Color(0x80929292),
+                BlendMode.srcIn,
               ),
-              BottomNavigationBarItem(
-                icon: SvgPicture.asset('assets/images/lets-icons_shop.svg'),
-                label: 'Toko Saya',
-              ),
-              BottomNavigationBarItem(
-                icon: SvgPicture.asset('assets/images/Chat.svg'),
-                label: 'Chat',
-              ),
-              BottomNavigationBarItem(
-                icon: SvgPicture.asset('assets/images/icon_profil.svg'),
-                label: 'Profil',
-              ),
+            ),
+            label: 'Beranda',
+          ),
+          BottomNavigationBarItem(
+            icon: SvgPicture.asset(
+              'assets/images/lets-icons_shop.svg',
+              colorFilter: ColorFilter.mode(
+                widget.selectedItem == 1 ? Color(0xFF06C474): Color(0x80929292),
+                BlendMode.srcIn,
+              ),),
+            label: 'Toko Saya',
+          ),
+          BottomNavigationBarItem(
+            icon: SvgPicture.asset(
+              'assets/images/Chat.svg',
+              colorFilter: ColorFilter.mode(
+                widget.selectedItem == 2 ? Color(0xFF06C474): Color(0x80929292),
+                BlendMode.srcIn,
+              ),),
+            label: 'Chat',
+          ),
+          BottomNavigationBarItem(
+            icon: SvgPicture.asset(
+              'assets/images/icon_profil.svg',
+              colorFilter: ColorFilter.mode(
+                widget.selectedItem == 3 ? Color(0xFF06C474): Color(0x80929292),
+                BlendMode.srcIn,
+              ),),
+            label: 'Profil',
+          ),
         ],
         selectedItemColor: zelow,
-        unselectedItemColor:  Color(0x80929292),
+        unselectedItemColor: Color(0x80929292),
         selectedLabelStyle: TextStyle(
-              fontSize: 10,
-              fontWeight: FontWeight.normal,
-              color: Color(0xFF06C474),
-            ),
-            unselectedLabelStyle: TextStyle(
-              fontSize: 10,
-              fontWeight: FontWeight.normal,
-              color: Color(0x80929292),
-            ),
+          fontSize: 10,
+          fontWeight: FontWeight.normal,
+          color: Color(0xFF06C474),
+        ),
+        unselectedLabelStyle: TextStyle(
+          fontSize: 10,
+          fontWeight: FontWeight.normal,
+          color: Color(0x80929292),
+        ),
         currentIndex: widget.selectedItem,
         onTap: changeSelectedNavBar,
       ),
