@@ -107,6 +107,8 @@ void initState() {
   super.initState();
   // listeners
   _judulController.addListener(_checkFormValidity);
+  _deskripsiController.addListener(_checkFormValidity);
+  _hargaController.addListener(_checkFormValidity);
 }
 
 // image picking 
@@ -117,6 +119,7 @@ Future<void> _pickImage() async {
   if (pickedFile != null) {
     setState(() {
       _pickedImage = File(pickedFile.path);
+      _checkFormValidity();
     });
   } else {
     if (mounted) {
@@ -131,12 +134,16 @@ Future<void> _pickImage() async {
   void _removeImage() {
     setState(() {
       _pickedImage == null;
+      _checkFormValidity();
     });
   }
 
   // dispose controller
   @override
   void dispose() {
+    _judulController.removeListener(_checkFormValidity);
+    _deskripsiController.removeListener(_checkFormValidity);
+    _hargaController.removeListener(_checkFormValidity);
     _judulController.dispose();
     _deskripsiController.dispose();
     _hargaController.dispose();
@@ -146,6 +153,18 @@ Future<void> _pickImage() async {
   // handle form submission
   void _submitForm() {
     if (_formKey.currentState!.validate()) {
+      if (_selectedKategori == null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Mohon pilih kategori produk.'),),
+        );
+        return;
+      }
+      if (_pickedImage == null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Mohon tambahkan foto produk.')),
+        );
+        return;
+      }
       // form valid
       widget.onSubmit(
         _judulController.text,
@@ -195,6 +214,7 @@ Future<void> _pickImage() async {
                 } 
                 return null;
               },
+              onChanged: (_) => _checkFormValidity(),
             ),
           ),
           SizedBox(height: 16,),
@@ -222,6 +242,7 @@ Future<void> _pickImage() async {
                 onChanged: (String? newValue) {
                   setState(() {
                     _selectedKategori = newValue;
+                    _checkFormValidity();
                   });
                 }, 
                 items: _opsiKategori.map<DropdownMenuItem<String>>((String category) {
@@ -265,6 +286,7 @@ Future<void> _pickImage() async {
                 }
                 return null;
               },
+              onChanged: (_) => _checkFormValidity(),
             ),
           ),
           SizedBox(height: 16,),
@@ -296,9 +318,10 @@ Future<void> _pickImage() async {
                 }
                 if (double.tryParse(value) == null) {
                   return 'Angka tidak valid';
-                }
+                } 
                 return null;
               },
+              onChanged: (_) => _checkFormValidity(),
             ),
           ),
           SizedBox(height: 16,),
