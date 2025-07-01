@@ -66,6 +66,11 @@ class _SearchPageState extends State<SearchPage> {
                 borderSide: BorderSide(color: Colors.grey.withOpacity(0.3)),
               ),
             ),
+            onEditingComplete: (){
+              // Navigator.push(
+              //context,
+              // MaterialPageRoute(builder: (context) =>));
+            },
           ),
         ),
       ),
