@@ -1,4 +1,5 @@
 import 'package:firebase_core/firebase_core.dart';
+import 'package:zelow/pages/umkm/income_report.dart';
 import 'firebase_options.dart';
 import 'package:flutter/material.dart';
 import 'package:zelow/pages/auth/login_page.dart';
@@ -25,7 +26,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      initialRoute: '/home_page_user',
+      initialRoute: '/login_page',
       debugShowCheckedModeBanner: false,
       routes: {
         '/splash': (context) => SplashPage(),
@@ -39,6 +40,7 @@ class MyApp extends StatelessWidget {
         '/profile': (context)=> ProfilePage(),
         '/toko': (context)=> TokoPageUser(),
         '/chat': (context)=> chatPage(),
+        '/laporan': (context) => incomeReport(),
       },
     );
   }

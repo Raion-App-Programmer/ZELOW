@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:zelow/pages/umkm/income_report.dart';
 
 import '../../components/constant.dart';
 import '../../services/auth_service.dart';
@@ -15,6 +16,11 @@ class _HomePageUmkmState extends State<HomePageUmkm> {
   void _handleLogout() {
     AuthService().logout(context);
   }
+
+  void _tes(){
+    Navigator.pushReplacementNamed(context, '/laporan');
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -26,7 +32,7 @@ class _HomePageUmkmState extends State<HomePageUmkm> {
         automaticallyImplyLeading: false,
         actions: [
           IconButton(
-            onPressed: _handleLogout,
+            onPressed: _tes,
             icon: Icon(Icons.logout, color: black),
           ),
         ],
