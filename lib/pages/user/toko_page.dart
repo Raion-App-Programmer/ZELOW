@@ -12,6 +12,7 @@ import 'package:zelow/components/voucher_toko_card.dart';
 import 'package:zelow/components/widget_slider.dart';
 import 'package:zelow/pages/user/display_page.dart';
 import 'package:zelow/pages/user/flashsale_page.dart';
+import 'package:zelow/pages/user/infoproduk_page.dart';
 import 'package:zelow/pages/user/surprisebox_page.dart';
 import 'package:zelow/services/toko_service.dart';
 
@@ -216,7 +217,6 @@ class _TokoPageUserState extends State<TokoPageUser> {
                       FutureBuilder<List<Produk>>(
                         future: _produkList,
                         builder: (context, snapshot) {
-
                           // Sedang memuat data
                           if (snapshot.connectionState ==
                               ConnectionState.waiting) {
@@ -287,8 +287,7 @@ class _TokoPageUserState extends State<TokoPageUser> {
                                   padding: EdgeInsets.zero,
                                   itemCount: makananProduk.length,
                                   shrinkWrap: true,
-                                  physics:
-                                      const NeverScrollableScrollPhysics(),
+                                  physics: const NeverScrollableScrollPhysics(),
                                   itemBuilder: (context, index) {
                                     final produk = makananProduk[index];
                                     return ProductTokoCard(
@@ -298,11 +297,19 @@ class _TokoPageUserState extends State<TokoPageUser> {
                                           '${produk.jumlahTerjual} terjual | Disukai oleh ${produk.jumlahSuka}',
                                       harga: produk.harga,
                                       onTap: () {
-                                        // Aksi ketika diklik
-                                      }
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder:
+                                                (context) => ProductInfoPage(
+                                                  productData: produk,
+                                                ),
+                                          ),
+                                        );
+                                      },
                                     );
-                                  }
-                                )
+                                  },
+                                ),
                               ],
 
                               if (minumanProduk.isNotEmpty) ...[
@@ -326,8 +333,7 @@ class _TokoPageUserState extends State<TokoPageUser> {
                                   padding: EdgeInsets.zero,
                                   itemCount: minumanProduk.length,
                                   shrinkWrap: true,
-                                  physics:
-                                      const NeverScrollableScrollPhysics(),
+                                  physics: const NeverScrollableScrollPhysics(),
                                   itemBuilder: (context, index) {
                                     final produk = minumanProduk[index];
                                     return ProductTokoCard(
@@ -337,11 +343,19 @@ class _TokoPageUserState extends State<TokoPageUser> {
                                           '${produk.jumlahTerjual} terjual | Disukai oleh ${produk.jumlahSuka}',
                                       harga: produk.harga,
                                       onTap: () {
-                                        // Aksi ketika diklik
-                                      }
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder:
+                                                (context) => ProductInfoPage(
+                                                  productData: produk,
+                                                ),
+                                          ),
+                                        );
+                                      },
                                     );
-                                  }
-                                )
+                                  },
+                                ),
                               ],
                             ],
                           );

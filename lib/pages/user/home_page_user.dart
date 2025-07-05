@@ -84,10 +84,9 @@ class _HomePageUserState extends State<HomePageUser> {
             return Center(child: CircularProgressIndicator(color: zelow));
           }
           if (snapshot.hasError) {
-            print(
-              "Error fetching toko list for $sectionTypeForNavigation: ${snapshot.error}",
-            );
-            return Center(child: Text('Gagat memuat data toko.'));
+            print("Error fetching toko list for $sectionTypeForNavigation: ${snapshot.error}");
+            print("Stack trace: ${snapshot.stackTrace}");
+            return Center(child: Text('Gagal memuat data toko.'));
           }
           if (!snapshot.hasData || snapshot.data!.isEmpty) {
             return Center(child: Text('Tidak ada toko tersedia.'));

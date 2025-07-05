@@ -3,8 +3,12 @@ import 'package:zelow/components/constant.dart';
 import 'package:zelow/components/info_produk_card.dart';
 import 'package:zelow/pages/user/chekout_page.dart';
 
+import 'package:zelow/models/produk_model.dart';
+
 class ProductInfoPage extends StatefulWidget {
-  final Map<String, dynamic> productData;
+  // final Map<String, dynamic> productData;
+
+  final Produk productData;
 
   const ProductInfoPage({super.key, required this.productData});
 
@@ -23,8 +27,11 @@ class _ProductInfoPageState extends State<ProductInfoPage> {
 
   @override
   Widget build(BuildContext context) {
-    double price = (widget.productData['price'] as num).toDouble();
-    double totalPrice = itemCount * price;
+    // double price = (widget.productData['price'] as num).toDouble();
+    // double totalPrice = itemCount * price;
+
+    int price = widget.productData.harga;
+    int totalPrice = itemCount * price;
 
     return Scaffold(
       appBar: AppBar(title: Text('Detail Produk'), leading: BackButton()),
@@ -32,14 +39,13 @@ class _ProductInfoPageState extends State<ProductInfoPage> {
         child: Column(
           children: [
             InfoProdukCard(
-              title: widget.productData['title'] ?? "Nasi Padang Ayam Kari",
-              imageUrl: widget.productData['imageUrl'] ??
-                  "https://example.com/nasi-padang.jpg",
-              rating: (widget.productData['rating'] as num).toDouble(),
-              jumlahTerjual: (widget.productData['reviewCount'] as num).toInt(),
-              likeCount: (widget.productData['likeCount'] as num).toInt(),
+              title: widget.productData.nama,
+              imageUrl: widget.productData.urlGambar,
+              rating: widget.productData.rating,
+              jumlahTerjual: widget.productData.jumlahTerjual,
+              likeCount: widget.productData.jumlahSuka,
               price: price,
-              reviews: _buildReviews(widget.productData['reviews'] ?? []),
+              reviews: _buildReviews([]), // Masih kurang tau apa gunanya
               onSavePressed: () {},
               onSharePressed: () {},
               onAddPressed: _addToCart,
@@ -104,11 +110,11 @@ class _ProductInfoPageState extends State<ProductInfoPage> {
                             builder: (context) => CheckoutPage(
                               orders: [
                                 {
-                                 'title': widget.productData['title'] ?? "Produk Tanpa Nama",
-                                 'imageUrl': widget.productData['imageUrl'] ?? "https://example.com/default-image.jpg",
-                                 'price': (widget.productData['price'] as num?)?.toDouble() ?? 0.0,
+                                 'title': widget.productData.nama,
+                                 'imageUrl': widget.productData.urlGambar,
+                                 'price': price,
                                  'quantity': itemCount,
-                                 'originalPrice': (widget.productData['originalPrice'] as num?)?.toDouble() ?? (widget.productData['price'] as num?)?.toDouble() ?? 0.0,
+                                 'originalPrice': widget.productData.harga,
                                 }
                               ],
                             ),
@@ -136,6 +142,9 @@ class _ProductInfoPageState extends State<ProductInfoPage> {
 
   
   List<ReviewItem> _buildReviews(List<dynamic> reviewsData) {
+    if (reviewsData.isEmpty) {
+      return [];
+    }
     return reviewsData
         .map(
           (review) => ReviewItem(

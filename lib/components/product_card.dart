@@ -52,6 +52,7 @@ class ProductCard extends StatelessWidget {
                     height: 80.0,
                     width: double.infinity,
                     fit: BoxFit.cover,
+                    
                     loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent? loadingProgress) {
                       if (loadingProgress == null) return child;
                       return Container(

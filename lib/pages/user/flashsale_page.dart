@@ -238,42 +238,42 @@ class _FlashsalePageState extends State<FlashsalePage> {
                     sold: (index + 1) * 5,
                     maxStock: 50,
                     onBuyPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder:
-                              (context) => ProductInfoPage(
-                                productData: {
-                                  'id': (index + 1).toDouble(),
-                                  'title':
-                                      'Masakan Padang Roda Dua, Bendungan Sutami',
-                                  'imageUrl': 'https://picsum.photos/200/200',
-                                  'rating': 4.5,
-                                  'reviewCount': 688.toDouble(),
-                                  'likeCount': 420.toDouble(),
-                                  'price': 10000.toDouble(),
-                                  'originalPrice': 12500.toDouble(),
-                                  'distance': '1.2 km',
-                                  'discount': '20%',
-                                  'sold': ((index + 1) * 5).toDouble(),
-                                  'reviews': [
-                                    {
-                                      'name': 'Nana Mirdad',
-                                      'imageUrl':
-                                          'https://example.com/avatar1.jpg',
-                                      'rating': 5.0,
-                                    },
-                                    {
-                                      'name': 'Budi Santoso',
-                                      'imageUrl':
-                                          'https://example.com/avatar2.jpg',
-                                      'rating': 4.0,
-                                    },
-                                  ],
-                                },
-                              ),
-                        ),
-                      );
+                      // Navigator.push(
+                      //   context,
+                      //   MaterialPageRoute(
+                      //     builder:
+                      //         (context) => ProductInfoPage(
+                      //           productData: {
+                      //             'id': (index + 1).toDouble(),
+                      //             'title':
+                      //                 'Masakan Padang Roda Dua, Bendungan Sutami',
+                      //             'imageUrl': 'https://picsum.photos/200/200',
+                      //             'rating': 4.5,
+                      //             'reviewCount': 688.toDouble(),
+                      //             'likeCount': 420.toDouble(),
+                      //             'price': 10000.toDouble(),
+                      //             'originalPrice': 12500.toDouble(),
+                      //             'distance': '1.2 km',
+                      //             'discount': '20%',
+                      //             'sold': ((index + 1) * 5).toDouble(),
+                      //             'reviews': [
+                      //               {
+                      //                 'name': 'Nana Mirdad',
+                      //                 'imageUrl':
+                      //                     'https://example.com/avatar1.jpg',
+                      //                 'rating': 5.0,
+                      //               },
+                      //               {
+                      //                 'name': 'Budi Santoso',
+                      //                 'imageUrl':
+                      //                     'https://example.com/avatar2.jpg',
+                      //                 'rating': 4.0,
+                      //               },
+                      //             ],
+                      //           },
+                      //         ),
+                      //   ),
+                      // );
                     },
                   );
                 }
