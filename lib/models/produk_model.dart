@@ -1,34 +1,25 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Produk {
-  final String id;
+  final String idProduk;
+  final String idToko;
+  final String namaKategori;
   final String nama;
-  final String deskripsi;
-  final String gambar;
+  final String urlGambar;
   final double harga;
   final double rating;
-  final int jumlahPenilaian;
+  final int jumlahTerjual;
+  final int jumlahSuka;
 
   Produk({
-    required this.id,
+    required this.idProduk,
+    required this.idToko,
+    required this.namaKategori,
     required this.nama,
-    required this.deskripsi,
-    required this.gambar,
+    required this.urlGambar,
     required this.harga,
     required this.rating,
-    required this.jumlahPenilaian,
+    required this.jumlahTerjual,
+    required this.jumlahSuka,
   });
-
-  factory Produk.fromFirestore(DocumentSnapshot doc) {
-    Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
-    return Produk(
-      id: doc.id,
-      nama: data['nama'],
-      deskripsi: data['deskripsi'],
-      gambar: data['gambar'],
-      harga: data['harga'],
-      rating: data['rating'],
-      jumlahPenilaian: data['jpenilaian'],
-    );
-  }
 }
