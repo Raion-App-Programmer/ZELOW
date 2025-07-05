@@ -5,7 +5,7 @@ class ProductTokoCard extends StatelessWidget {
   final String imageUrl;
   final String restaurantName;
   final String description;
-  final double harga;
+  final int harga;
   final VoidCallback onTap;
 
   const ProductTokoCard({
@@ -42,11 +42,50 @@ class ProductTokoCard extends StatelessWidget {
             // Gambar Produk (Kotak di kiri)
             ClipRRect(
               borderRadius: BorderRadius.circular(8),
-              child: Image.asset(
+              child: Image.network(
                 imageUrl,
                 height: 80,
                 width: 80,
                 fit: BoxFit.cover,
+                loadingBuilder: (
+                  BuildContext context,
+                  Widget child,
+                  ImageChunkEvent? loadingProgress,
+                ) {
+                  if (loadingProgress == null) return child;
+                  return Container(
+                    height: 90,
+                    width: double.infinity,
+                    color: Colors.grey[200],
+                    child: Center(
+                      child: CircularProgressIndicator(
+                        value:
+                            loadingProgress.expectedTotalBytes != null
+                                ? loadingProgress.cumulativeBytesLoaded /
+                                    loadingProgress.expectedTotalBytes!
+                                : null,
+                        color: zelow,
+                      ),
+                    ),
+                  );
+                },
+
+                errorBuilder: (
+                  BuildContext context,
+                  Object exception,
+                  StackTrace? stackTrace,
+                ) {
+                  return Container(
+                    height: 90,
+                    width: double.infinity,
+                    color: Colors.grey[300],
+                    child: Icon(
+                      Icons.broken_image_outlined,
+                      color: Colors.grey[600],
+                      size: 40,
+                    ),
+                  );
+                },
               ),
             ),
             const SizedBox(width: 10),
@@ -88,29 +127,25 @@ class ProductTokoCard extends StatelessWidget {
                     child: Row(
                       children: [
                         Text(
-                          "RP${harga.toStringAsFixed(3)}",
+                          "RP ${harga.toStringAsFixed(0)}",
                           style: TextStyle(
-                              color: zelow,
-                              fontSize: 20,
-                              fontWeight: FontWeight.w700
+                            color: zelow,
+                            fontSize: 20,
+                            fontWeight: FontWeight.w700,
                           ),
                         ),
                         Spacer(),
                         Container(
-                            decoration: BoxDecoration(
-                              color: zelow,
-                              shape: BoxShape.circle, // Bentuk lingkaran
-                            ),
-                            child: Icon(
-                                Icons.add,
-                              color: Colors.white,
-                            )
-                        )
+                          decoration: BoxDecoration(
+                            color: zelow,
+                            shape: BoxShape.circle, // Bentuk lingkaran
+                          ),
+                          child: Icon(Icons.add, color: Colors.white),
+                        ),
                       ],
                     ),
                   ),
                   const SizedBox(width: 6),
-
                 ],
               ),
             ),

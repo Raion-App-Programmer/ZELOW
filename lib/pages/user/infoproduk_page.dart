@@ -36,7 +36,7 @@ class _ProductInfoPageState extends State<ProductInfoPage> {
               imageUrl: widget.productData['imageUrl'] ??
                   "https://example.com/nasi-padang.jpg",
               rating: (widget.productData['rating'] as num).toDouble(),
-              reviewCount: (widget.productData['reviewCount'] as num).toInt(),
+              jumlahTerjual: (widget.productData['reviewCount'] as num).toInt(),
               likeCount: (widget.productData['likeCount'] as num).toInt(),
               price: price,
               reviews: _buildReviews(widget.productData['reviews'] ?? []),

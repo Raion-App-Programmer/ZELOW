@@ -5,7 +5,7 @@ class InfoProdukCard extends StatelessWidget {
   final String title;
   final String imageUrl;
   final double rating;
-  final int reviewCount;
+  final int jumlahTerjual;
   final int likeCount;
   final double price;
   final List<ReviewItem> reviews;
@@ -18,7 +18,7 @@ class InfoProdukCard extends StatelessWidget {
     required this.title,
     required this.imageUrl,
     required this.rating,
-    required this.reviewCount,
+    required this.jumlahTerjual,
     required this.likeCount,
     required this.price,
     this.reviews = const [],
@@ -26,6 +26,7 @@ class InfoProdukCard extends StatelessWidget {
     this.onSharePressed,
     this.onAddPressed,
   });
+
 
   @override
   Widget build(BuildContext context) {
@@ -68,19 +69,24 @@ class InfoProdukCard extends StatelessWidget {
                 SizedBox(height: 8),
                 
                 // Rating and reviews count
-                Row(
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Icon(Icons.star, color: Colors.amber, size: 18),
-                    SizedBox(width: 4),
-                    Text(
-                      rating.toString(),
-                      style: TextStyle(fontWeight: FontWeight.bold),
+                    Row(
+                      children: [
+                        Icon(Icons.star, color: Colors.amber, size: 18),
+                        SizedBox(width: 4),
+                        Text(
+                          rating.toString(),
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                      ],
                     ),
                     SizedBox(width: 8),
                     Text(
-                      '$reviewCount Disukai oleh $likeCount',
+                      '$jumlahTerjual terjual | Disukai oleh $likeCount',
                       style: TextStyle(
-                        color: Colors.grey[600],
+                        color: const Color.fromARGB(255, 34, 29, 29),
                         fontSize: 14,
                       ),
                     ),
@@ -267,7 +273,7 @@ class FoodItemExample extends StatelessWidget {
             title: "Nasi Padang Ayam Kari",
             imageUrl: "https://example.com/nasi-padang.jpg",
             rating: 4.9,
-            reviewCount: 689,
+            jumlahTerjual: 689,
             likeCount: 342,
             price: 20000,
             reviews: [
