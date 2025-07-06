@@ -1,11 +1,14 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:zelow/models/keranjang_model.dart';
 import 'package:zelow/models/product.dart';
 
 class CardItemSample extends StatelessWidget {
-  final Product product;
+  // final Product product;
+  final KeranjangItem item;
   final VoidCallback onTap;
 
-  const CardItemSample({super.key, required this.product, required this.onTap});
+  const CardItemSample({super.key, required this.item, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -16,13 +19,13 @@ class CardItemSample extends StatelessWidget {
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(24),
-          border: Border.all(
-            color:
-                product.isSelected
-                    ? const Color(0xff06C474)
-                    : Colors.transparent,
-            width: 2,
-          ),
+          // border: Border.all(
+          //   color:
+          //       item.produk.isSelected
+          //           ? const Color(0xff06C474)
+          //           : Colors.transparent,
+          //   width: 2,
+          // ),
           boxShadow: [
             BoxShadow(
               color: Colors.black.withOpacity(0.05),
@@ -40,22 +43,29 @@ class CardItemSample extends StatelessWidget {
                 const SizedBox(width: 4),
                 const Expanded(
                   child: Text(
-                    "Masakan Padang Roda Dua, Bendungan Suta...",
+                    "Masakan Padang Roda Dua, Bendungan Suta...", // Alamat toko, nanti saja
                     style: TextStyle(fontSize: 12, fontWeight: FontWeight.w400),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                   ),
                 ),
               ],
             ),
+
             const SizedBox(height: 12),
+
             Row(
               children: [
                 ClipRRect(
                   borderRadius: BorderRadius.circular(8),
-                  child: Image.asset(
-                    product.imagePath,
+                  child: Image.network(
+                    item.produk.urlGambar,
                     width: 80,
                     height: 80,
                     fit: BoxFit.cover,
+                    errorBuilder: (context, error, stackTrace) {
+                      return Icon(Icons.broken_image, size: 80, color: Colors.grey);
+                    },
                   ),
                 ),
                 const SizedBox(width: 17),
@@ -64,7 +74,7 @@ class CardItemSample extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        product.name,
+                        item.produk.nama,
                         style: const TextStyle(
                           fontSize: 12,
                           fontWeight: FontWeight.w700,
@@ -73,7 +83,7 @@ class CardItemSample extends StatelessWidget {
                       ),
                       const SizedBox(height: 20),
                       Text(
-                        "${product.quantity}x",
+                        "${item.quantity}x",
                         style: const TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.w700,
@@ -84,7 +94,7 @@ class CardItemSample extends StatelessWidget {
                       Row(
                         children: [
                           Text(
-                            "Rp${product.price.toInt()}",
+                            "Rp${item.produk.harga.toInt()}",
                             style: const TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.w700,
@@ -92,15 +102,17 @@ class CardItemSample extends StatelessWidget {
                             ),
                           ),
                           const SizedBox(width: 4),
-                          Text(
-                            "Rp${product.originalPrice.toInt()}",
-                            style: const TextStyle(
-                              fontSize: 12,
-                              fontWeight: FontWeight.w500,
-                              decoration: TextDecoration.lineThrough,
-                              color: Color(0xFFB8B8B8),
-                            ),
-                          ),
+
+                          // Jika ada harga diskon, tampilkan harga lama yang dicoret
+                          // Text(
+                          //   "Rp${item.produk.harga.toInt()}",
+                          //   style: const TextStyle(
+                          //     fontSize: 12,
+                          //     fontWeight: FontWeight.w500,
+                          //     decoration: TextDecoration.lineThrough,
+                          //     color: Color(0xFFB8B8B8),
+                          //   ),
+                          // ),
                         ],
                       ),
                     ],

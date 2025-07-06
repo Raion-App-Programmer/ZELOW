@@ -5,8 +5,10 @@ import 'package:zelow/pages/user/chekout_page.dart';
 
 import 'package:zelow/models/produk_model.dart';
 
+import 'package:zelow/pages/user/keranjang_page.dart'; // Tambahkan import ini
+import 'package:zelow/services/keranjang_service.dart'; // Tambahkan import ini
+
 class ProductInfoPage extends StatefulWidget {
-  // final Map<String, dynamic> productData;
 
   final Produk productData;
 
@@ -19,18 +21,69 @@ class ProductInfoPage extends StatefulWidget {
 class _ProductInfoPageState extends State<ProductInfoPage> {
   int itemCount = 0;
 
-  void _addToCart() {
+  void _addItem() {
     setState(() {
       itemCount++;
     });
   }
 
-  void _removeFromCart() {
+  void _removeItem() {
     setState(() {
       if (itemCount > 0) {
         itemCount--;
       }
     });
+  }
+
+  // backend keranjang
+  final KeranjangService _keranjangService = KeranjangService();
+  bool isAddingToCart = false;
+  Future<void> _handleAddToCart() async {
+    if (itemCount <= 0) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Tentukan jumlah barang terlebih dahulu'),
+          backgroundColor: Colors.orange,
+        ),
+      );
+    }
+    setState(() {
+      isAddingToCart = true;
+    });
+
+    try {
+      // manggil fungsi keranjang service
+      await _keranjangService.addToCart(widget.productData, itemCount);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('$itemCount ${widget.productData.nama} ditambahkan ke keranjang!'),
+          backgroundColor: zelow,
+          action: SnackBarAction(
+            label: 'LIHAT',
+            textColor: Colors.white,
+            onPressed: () { // User dapat langsung pindah ke halaman keranjang
+              Navigator.push(
+                context, 
+                MaterialPageRoute(
+                  builder: (context) => KeranjangKu()
+                )
+              );
+            },
+          ),
+        )
+      );
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Gagal menambahkan ke keranjang: ${e.toString()}'),
+          backgroundColor: Colors.red,
+        ),
+      );
+    } finally {
+      setState(() {
+        isAddingToCart = false;
+      });
+    }
   }
 
   @override
@@ -57,8 +110,8 @@ class _ProductInfoPageState extends State<ProductInfoPage> {
               reviews: _buildReviews([]), // Masih kurang tau apa gunanya
               onSavePressed: () {},
               onSharePressed: () {},
-              onAddPressed: _addToCart,
-              onRemovePressed: _removeFromCart,
+              onAddPressed: _addItem,
+              onRemovePressed: _removeItem,
             ),
           ],
         ),
@@ -78,10 +131,17 @@ class _ProductInfoPageState extends State<ProductInfoPage> {
                     Stack(
                       clipBehavior: Clip.none,
                       children: [
-                        Icon(
-                          Icons.shopping_bag,
-                          size: 30,
-                          color: zelow, // Warna Zelow
+                        // Icon(
+                        //   Icons.shopping_bag,
+                        //   size: 30,
+                        //   color: zelow, 
+                        //   // Warna Zelow
+                        // ),
+                        IconButton(
+                          onPressed: isAddingToCart ? null : _handleAddToCart, 
+                          icon: isAddingToCart
+                          ? CircularProgressIndicator(color: zelow, strokeWidth: 3)
+                          : Image.asset('assets/images/keranjangKu-icon.png', width: 25,)
                         ),
                         if (itemCount > 0)
                           Positioned(
@@ -98,7 +158,7 @@ class _ProductInfoPageState extends State<ProductInfoPage> {
                                 minHeight: 15,
                               ),
                               child: Text(
-                                '$itemCount',
+                                '+',
                                 style: TextStyle(
                                   color: Colors.white,
                                   fontSize: 14,
