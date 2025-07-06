@@ -8,6 +8,9 @@ import 'package:zelow/components/product_card_horizontal.dart';
 import 'package:zelow/components/widget_slider.dart';
 import 'package:zelow/pages/user/display_page.dart';
 import 'package:zelow/pages/user/flashsale_page.dart';
+import 'package:zelow/pages/user/payment_option_page.dart';
+import 'package:zelow/pages/user/payment_page.dart';
+import 'package:zelow/pages/user/promotion_option_page.dart';
 import 'package:zelow/pages/user/search_page.dart';
 import 'package:zelow/pages/user/surprisebox_page.dart';
 
@@ -309,7 +312,7 @@ class _HomePageUserState extends State<HomePageUser> {
                 onTap: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => SearchPage()),
+                    MaterialPageRoute(builder: (context) => PromotionOptionPage()),
                   );
                 },
                 decoration: InputDecoration(

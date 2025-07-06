@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:zelow/pages/user/payment_option_page.dart';
 
 class PackageSelectionPage extends StatefulWidget {
   const PackageSelectionPage({super.key});
@@ -126,7 +127,11 @@ class _PackageSelectionPageState extends State<PackageSelectionPage> {
                     SizedBox(
                           height: 44,
                           width: 353,
-                          child: ElevatedButton(onPressed: (){},
+                          child: ElevatedButton(onPressed: (){
+                            Navigator.push(context, 
+                              MaterialPageRoute(builder: (context) => PaymentOptionPage())
+                            );
+                          },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Color(0xff06C474),
                           shape: RoundedRectangleBorder(

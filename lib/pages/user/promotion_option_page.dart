@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:zelow/pages/user/package_selection_page.dart';
 
 class PromotionOptionPage extends StatelessWidget {
   const PromotionOptionPage({super.key});
@@ -22,10 +23,10 @@ class PromotionOptionPage extends StatelessWidget {
           SizedBox(height: 48),
           InkWell(
             onTap: () {
-              // Navigator.push(
-              //   context,
-              //    MaterialPageRoute(builder: (context) => PromotionOptionPage())
-              //   );
+              Navigator.push(
+                context,
+                 MaterialPageRoute(builder: (context) => PackageSelectionPage())
+                );
             },
             child: Center(
             child: 
