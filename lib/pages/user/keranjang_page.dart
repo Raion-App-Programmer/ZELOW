@@ -212,7 +212,7 @@ class _KeranjangKuState extends State<KeranjangKu> {
                 key: Key(item.produk.idProduk),
                 direction: DismissDirection.endToStart,
                 onDismissed: (direction) {
-                  // _keranjangService.removeFromCart(item.produk.idProduk);
+                  _keranjangService.removeFromCart(item.produk.idProduk);
 
                   // ScaffoldMessenger.of(context).showSnackBar(
                   //   SnackBar(
