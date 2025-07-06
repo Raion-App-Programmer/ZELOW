@@ -9,12 +9,13 @@ import 'package:zelow/components/widget_slider.dart';
 import 'package:zelow/models/toko_model.dart';
 import 'package:zelow/pages/user/display_page.dart';
 import 'package:zelow/pages/user/flashsale_page.dart';
-import 'package:zelow/pages/user/rekomendasi_page.dart';
 import 'package:zelow/pages/user/search_page.dart';
 import 'package:zelow/pages/user/surprisebox_page.dart';
-import 'package:zelow/pages/user/chat_page.dart';
 import 'package:zelow/pages/user/toko_page.dart';
+import 'package:zelow/services/product_service.dart';
 import 'package:zelow/services/toko_service.dart';
+import 'package:zelow/models/produk_model.dart';
+
 
 class HomePageUser extends StatefulWidget {
   const HomePageUser({super.key});
@@ -26,6 +27,8 @@ class HomePageUser extends StatefulWidget {
 
 class _HomePageUserState extends State<HomePageUser> {
   final TokoServices _tokoService = TokoServices();
+  final ProdukService _produkService = ProdukService();
+
 
   Widget _buildSectionTitle(
       BuildContext context,
@@ -123,28 +126,43 @@ class _HomePageUserState extends State<HomePageUser> {
         }),
         SizedBox(
           height: 185,
-          child: SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: Row(
-              children: List.generate(
-                10,
-                    (index) => Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 1,
-                  ),
-                  child: FlashCard(
-                    imageUrl: 'assets/images/mie ayam.jpg',
-                    title: 'Mie Ayam Ceker',
-                    price: 'Rp.10.000',
-                    stock: 12,
-                    sold: 5,
-                    onTap: () {
-                      // navigasi ke checkout
-                    },
-                  ),
-                ),
-              ),
-            ),
+          child: FutureBuilder<List<Produk>>(
+            future: _produkService.getProdukRandom(limit: 10),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return Center(child: CircularProgressIndicator(color: zelow));
+              }
+              if (snapshot.hasError) {
+                print('Zeflash error: ${snapshot.error}'); // 👈 bisa bantu debug juga
+                return Center(child: Text('Gagal memuat produk.'));
+              }
+              if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                return Center(child: Text('Tidak ada produk tersedia.'));
+              }
+
+              final produkList = snapshot.data!;
+
+              return ListView.builder(
+                scrollDirection: Axis.horizontal,
+                itemCount: produkList.length,
+                itemBuilder: (context, index) {
+                  final produk = produkList[index];
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 1),
+                    child: FlashCard(
+                      imageUrl: produk.gambar,
+                      title: produk.nama,
+                      price: 'Rp.${produk.harga.toStringAsFixed(0)}',
+                      stock: 10, // opsional: bisa tambahkan field baru untuk stok
+                      sold: produk.jumlahPembelian,
+                      onTap: () {
+                        // TODO: Tambahkan navigasi ke detail produk
+                      },
+                    ),
+                  );
+                },
+              );
+            },
           ),
         ),
       ],

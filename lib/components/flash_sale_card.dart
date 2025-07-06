@@ -48,11 +48,16 @@ class FlashCard extends StatelessWidget {
           children: [
             ClipRRect(
               borderRadius: BorderRadius.circular(6),
-              child: Image.asset(
-                imageUrl,
+              child: Image.network(
+                imageUrl.isNotEmpty
+                    ? imageUrl
+                    : 'https://via.placeholder.com/150', // default gambar kalau kosong
                 height: 90,
                 width: double.infinity,
                 fit: BoxFit.cover,
+                errorBuilder: (context, error, stackTrace) {
+                  return Icon(Icons.broken_image, size: 90, color: Colors.grey);
+                },
               ),
             ),
             const SizedBox(height: 6),
