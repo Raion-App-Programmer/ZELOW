@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:zelow/components/constant.dart';
 import 'package:zelow/models/keranjang_model.dart';
 import 'package:zelow/models/product.dart';
 
@@ -7,8 +8,14 @@ class CardItemSample extends StatelessWidget {
   // final Product product;
   final KeranjangItem item;
   final VoidCallback onTap;
+  final bool isSelected;
 
-  const CardItemSample({super.key, required this.item, required this.onTap});
+  const CardItemSample({
+    super.key,
+    required this.item,
+    required this.onTap,
+    required this.isSelected,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -16,16 +23,14 @@ class CardItemSample extends StatelessWidget {
       onTap: onTap,
       child: Container(
         margin: const EdgeInsets.symmetric(vertical: 6, horizontal: 20),
+
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(24),
-          // border: Border.all(
-          //   color:
-          //       item.produk.isSelected
-          //           ? const Color(0xff06C474)
-          //           : Colors.transparent,
-          //   width: 2,
-          // ),
+          border: Border.all(
+            color: isSelected ? zelow : Colors.transparent,
+            width: 2
+          ),
           boxShadow: [
             BoxShadow(
               color: Colors.black.withOpacity(0.05),
@@ -34,6 +39,7 @@ class CardItemSample extends StatelessWidget {
             ),
           ],
         ),
+
         padding: const EdgeInsets.all(12), // padding dalam card
         child: Column(
           children: [
@@ -64,11 +70,17 @@ class CardItemSample extends StatelessWidget {
                     height: 80,
                     fit: BoxFit.cover,
                     errorBuilder: (context, error, stackTrace) {
-                      return Icon(Icons.broken_image, size: 80, color: Colors.grey);
+                      return Icon(
+                        Icons.broken_image,
+                        size: 80,
+                        color: Colors.grey,
+                      );
                     },
                   ),
                 ),
+
                 const SizedBox(width: 17),
+                
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -104,6 +116,7 @@ class CardItemSample extends StatelessWidget {
                           const SizedBox(width: 4),
 
                           // Jika ada harga diskon, tampilkan harga lama yang dicoret
+                          
                           // Text(
                           //   "Rp${item.produk.harga.toInt()}",
                           //   style: const TextStyle(

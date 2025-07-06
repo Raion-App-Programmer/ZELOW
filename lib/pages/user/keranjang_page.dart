@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:zelow/components/keranjang_card.dart';
 import 'package:zelow/components/keranjang_bottomnavbar.dart';
 import 'package:zelow/models/keranjang_model.dart';
+import 'package:zelow/pages/user/chekout_page.dart';
 import 'package:zelow/services/keranjang_service.dart';
-
 
 // class KeranjangKu extends StatefulWidget {
 //   const KeranjangKu({super.key});
@@ -79,6 +79,54 @@ class _KeranjangKuState extends State<KeranjangKu> {
   // Backend Keranjang
   final KeranjangService _keranjangService = KeranjangService();
 
+  final Set<String> _selectedItems = {};
+  List<KeranjangItem> _cartItems = [];
+
+  void _toggleSelection(String idProduk) {
+    setState(() {
+      if (_selectedItems.contains(idProduk)) {
+        _selectedItems.remove(idProduk);
+      } else {
+        _selectedItems.add(idProduk);
+      }
+    });
+  }
+
+  double get _selectedTotalPrice {
+    double total = 0;
+    for (var item in _cartItems) {
+      if (_selectedItems.contains(item.produk.idProduk)) {
+        total += item.produk.harga * item.quantity;
+      }
+    }
+    return total;
+  }
+
+  int get _selectedItemsCount {
+    return _selectedItems.length;
+  }
+
+  void _handleCheckout() {
+    final selectedOrders =_cartItems
+            .where((item) => _selectedItems.contains(item.produk.idProduk))
+            .map(
+              (item) => {
+                'title': item.produk.nama,
+                'imageUrl': item.produk.urlGambar,
+                'price': item.produk.harga.toDouble(),
+                'quantity': item.quantity,
+              },
+            )
+            .toList();
+
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => CheckoutPage(orders: selectedOrders),
+      ),
+    );
+  }
+
   // void toggleSelection(int index) {
   //   setState(() {
   //     _products[index].isSelected = !_products[index].isSelected;
@@ -129,40 +177,57 @@ class _KeranjangKuState extends State<KeranjangKu> {
       body: StreamBuilder<List<KeranjangItem>>(
         stream: _keranjangService.getCartItems(),
         builder: (context, snapshot) {
-
           // Loading
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
           }
 
           if (!snapshot.hasData || snapshot.data!.isEmpty) {
+            _cartItems = [];
+            if (_selectedItems.isNotEmpty) {
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                setState(() {
+                  _selectedItems.clear();
+                });
+              });
+            }
             return const Center(
               child: Text(
-                'Keranjang Masih Anda Kosong',
+                'Keranjang Anda Kosong',
                 style: TextStyle(fontSize: 18, color: Colors.grey),
               ),
             );
           }
 
-          final cartItems = snapshot.data!;
+          _cartItems = snapshot.data!;
 
           // Menampilkan data keranjang
           return ListView.builder(
-            itemCount: cartItems.length,
+            itemCount: _cartItems.length,
             itemBuilder: (context, index) {
-              final item = cartItems[index];
+              final item = _cartItems[index];
+              final isSelected = _selectedItems.contains(item.produk.idProduk);
+
               return Dismissible(
                 key: Key(item.produk.idProduk),
                 direction: DismissDirection.endToStart,
                 onDismissed: (direction) {
-                  _keranjangService.removeFromCart(item.produk.idProduk);
+                  // _keranjangService.removeFromCart(item.produk.idProduk);
 
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text('${item.produk.nama} dihapus dari keranjang.'),
-                      backgroundColor: Colors.red,
-                    ),
-                  );
+                  // ScaffoldMessenger.of(context).showSnackBar(
+                  //   SnackBar(
+                  //     content: Text(
+                  //       '${item.produk.nama} dihapus dari keranjang.',
+                  //     ),
+                  //     backgroundColor: Colors.red,
+                  //   ),
+                  // );
+
+                  setState(() {
+                    if (_selectedItems.contains(item.produk.idProduk)) {
+                      _selectedItems.remove(item.produk.idProduk);
+                    }
+                  });
                 },
 
                 background: Container(
@@ -172,12 +237,11 @@ class _KeranjangKuState extends State<KeranjangKu> {
                   child: const Icon(Icons.delete, color: Colors.white),
                 ),
 
+                
                 child: CardItemSample(
                   item: item,
-                  onTap: () {
-                    
-                    print('${item.produk.nama} ditekan');
-                  },
+                  isSelected: isSelected,
+                  onTap: () => _toggleSelection(item.produk.idProduk), // Panggil fungsi toggle
                 ),
               );
             },
@@ -189,10 +253,10 @@ class _KeranjangKuState extends State<KeranjangKu> {
       //   totalPrice: totalPrice,
       //   itemCount: selectedCount,
       // ),
-
       bottomNavigationBar: CartBottomNavBar(
-        totalPrice: 0, // Kalkulasi total harga bisa jadi langkah selanjutnya
-        itemCount: 0,  // Kalkulasi jumlah item juga
+        totalPrice: _selectedTotalPrice, 
+        itemCount: _selectedItemsCount,
+        // onCheckoutPressed: _handleCheckout,
       ),
     );
   }
