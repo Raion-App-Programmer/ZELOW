@@ -151,9 +151,7 @@ class _FlashSaleTabsState extends State<FlashSaleTabs> {
     final tabWidth = screenWidth * 0.25;
 
     return Padding(
-      padding: const EdgeInsets.symmetric(
-        horizontal: 8.0,
-      ),
+      padding: const EdgeInsets.symmetric(horizontal: 8.0),
       child: SizedBox(
         height: 80,
         child: ListView.builder(

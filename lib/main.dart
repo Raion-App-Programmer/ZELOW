@@ -1,4 +1,5 @@
 import 'package:firebase_core/firebase_core.dart';
+import 'package:zelow/pages/umkm/income_report.dart';
 import 'firebase_options.dart';
 import 'package:flutter/material.dart';
 import 'package:zelow/pages/auth/login_page.dart';
@@ -40,6 +41,7 @@ class MyApp extends StatelessWidget {
         '/pesanan': (context) => PesananPage(orders: [],),
         '/profile': (context)=> ProfilePage(),
         '/chat': (context)=> chatPage(),
+        '/laporan': (context) => incomeReport(),
       },
     );
   }
