@@ -1,17 +1,29 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class Product {
-  final String name;
-  final String imagePath;
-  final int quantity;
-  final double price;
-  final double originalPrice;
+  final String id;
+  final String nama;
+  final String gambar;
+  final double harga;
+  final double rating;
+  final int jumlahDisukai;
+  final int jumlahPembelian;
+  final String kategori;
+  final String idToko;
+  final int kuantitas;
   bool isSelected;
 
   Product({
-    required this.name,
-    required this.imagePath,
-    required this.quantity,
-    required this.price,
-    required this.originalPrice,
+    required this.id,
+    required this.nama,
+    required this.gambar,
+    required this.harga,
+    required this.rating,
+    required this.jumlahDisukai,
+    required this.jumlahPembelian,
+    required this.kategori,
+    required this.idToko,
+    required this.kuantitas,
     this.isSelected = false,
   });
 }

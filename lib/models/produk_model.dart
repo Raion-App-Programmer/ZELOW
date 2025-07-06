@@ -1,34 +1,45 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-class Produk {
+class Product {
   final String id;
   final String nama;
-  final String deskripsi;
   final String gambar;
   final double harga;
   final double rating;
-  final int jumlahPenilaian;
+  final int jumlahDisukai;
+  final int jumlahPembelian;
+  final String kategori;
+  final String idToko;
+  final int kuantitas;
+  bool isSelected;
 
-  Produk({
+  Product({
     required this.id,
     required this.nama,
-    required this.deskripsi,
     required this.gambar,
     required this.harga,
     required this.rating,
-    required this.jumlahPenilaian,
+    required this.jumlahDisukai,
+    required this.jumlahPembelian,
+    required this.kategori,
+    required this.idToko,
+    required this.kuantitas,
+    this.isSelected = false,
   });
 
-  factory Produk.fromFirestore(DocumentSnapshot doc) {
-    Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
-    return Produk(
+  factory Product.fromFirestore(DocumentSnapshot doc) {
+    final data = doc.data() as Map<String, dynamic>;
+    return Product(
       id: doc.id,
-      nama: data['nama'],
-      deskripsi: data['deskripsi'],
-      gambar: data['gambar'],
-      harga: data['harga'],
-      rating: data['rating'],
-      jumlahPenilaian: data['jpenilaian'],
+      nama: data['nama'] ?? '',
+      gambar: data['gambar'] ?? '',
+      harga: (data['harga'] ?? 0).toDouble(),
+      rating: (data['rating'] ?? 0).toDouble(),
+      jumlahDisukai: data['jumlah_disukai'] ?? 0,
+      jumlahPembelian: data['jumlah_pembelian'] ?? 0,
+      kategori: data['kategori'] ?? '',
+      idToko: data['id_toko'] ?? '',
+      kuantitas: data['kuantitas'] ?? 0,
     );
   }
 }

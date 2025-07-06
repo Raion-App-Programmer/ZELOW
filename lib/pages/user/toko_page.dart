@@ -14,6 +14,8 @@ import 'package:zelow/pages/user/display_page.dart';
 import 'package:zelow/pages/user/flashsale_page.dart';
 import 'package:zelow/pages/user/surprisebox_page.dart';
 import 'package:zelow/services/toko_service.dart';
+import 'package:zelow/models/produk_model.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 import '../../models/toko_model.dart';
 import '../../services/auth_service.dart';
@@ -28,11 +30,21 @@ class TokoPageUser extends StatefulWidget {
 }
 
 class _TokoPageUserState extends State<TokoPageUser> {
+  Future<List<Product>> fetchProdukByToko(String idToko) async {
+    final snapshot =
+        await FirebaseFirestore.instance
+            .collection('produk')
+            .where('id_toko', isEqualTo: idToko)
+            .get();
+
+    return snapshot.docs.map((doc) => Product.fromFirestore(doc)).toList();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: white,
+
       body: Stack(
         children: [
           Column(
@@ -42,9 +54,7 @@ class _TokoPageUserState extends State<TokoPageUser> {
                   child: Column(
                     children: [
                       SizedBox(
-                        height:
-                            MediaQuery.of(context).size.height *
-                            0.25,
+                        height: MediaQuery.of(context).size.height * 0.25,
                         child: HeaderToko(imageUrl: widget.tokoData.gambar),
                       ),
                       SizedBox(
@@ -90,7 +100,8 @@ class _TokoPageUserState extends State<TokoPageUser> {
                                           color: Color(0xFFFFC837),
                                         ),
                                         Text(
-                                          widget.tokoData.rating.toStringAsFixed(1),
+                                          widget.tokoData.rating
+                                              .toStringAsFixed(1),
                                           style: TextStyle(
                                             fontFamily: 'nunito',
                                             fontSize: 16,
@@ -202,81 +213,175 @@ class _TokoPageUserState extends State<TokoPageUser> {
                         ),
                       ),
 
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 16),
-                            child: Text(
-                              'Flash Sale',
-                              style: blackTextStyle.copyWith(
-                                fontSize:
-                                    MediaQuery.of(context).size.width * 0.045,
-                                fontWeight: FontWeight.bold,
+                      // Column(
+                      //   crossAxisAlignment: CrossAxisAlignment.start,
+                      //   children: [
+                      //     Padding(
+                      //       padding: const EdgeInsets.symmetric(horizontal: 16),
+                      //       child: Text(
+                      //         'Flash Sale',
+                      //         style: blackTextStyle.copyWith(
+                      //           fontSize:
+                      //               MediaQuery.of(context).size.width * 0.045,
+                      //           fontWeight: FontWeight.bold,
+                      //         ),
+                      //       ),
+                      //     ),
+                      //     const SizedBox(height: 8),
+
+                      //     // List Card ke BAWAH
+                      //     SizedBox(
+                      //       child: ListView.builder(
+                      //         padding: EdgeInsets.zero,
+                      //         itemCount: 3, // Jumlah flash sale
+                      //         shrinkWrap: true,
+                      //         physics:
+                      //             const NeverScrollableScrollPhysics(), // Scroll bawaan dari Parent
+                      //         itemBuilder: (context, index) {
+                      //           return ProductTokoCard(
+                      //             imageUrl: 'assets/images/mie ayam.jpg',
+                      //             restaurantName: 'Nasi padang saus tiram',
+                      //             description: '6rb terjual | Disukai oleh 342',
+                      //             harga: 12.000,
+                      //             onTap: () {
+                      //               // Aksi ketika diklik
+                      //             },
+                      //           );
+                      //         },
+                      //       ),
+                      //     ),
+
+                      //     Padding(
+                      //       padding: const EdgeInsets.symmetric(
+                      //         horizontal: 16,
+                      //         vertical: 8,
+                      //       ),
+                      //       child: Text(
+                      //         'Makanan',
+                      //         style: blackTextStyle.copyWith(
+                      //           fontSize:
+                      //               MediaQuery.of(context).size.width * 0.045,
+                      //           fontWeight: FontWeight.bold,
+                      //         ),
+                      //       ),
+                      //     ),
+
+                      //     SizedBox(
+                      //       child: ListView.builder(
+                      //         padding: EdgeInsets.zero,
+                      //         itemCount: 3, // Jumlah makanan
+                      //         shrinkWrap: true,
+                      //         physics:
+                      //             const NeverScrollableScrollPhysics(), // Scroll bawaan dari Parent
+                      //         itemBuilder: (context, index) {
+                      //           return ProductTokoCard(
+                      //             imageUrl: 'assets/images/naspad.jpg',
+                      //             restaurantName: 'Rendang',
+                      //             description: '6rb terjual | Disukai oleh 342',
+                      //             harga: 12.000,
+                      //             onTap: () {
+                      //               // Aksi ketika diklik
+                      //             },
+                      //           );
+                      //         },
+                      //       ),
+                      //     ),
+                      //     const SizedBox(height: 30),
+                      //   ],
+                      // ),
+
+                      // ambil data dari firebase
+                      FutureBuilder<List<Product>>(
+                        future: fetchProdukByToko(widget.tokoData.id),
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return const Center(
+                              child: CircularProgressIndicator(),
+                            );
+                          } else if (snapshot.hasError) {
+                            return Center(
+                              child: Text(
+                                'Terjadi kesalahan: ${snapshot.error}',
                               ),
-                            ),
-                          ),
-                          const SizedBox(height: 8),
+                            );
+                          } else if (!snapshot.hasData ||
+                              snapshot.data!.isEmpty) {
+                            return const Center(
+                              child: Text('Belum ada produk.'),
+                            );
+                          }
 
-                          // List Card ke BAWAH
-                          SizedBox(
-                            child: ListView.builder(
-                              padding: EdgeInsets.zero,
-                              itemCount: 3, // Jumlah flash sale
-                              shrinkWrap: true,
-                              physics:
-                                  const NeverScrollableScrollPhysics(), // Scroll bawaan dari Parent
-                              itemBuilder: (context, index) {
-                                return ProductTokoCard(
-                                  imageUrl: 'assets/images/mie ayam.jpg',
-                                  restaurantName: 'Nasi padang saus tiram',
-                                  description: '6rb terjual | Disukai oleh 342',
-                                  harga: 12.000,
-                                  onTap: () {
-                                    // Aksi ketika diklik
+                          final products = snapshot.data!;
+                          final makanan =
+                              products
+                                  .where((p) => p.kategori == 'makanan')
+                                  .toList();
+                          final minuman =
+                              products
+                                  .where((p) => p.kategori == 'minuman')
+                                  .toList();
+                          final tambahan =
+                              products
+                                  .where((p) => p.kategori == 'tambahan')
+                                  .toList();
+
+                          Widget buildProdukSection(
+                            String title,
+                            List<Product> items,
+                          ) {
+                            return Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 16,
+                                    vertical: 8,
+                                  ),
+                                  child: Text(
+                                    title,
+                                    style: blackTextStyle.copyWith(
+                                      fontSize:
+                                          MediaQuery.of(context).size.width *
+                                          0.045,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ),
+                                ListView.builder(
+                                  padding: EdgeInsets.zero,
+                                  itemCount: items.length,
+                                  shrinkWrap: true,
+                                  physics: const NeverScrollableScrollPhysics(),
+                                  itemBuilder: (context, index) {
+                                    final item = items[index];
+                                    return ProductTokoCard(
+                                      imageUrl: item.gambar,
+                                      restaurantName: item.nama,
+                                      description:
+                                          '${item.jumlahPembelian} terjual | Disukai oleh ${item.jumlahDisukai}',
+                                      harga: item.harga,
+                                      onTap: () {},
+                                    );
                                   },
-                                );
-                              },
-                            ),
-                          ),
+                                ),
+                              ],
+                            );
+                          }
 
-                          Padding(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 16,
-                              vertical: 8,
-                            ),
-                            child: Text(
-                              'Makanan',
-                              style: blackTextStyle.copyWith(
-                                fontSize:
-                                    MediaQuery.of(context).size.width * 0.045,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ),
-
-                          SizedBox(
-                            child: ListView.builder(
-                              padding: EdgeInsets.zero,
-                              itemCount: 3, // Jumlah makanan
-                              shrinkWrap: true,
-                              physics:
-                                  const NeverScrollableScrollPhysics(), // Scroll bawaan dari Parent
-                              itemBuilder: (context, index) {
-                                return ProductTokoCard(
-                                  imageUrl: 'assets/images/naspad.jpg',
-                                  restaurantName: 'Rendang',
-                                  description: '6rb terjual | Disukai oleh 342',
-                                  harga: 12.000,
-                                  onTap: () {
-                                    // Aksi ketika diklik
-                                  },
-                                );
-                              },
-                            ),
-                          ),
-                          const SizedBox(height: 30),
-                        ],
+                          return Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              if (makanan.isNotEmpty)
+                                buildProdukSection('Makanan', makanan),
+                              if (minuman.isNotEmpty)
+                                buildProdukSection('Minuman', minuman),
+                              if (tambahan.isNotEmpty)
+                                buildProdukSection('Tambahan', tambahan),
+                              const SizedBox(height: 30),
+                            ],
+                          );
+                        },
                       ),
                     ],
                   ),
