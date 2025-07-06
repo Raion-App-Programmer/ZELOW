@@ -27,7 +27,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      initialRoute: '/login_page',
+      initialRoute: '/home_page_user',
       debugShowCheckedModeBanner: false,
       routes: {
         '/splash': (context) => SplashPage(),
@@ -39,7 +39,6 @@ class MyApp extends StatelessWidget {
         '/profile': (context) => ProfilePage(),
         '/pesanan': (context) => PesananPage(orders: [],),
         '/profile': (context)=> ProfilePage(),
-        '/toko': (context)=> TokoPageUser(),
         '/chat': (context)=> chatPage(),
       },
     );
