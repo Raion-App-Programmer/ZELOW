@@ -30,11 +30,12 @@ class TokoServices {
     return getTokoList(orderByField: 'rating', isDecending: true, limit: limit);
   }
 
-  Future<List<Toko>> getAllTokoTerdekat({int limit = 5}) async {
+  Future<List<Toko>> getAllTokoTerdekat() async {
     return getTokoList(orderByField: 'jarak', isDecending: false);
   }
 
-  Future<List<Toko>> getAllTokoPalingLaris({int limit = 5}) async {
+
+  Future<List<Toko>> getAllTokoPalingLaris() async {
     return getTokoList(orderByField: 'rating', isDecending: true);
   }
 
@@ -44,7 +45,7 @@ class TokoServices {
     tokoList.shuffle();
     return tokoList;
   }
-
+  
   Future<Toko?> getTokoById(String tokoId) async {
     DocumentSnapshot doc = await _firestore.collection(_tokoCollection)
         .doc(tokoId)

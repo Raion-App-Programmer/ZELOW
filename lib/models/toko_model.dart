@@ -9,6 +9,7 @@ class Toko {
   final String waktu;
   final int jumlahPenilaian;
   final String deskripsi;
+  // final String alamat;
 
   const Toko({
     required this.id,
@@ -19,6 +20,7 @@ class Toko {
     required this.waktu,
     required this.jumlahPenilaian,
     required this.deskripsi,
+    // required this.alamat,
   });
 
   factory Toko.fromFirestore(DocumentSnapshot doc) {
@@ -32,6 +34,7 @@ class Toko {
       waktu: data['waktu'],
       jumlahPenilaian: data['jpenilaian'],
       deskripsi: data['deskripsi'],
+      // alamat: data['alamat'],
     );
   }
 }

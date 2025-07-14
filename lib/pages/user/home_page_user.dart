@@ -6,15 +6,19 @@ import 'package:zelow/components/navbar.dart';
 import 'package:zelow/components/product_card.dart';
 import 'package:zelow/components/product_card_horizontal.dart';
 import 'package:zelow/components/widget_slider.dart';
+import 'package:zelow/models/produk_model.dart';
 import 'package:zelow/models/toko_model.dart';
 import 'package:zelow/pages/user/display_page.dart';
 import 'package:zelow/pages/user/flashsale_page.dart';
+import 'package:zelow/pages/user/infoproduk_page.dart';
+import 'package:zelow/pages/user/rekomendasi_page.dart';
 import 'package:zelow/pages/user/search_page.dart';
 import 'package:zelow/pages/user/surprisebox_page.dart';
 import 'package:zelow/pages/user/toko_page.dart';
-import 'package:zelow/services/product_service.dart';
-import 'package:zelow/services/toko_service.dart';
-import 'package:zelow/models/produk_model.dart';
+import 'package:zelow/pages/user/toko_page.dart';
+import 'package:zelow/services/produk_service.dart';
+
+import '../../services/toko_service.dart';
 
 class HomePageUser extends StatefulWidget {
   const HomePageUser({super.key});
@@ -27,7 +31,6 @@ class HomePageUser extends StatefulWidget {
 class _HomePageUserState extends State<HomePageUser> {
   final TokoServices _tokoService = TokoServices();
   final ProdukService _produkService = ProdukService();
-
 
   Widget _buildSectionTitle(
       BuildContext context,
@@ -118,21 +121,21 @@ class _HomePageUserState extends State<HomePageUser> {
         _buildSectionTitle(context, 'Zeflash', () {
           Navigator.push(
             context,
-            MaterialPageRoute(
-              builder: (context) => FlashsalePage(),
-            ),
+            MaterialPageRoute(builder: (context) => FlashsalePage()),
           );
         }),
         SizedBox(
           height: 185,
-          child: FutureBuilder<List<Product>>(
+          child: FutureBuilder<List<Produk>>(
             future: _produkService.getProdukRandom(limit: 10),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return Center(child: CircularProgressIndicator(color: zelow));
               }
               if (snapshot.hasError) {
-                print('Zeflash error: ${snapshot.error}'); // 👈 bisa bantu debug juga
+                print(
+                  'Zeflash error: ${snapshot.error}',
+                ); // 👈 bisa bantu debug juga
                 return Center(child: Text('Gagal memuat produk.'));
               }
               if (!snapshot.hasData || snapshot.data!.isEmpty) {
@@ -152,10 +155,18 @@ class _HomePageUserState extends State<HomePageUser> {
                       imageUrl: produk.gambar,
                       title: produk.nama,
                       price: 'Rp.${produk.harga.toStringAsFixed(0)}',
-                      stock: 10, // opsional: bisa tambahkan field baru untuk stok
+                      stock:
+                          10, // opsional: bisa tambahkan field baru untuk stok
                       sold: produk.jumlahPembelian,
                       onTap: () {
-                        // TODO: Tambahkan navigasi ke detail produk
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => ProductInfoPage(
+                              productData: produk,
+                            ),
+                          ),
+                        );
                       },
                     ),
                   );
@@ -192,7 +203,9 @@ class _HomePageUserState extends State<HomePageUser> {
                 return Center(child: CircularProgressIndicator(color: zelow));
               }
               if (snapshot.hasError) {
-                print("Error fetching Rekomendasi toko list: ${snapshot.error}");
+                print(
+                  "Error fetching Rekomendasi toko list: ${snapshot.error}",
+                );
                 return Center(child: Text('Gagal memuat data toko.'));
               }
               if (!snapshot.hasData || snapshot.data!.isEmpty) {
@@ -210,12 +223,17 @@ class _HomePageUserState extends State<HomePageUser> {
                   return DisplayCard(
                     imageUrl: toko.gambar,
                     restaurantName: toko.nama,
-                    description: '${toko.deskripsi ?? 'Toko enak dan terjangkau!'}',
+                    description: toko.deskripsi,
                     rating: toko.rating,
                     distance: '${toko.jarak} km',
                     estimatedTime: toko.waktu,
                     onTap: () {
-                      // Aksi ketika diklik
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => TokoPageUser(tokoData: toko),
+                        ),
+                      );
                     },
                   );
                 },
@@ -308,6 +326,9 @@ class _HomePageUserState extends State<HomePageUser> {
                           ),
                         ],
                       ),
+                      SizedBox(
+                        height: MediaQuery.of(context).size.height * 0.02,
+                      ),
                       _buildZeflashSection(),
                       _buildSectionTitle(context, 'Terdekat', () {
                         Navigator.push(
@@ -317,7 +338,13 @@ class _HomePageUserState extends State<HomePageUser> {
                             )
                         );
                       }),
-                      _buildTokoHorizontal(_tokoService.getAllTokoTerdekat(), "terdekat"),
+                      _buildTokoHorizontal(
+                        _tokoService.getAllTokoTerdekat(),
+                        "terdekat",
+                      ),
+                      SizedBox(
+                        height: MediaQuery.of(context).size.height * 0.02,
+                      ),
                       _buildRekomendasiSection(),
                     ],
                   ),

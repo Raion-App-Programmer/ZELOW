@@ -114,11 +114,13 @@ import 'package:badges/badges.dart' as badges;
 class CartBottomNavBar extends StatefulWidget {
   final int itemCount;
   final double totalPrice;
+  final VoidCallback? onCheckoutPressed;
 
   const CartBottomNavBar({
     super.key,
     required this.itemCount,
     required this.totalPrice,
+    this.onCheckoutPressed,
   });
 
   @override
@@ -142,6 +144,7 @@ class _CartBottomNavBarState extends State<CartBottomNavBar> {
           ),
         ],
       ),
+
       child: Row(
         children: [
           badges.Badge(
@@ -176,11 +179,9 @@ class _CartBottomNavBarState extends State<CartBottomNavBar> {
                 Expanded(
                   child: GestureDetector(
                     onTap:
-                        widget.itemCount == 0
-                            ? null
-                            : () {
-                              // tambahkan aksi checkout di sini
-                            },
+                        widget.itemCount > 0 ? widget.onCheckoutPressed : () {
+                          print("Checkout button pressed, but no items in cart.");
+                        },
                     child: Container(
                       alignment: Alignment.center,
                       height: 44,

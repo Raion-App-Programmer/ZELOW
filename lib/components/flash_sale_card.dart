@@ -10,14 +10,14 @@ class FlashCard extends StatelessWidget {
   final VoidCallback onTap;
 
   const FlashCard({
-    Key? key,
+    super.key,
     required this.imageUrl,
     required this.title,
     required this.price,
     required this.stock,
     required this.sold,
     required this.onTap,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -49,14 +49,49 @@ class FlashCard extends StatelessWidget {
             ClipRRect(
               borderRadius: BorderRadius.circular(6),
               child: Image.network(
-                imageUrl.isNotEmpty
-                    ? imageUrl
-                    : 'https://via.placeholder.com/150', // default gambar kalau kosong
+                imageUrl,
                 height: 90,
                 width: double.infinity,
                 fit: BoxFit.cover,
-                errorBuilder: (context, error, stackTrace) {
-                  return Icon(Icons.broken_image, size: 90, color: Colors.grey);
+
+                loadingBuilder: (
+                  BuildContext context,
+                  Widget child,
+                  ImageChunkEvent? loadingProgress,
+                ) {
+                  if (loadingProgress == null) return child;
+                  return Container(
+                    height: 90,
+                    width: double.infinity,
+                    color: Colors.grey[200],
+                    child: Center(
+                      child: CircularProgressIndicator(
+                        value:
+                            loadingProgress.expectedTotalBytes != null
+                                ? loadingProgress.cumulativeBytesLoaded /
+                                    loadingProgress.expectedTotalBytes!
+                                : null,
+                        color: zelow,
+                      ),
+                    ),
+                  );
+                },
+
+                errorBuilder: (
+                  BuildContext context,
+                  Object exception,
+                  StackTrace? stackTrace,
+                ) {
+                  return Container(
+                    height: 90,
+                    width: double.infinity,
+                    color: Colors.grey[300],
+                    child: Icon(
+                      Icons.broken_image_outlined,
+                      color: Colors.grey[600],
+                      size: 40,
+                    ),
+                  );
                 },
               ),
             ),

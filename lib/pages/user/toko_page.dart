@@ -12,6 +12,7 @@ import 'package:zelow/components/voucher_toko_card.dart';
 import 'package:zelow/components/widget_slider.dart';
 import 'package:zelow/pages/user/display_page.dart';
 import 'package:zelow/pages/user/flashsale_page.dart';
+import 'package:zelow/pages/user/infoproduk_page.dart';
 import 'package:zelow/pages/user/surprisebox_page.dart';
 import 'package:zelow/services/toko_service.dart';
 import 'package:zelow/models/produk_model.dart';
@@ -19,6 +20,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 import '../../models/toko_model.dart';
 import '../../services/auth_service.dart';
+
+import '../../models/produk_model.dart';
+import '../../services/produk_service.dart';
 
 class TokoPageUser extends StatefulWidget {
   final Toko tokoData;
@@ -30,14 +34,40 @@ class TokoPageUser extends StatefulWidget {
 }
 
 class _TokoPageUserState extends State<TokoPageUser> {
-  Future<List<Product>> fetchProdukByToko(String idToko) async {
-    final snapshot =
-        await FirebaseFirestore.instance
-            .collection('produk')
-            .where('id_toko', isEqualTo: idToko)
-            .get();
+  final ProdukService _produkService = ProdukService();
+  late Future<List<Produk>> _produkList;
 
-    return snapshot.docs.map((doc) => Product.fromFirestore(doc)).toList();
+  @override
+  void initState() {
+    super.initState();
+    _produkList = _produkService.getProdukByToko(widget.tokoData.id);
+  }
+
+  Widget buildProdukCardByCategory(final List<Produk> produk, String kategori) {
+    return ListView.builder(
+      padding: EdgeInsets.zero,
+      itemCount: produk.length,
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      itemBuilder: (context, index) {
+        final dataProduk = produk[index];
+        return ProductTokoCard(
+          imageUrl: dataProduk.gambar,
+          restaurantName: dataProduk.nama,
+          description:
+              '${dataProduk.jumlahPembelian} terjual | Disukai oleh ${dataProduk.jumlahDisukai}',
+          harga: dataProduk.harga,
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => ProductInfoPage(productData: dataProduk),
+              ),
+            );
+          },
+        );
+      },
+    );
   }
 
   @override
@@ -213,6 +243,136 @@ class _TokoPageUserState extends State<TokoPageUser> {
                         ),
                       ),
 
+                      // Daftar Produk dengan firebase firestore (Hery)
+                      FutureBuilder<List<Produk>>(
+                        future: _produkList,
+                        builder: (context, snapshot) {
+                          // Sedang memuat data
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return Center(child: CircularProgressIndicator());
+                          }
+
+                          // Jika terjadi error
+                          if (snapshot.hasError) {
+                            return Center(
+                              child: Text(
+                                'Gagal memuat data produk: ${snapshot.error}',
+                              ),
+                            );
+                          }
+
+                          // Jika tidak ada data atau data kosong
+                          if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                            return Center(
+                              child: Padding(
+                                padding: const EdgeInsets.all(20.0),
+                                child: Text(
+                                  'Tidak ada produk tersedia di toko ini.',
+                                ),
+                              ),
+                            );
+                          }
+
+                          // Data berhasil dimuat
+                          final produkList = snapshot.data!;
+
+                          // Setting kategori produk
+                          final makananProduk =
+                              produkList
+                                  .where(
+                                    (produk) => produk.kategori == 'makanan',
+                                  )
+                                  .toList();
+                          final minumanProduk =
+                              produkList
+                                  .where(
+                                    (produk) => produk.kategori == 'minuman',
+                                  )
+                                  .toList();
+
+                          final tambahanProduk =
+                              produkList
+                                  .where(
+                                    (produk) => produk.kategori == 'tambahan',
+                                  )
+                                  .toList();
+
+                          return Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              if (makananProduk.isNotEmpty) ...[
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 16,
+                                    vertical: 8,
+                                  ),
+                                  child: Text(
+                                    'Makanan',
+                                    style: blackTextStyle.copyWith(
+                                      fontSize:
+                                          MediaQuery.of(context).size.width *
+                                          0.045,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ),
+
+                                buildProdukCardByCategory(
+                                  makananProduk,
+                                  'makanan',
+                                ),
+                              ],
+
+                              if (minumanProduk.isNotEmpty) ...[
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 16,
+                                    vertical: 8,
+                                  ),
+                                  child: Text(
+                                    'Minuman',
+                                    style: blackTextStyle.copyWith(
+                                      fontSize:
+                                          MediaQuery.of(context).size.width *
+                                          0.045,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ),
+
+                                buildProdukCardByCategory(
+                                  minumanProduk,
+                                  'minuman',
+                                ),
+                              ],
+
+                              if (tambahanProduk.isNotEmpty) ...[
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 16,
+                                    vertical: 8,
+                                  ),
+                                  child: Text(
+                                    'Tambahan',
+                                    style: blackTextStyle.copyWith(
+                                      fontSize:
+                                          MediaQuery.of(context).size.width *
+                                          0.045,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ),
+
+                                buildProdukCardByCategory(
+                                  tambahanProduk,
+                                  'tambahan',
+                                ),
+                              ],
+                            ],
+                          );
+                        },
+                      ),
                       // Column(
                       //   crossAxisAlignment: CrossAxisAlignment.start,
                       //   children: [
@@ -289,100 +449,6 @@ class _TokoPageUserState extends State<TokoPageUser> {
                       //     const SizedBox(height: 30),
                       //   ],
                       // ),
-
-                      // ambil data dari firebase
-                      FutureBuilder<List<Product>>(
-                        future: fetchProdukByToko(widget.tokoData.id),
-                        builder: (context, snapshot) {
-                          if (snapshot.connectionState ==
-                              ConnectionState.waiting) {
-                            return const Center(
-                              child: CircularProgressIndicator(),
-                            );
-                          } else if (snapshot.hasError) {
-                            return Center(
-                              child: Text(
-                                'Terjadi kesalahan: ${snapshot.error}',
-                              ),
-                            );
-                          } else if (!snapshot.hasData ||
-                              snapshot.data!.isEmpty) {
-                            return const Center(
-                              child: Text('Belum ada produk.'),
-                            );
-                          }
-
-                          final products = snapshot.data!;
-                          final makanan =
-                              products
-                                  .where((p) => p.kategori == 'makanan')
-                                  .toList();
-                          final minuman =
-                              products
-                                  .where((p) => p.kategori == 'minuman')
-                                  .toList();
-                          final tambahan =
-                              products
-                                  .where((p) => p.kategori == 'tambahan')
-                                  .toList();
-
-                          Widget buildProdukSection(
-                            String title,
-                            List<Product> items,
-                          ) {
-                            return Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 16,
-                                    vertical: 8,
-                                  ),
-                                  child: Text(
-                                    title,
-                                    style: blackTextStyle.copyWith(
-                                      fontSize:
-                                          MediaQuery.of(context).size.width *
-                                          0.045,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                ),
-                                ListView.builder(
-                                  padding: EdgeInsets.zero,
-                                  itemCount: items.length,
-                                  shrinkWrap: true,
-                                  physics: const NeverScrollableScrollPhysics(),
-                                  itemBuilder: (context, index) {
-                                    final item = items[index];
-                                    return ProductTokoCard(
-                                      imageUrl: item.gambar,
-                                      restaurantName: item.nama,
-                                      description:
-                                          '${item.jumlahPembelian} terjual | Disukai oleh ${item.jumlahDisukai}',
-                                      harga: item.harga,
-                                      onTap: () {},
-                                    );
-                                  },
-                                ),
-                              ],
-                            );
-                          }
-
-                          return Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              if (makanan.isNotEmpty)
-                                buildProdukSection('Makanan', makanan),
-                              if (minuman.isNotEmpty)
-                                buildProdukSection('Minuman', minuman),
-                              if (tambahan.isNotEmpty)
-                                buildProdukSection('Tambahan', tambahan),
-                              const SizedBox(height: 30),
-                            ],
-                          );
-                        },
-                      ),
                     ],
                   ),
                 ),
