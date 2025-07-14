@@ -7,8 +7,8 @@ import 'package:zelow/components/navbar.dart';
 import 'package:zelow/components/product_card_horizontal.dart';
 
 
-class chatPage extends StatelessWidget{
-  const chatPage({Key? key}) :super(key: key);
+class ChatPage extends StatelessWidget{
+  const ChatPage({Key? key}) :super(key: key);
 
   @override
   Widget build(BuildContext context){

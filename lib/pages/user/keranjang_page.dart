@@ -107,17 +107,19 @@ class _KeranjangKuState extends State<KeranjangKu> {
   }
 
   void _handleCheckout() {
-    final selectedOrders =_cartItems
-            .where((item) => _selectedItems.contains(item.produk.idProduk))
-            .map(
-              (item) => {
-                'title': item.produk.nama,
-                'imageUrl': item.produk.urlGambar,
-                'price': item.produk.harga.toDouble(),
-                'quantity': item.quantity,
-              },
-            )
-            .toList();
+    final selectedOrders = _cartItems
+        .where((item) => _selectedItems.contains(item.produk.idProduk))
+        .map(
+          (item) => {
+            'idProduk': item.produk.idProduk, // PENTING untuk menghapus dari keranjang nanti
+            'title': item.produk.nama,
+            'imageUrl': item.produk.urlGambar,
+            'price': item.produk.harga.toDouble(),
+            'originalPrice': item.produk.harga.toDouble(), // Sesuaikan jika ada harga asli/diskon
+            'quantity': item.quantity,
+          },
+        )
+        .toList();
 
     Navigator.push(
       context,
@@ -256,7 +258,7 @@ class _KeranjangKuState extends State<KeranjangKu> {
       bottomNavigationBar: CartBottomNavBar(
         totalPrice: _selectedTotalPrice, 
         itemCount: _selectedItemsCount,
-        // onCheckoutPressed: _handleCheckout,
+        onCheckoutPressed: _handleCheckout,
       ),
     );
   }

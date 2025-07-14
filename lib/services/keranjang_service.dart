@@ -12,7 +12,6 @@ class KeranjangService {
 
   // nambah atau update item di keranjang
   Future<void> addToCart(Produk produk, int quantity) async {
-    if (quantity <= 0) return;
     try {
       final docRef = _firestore
           .collection('user')

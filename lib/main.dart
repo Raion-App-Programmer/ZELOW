@@ -36,9 +36,7 @@ class MyApp extends StatelessWidget {
         '/flashsale': (context) => FlashsalePage(),
         '/pesanan': (context) => PesananPage(orders: []),
         '/profile': (context) => ProfilePage(),
-        '/pesanan': (context) => PesananPage(orders: [],),
-        '/profile': (context)=> ProfilePage(),
-        '/chat': (context)=> chatPage(),
+        '/chat': (context)=> ChatPage(),
       },
     );
   }
