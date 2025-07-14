@@ -2,7 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:zelow/components/constant.dart';
 import 'package:zelow/models/keranjang_model.dart';
-import 'package:zelow/models/product.dart';
 
 class CardItemSample extends StatelessWidget {
   // final Product product;
@@ -65,7 +64,7 @@ class CardItemSample extends StatelessWidget {
                 ClipRRect(
                   borderRadius: BorderRadius.circular(8),
                   child: Image.network(
-                    item.produk.urlGambar,
+                    item.produk.gambar,
                     width: 80,
                     height: 80,
                     fit: BoxFit.cover,

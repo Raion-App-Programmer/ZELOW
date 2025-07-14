@@ -6,15 +6,18 @@ import 'package:zelow/components/navbar.dart';
 import 'package:zelow/components/product_card.dart';
 import 'package:zelow/components/product_card_horizontal.dart';
 import 'package:zelow/components/widget_slider.dart';
+import 'package:zelow/models/produk_model.dart';
 import 'package:zelow/models/toko_model.dart';
 import 'package:zelow/pages/user/display_page.dart';
 import 'package:zelow/pages/user/flashsale_page.dart';
+import 'package:zelow/pages/user/infoproduk_page.dart';
 import 'package:zelow/pages/user/rekomendasi_page.dart';
 import 'package:zelow/pages/user/search_page.dart';
 import 'package:zelow/pages/user/surprisebox_page.dart';
 import 'package:zelow/pages/user/chat_page.dart';
 import 'package:zelow/pages/user/toko_page.dart';
 import 'package:zelow/pages/user/toko_page.dart';
+import 'package:zelow/services/produk_service.dart';
 
 import '../../services/toko_service.dart';
 
@@ -28,13 +31,7 @@ class HomePageUser extends StatefulWidget {
 
 class _HomePageUserState extends State<HomePageUser> {
   final TokoServices _tokoService = TokoServices();
-
-  // Widget _buildRekomendasiToko() {
-  //   return FutureBuilder<Toko?>(
-  //       future: _tokoService.getTokoRekomendasi()
-  //       builder: builder
-  //   );
-  // }
+  final ProdukService _produkService = ProdukService();
 
   Widget _buildSectionTitle(
     BuildContext context,
@@ -84,7 +81,9 @@ class _HomePageUserState extends State<HomePageUser> {
             return Center(child: CircularProgressIndicator(color: zelow));
           }
           if (snapshot.hasError) {
-            print("Error fetching toko list for $sectionTypeForNavigation: ${snapshot.error}");
+            print(
+              "Error fetching toko list for $sectionTypeForNavigation: ${snapshot.error}",
+            );
             print("Stack trace: ${snapshot.stackTrace}");
             return Center(child: Text('Gagal memuat data toko.'));
           }
@@ -122,6 +121,137 @@ class _HomePageUserState extends State<HomePageUser> {
           );
         },
       ),
+    );
+  }
+
+  Widget _buildZeflashSection() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _buildSectionTitle(context, 'Zeflash', () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => FlashsalePage()),
+          );
+        }),
+        SizedBox(
+          height: 185,
+          child: FutureBuilder<List<Produk>>(
+            future: _produkService.getProdukRandom(limit: 10),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return Center(child: CircularProgressIndicator(color: zelow));
+              }
+              if (snapshot.hasError) {
+                print(
+                  'Zeflash error: ${snapshot.error}',
+                ); // 👈 bisa bantu debug juga
+                return Center(child: Text('Gagal memuat produk.'));
+              }
+              if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                return Center(child: Text('Tidak ada produk tersedia.'));
+              }
+
+              final produkList = snapshot.data!;
+
+              return ListView.builder(
+                scrollDirection: Axis.horizontal,
+                itemCount: produkList.length,
+                itemBuilder: (context, index) {
+                  final produk = produkList[index];
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 1),
+                    child: FlashCard(
+                      imageUrl: produk.gambar,
+                      title: produk.nama,
+                      price: 'Rp.${produk.harga.toStringAsFixed(0)}',
+                      stock:
+                          10, // opsional: bisa tambahkan field baru untuk stok
+                      sold: produk.jumlahPembelian,
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => ProductInfoPage(
+                              productData: produk,
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  );
+                },
+              );
+            },
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildRekomendasiSection() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          child: Text(
+            'Rekomendasi Untukmu',
+            style: blackTextStyle.copyWith(
+              fontSize: MediaQuery.of(context).size.width * 0.05,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ),
+        const SizedBox(height: 8),
+        SizedBox(
+          height: 400,
+          child: FutureBuilder<List<Toko>>(
+            future: _tokoService.getAllTokoRandom(),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return Center(child: CircularProgressIndicator(color: zelow));
+              }
+              if (snapshot.hasError) {
+                print(
+                  "Error fetching Rekomendasi toko list: ${snapshot.error}",
+                );
+                return Center(child: Text('Gagal memuat data toko.'));
+              }
+              if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                return Center(child: Text('Tidak ada toko tersedia.'));
+              }
+              final tokoList = snapshot.data!;
+
+              return ListView.builder(
+                padding: EdgeInsets.zero,
+                itemCount: tokoList.length,
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                itemBuilder: (context, index) {
+                  final toko = tokoList[index];
+                  return DisplayCard(
+                    imageUrl: toko.gambar,
+                    restaurantName: toko.nama,
+                    description: toko.deskripsi,
+                    rating: toko.rating,
+                    distance: '${toko.jarak} km',
+                    estimatedTime: toko.waktu,
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => TokoPageUser(tokoData: toko),
+                        ),
+                      );
+                    },
+                  );
+                },
+              );
+            },
+          ),
+        ),
+      ],
     );
   }
 
@@ -219,140 +349,9 @@ class _HomePageUserState extends State<HomePageUser> {
                         ],
                       ),
                       SizedBox(
-                        height: MediaQuery.of(context).size.height * 0.01,
+                        height: MediaQuery.of(context).size.height * 0.02,
                       ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Padding(
-                            padding: EdgeInsets.only(left: 16),
-                            child: Text(
-                              'Zeflash',
-                              style: blackTextStyle.copyWith(
-                                fontSize:
-                                    MediaQuery.of(context).size.width * 0.05,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ),
-                          Padding(
-                            padding: EdgeInsets.only(right: 16),
-                            child: TextButton(
-                              onPressed: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => FlashsalePage(),
-                                  ),
-                                );
-                              },
-                              child: Text(
-                                'Lihat Semua',
-                                style: greenTextStyle.copyWith(
-                                  fontSize:
-                                      MediaQuery.of(context).size.width * 0.04,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-
-                      SizedBox(
-                        height: 185,
-                        child: SingleChildScrollView(
-                          scrollDirection: Axis.horizontal,
-                          child: Row(
-                            children: List.generate(
-                              10,
-                              (index) => Padding(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 1,
-                                ),
-                                child: FlashCard(
-                                  imageUrl: 'assets/images/mie ayam.jpg',
-                                  title: 'Mie Ayam Ceker',
-                                  price: 'Rp.10.000',
-                                  stock: 12,
-                                  sold: 5,
-                                  onTap: () {
-                                    // navigasi ke checkout
-                                  },
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-
-                      // SizedBox(
-                      //   height: MediaQuery.of(context).size.height * 0.01,
-                      // ),
-                      // Row(
-                      //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      //   children: [
-                      //     Padding(
-                      //       padding: EdgeInsets.only(left: 16),
-                      //       child: Text(
-                      //         'Terdekat',
-                      //         style: blackTextStyle.copyWith(
-                      //           fontSize:
-                      //               MediaQuery.of(context).size.width * 0.04,
-                      //           fontWeight: FontWeight.bold,
-                      //         ),
-                      //       ),
-                      //     ),
-                      //     Padding(
-                      //       padding: EdgeInsets.only(right: 16),
-                      //       child: TextButton(
-                      //         onPressed: () {
-                      //           //navigasi ke semua
-                      //         },
-                      //         child: Text(
-                      //           'Lihat Semua',
-                      //           style: greenTextStyle.copyWith(
-                      //             fontSize:
-                      //                 MediaQuery.of(context).size.width * 0.03,
-                      //             fontWeight: FontWeight.bold,
-                      //           ),
-                      //         ),
-                      //       ),
-                      //     ),
-                      //   ],
-                      // ),
-
-                      // SizedBox(
-                      //   height:
-                      //       MediaQuery.of(context).size.height *
-                      //       0.20,
-                      // child: SingleChildScrollView(
-                      //   scrollDirection: Axis.horizontal,
-                      //   child: Row(
-                      //     children: List.generate(
-                      //       10,
-                      //       (index) => Padding(
-                      //         padding: const EdgeInsets.symmetric(
-                      //           horizontal: 0.5,
-                      //         ),
-                      //         child: SizedBox(
-                      //           width:
-                      //               MediaQuery.of(context).size.width *
-                      //               0.42, // 42% dari layar
-                      //           child: ProductCard(
-                      //             imageUrl: 'assets/images/mie ayam.jpg',
-                      //             rating: 4.5,
-                      //             restaurantName: 'Nina Rasa',
-                      //             distance: '1.2 km',
-                      //             estimatedTime: '25 min',
-                      //             onTap: () {},
-                      //           ),
-                      //         ),
-                      //       ),
-                      //     ),
-                      //   ),
-                      // ),
-                      // ),
+                      _buildZeflashSection(),
                       _buildSectionTitle(context, 'Terdekat', () {
                         Navigator.push(
                           context,
@@ -369,49 +368,10 @@ class _HomePageUserState extends State<HomePageUser> {
                         _tokoService.getAllTokoTerdekat(),
                         "terdekat",
                       ),
-                      SizedBox(height: 16),
-
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 16),
-                            child: Text(
-                              'Rekomendasi Untukmu',
-                              style: blackTextStyle.copyWith(
-                                fontSize:
-                                    MediaQuery.of(context).size.width * 0.05,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ),
-                          const SizedBox(height: 8),
-
-                          SizedBox(
-                            height: 400,
-                            child: ListView.builder(
-                              padding: EdgeInsets.zero,
-                              itemCount: 5, // Jumlah restoran
-                              shrinkWrap: true,
-                              physics:
-                                  const NeverScrollableScrollPhysics(), // Scroll bawaan dari Parent
-                              itemBuilder: (context, index) {
-                                return DisplayCard(
-                                  imageUrl: 'assets/images/mie ayam.jpg',
-                                  restaurantName: 'Warung Mie Ayam',
-                                  description: 'Mie ayam enak, porsi banyak!',
-                                  rating: 4.5,
-                                  distance: '1.2 km',
-                                  estimatedTime: '15 min',
-                                  onTap: () {
-                                    // Aksi ketika diklik
-                                  },
-                                );
-                              },
-                            ),
-                          ),
-                        ],
+                      SizedBox(
+                        height: MediaQuery.of(context).size.height * 0.02,
                       ),
+                      _buildRekomendasiSection(),
                     ],
                   ),
                 ),

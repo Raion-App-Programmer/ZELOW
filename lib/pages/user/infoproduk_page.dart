@@ -101,10 +101,10 @@ class _ProductInfoPageState extends State<ProductInfoPage> {
           children: [
             InfoProdukCard(
               title: widget.productData.nama,
-              imageUrl: widget.productData.urlGambar,
+              imageUrl: widget.productData.gambar,
               rating: widget.productData.rating,
-              jumlahTerjual: widget.productData.jumlahTerjual,
-              likeCount: widget.productData.jumlahSuka,
+              jumlahTerjual: widget.productData.jumlahPembelian,
+              likeCount: widget.productData.jumlahDisukai,
               price: price,
               itemCount: itemCount,
               reviews: _buildReviews([]), // Masih kurang tau apa gunanya
@@ -191,7 +191,7 @@ class _ProductInfoPageState extends State<ProductInfoPage> {
                                       {
                                         'title': widget.productData.nama,
                                         'imageUrl':
-                                            widget.productData.urlGambar,
+                                            widget.productData.gambar,
                                         'price': price,
                                         'quantity': itemCount,
                                         'originalPrice':

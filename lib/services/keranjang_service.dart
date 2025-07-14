@@ -17,7 +17,7 @@ class KeranjangService {
           .collection('user')
           .doc(_userId)
           .collection('keranjang')
-          .doc(produk.idProduk);
+          .doc(produk.id);
       
       // buat item keranjang baru
       final keranjangItem = KeranjangItem(produk: produk, quantity: quantity);

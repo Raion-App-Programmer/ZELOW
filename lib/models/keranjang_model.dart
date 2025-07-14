@@ -5,39 +5,41 @@ class KeranjangItem {
   final Produk produk;
   final int quantity;
 
-  KeranjangItem({
-    required this.produk,
-    required this.quantity,
-  });
+  KeranjangItem({required this.produk, required this.quantity});
 
   factory KeranjangItem.fromFirestore(DocumentSnapshot doc) {
     Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
     return KeranjangItem(
       produk: Produk(
-        idProduk: doc.id,
-        idToko: data['id_toko'] ?? '',
-        namaKategori: data['nama_kategori'] ?? '',
-        nama: data['nama'] ?? 'Produk tidak tersedia',
-        urlGambar: data['url_gambar'] ?? '',
-        harga: (data['harga'] as num?)?.toInt() ?? 0,
-        rating: (data['rating'] as num?)?.toDouble() ?? 0.0,
-        jumlahTerjual: data['jumlah_terjual'] ?? 0,
-        jumlahSuka: data['jumlah_suka'] ?? 0,
+        harga: data['harga'],
+        idToko: data['id_toko'],
+        jumlahDisukai: data['jumlah_disukai'],
+        jumlahPembelian: data['jumlah_pembelian'],
+        kategori: data['kategori'],
+        id: doc.id,
+        nama: data['nama'],
+        gambar: data['gambar'],
+        rating: data['rating'],
+        stok: data['stok'],
+        terjual: data['terjual'],
       ),
-      quantity: data['quantity'] ?? 1,
+      quantity: data['quantity'],
     );
   }
 
   Map<String, dynamic> toFirestore() {
     return {
+      'id': produk.id,
       'id_toko': produk.idToko,
-      'nama_kategori': produk.namaKategori,
+      'kategori': produk.kategori,
       'nama': produk.nama,
-      'url_gambar': produk.urlGambar,
+      'gambar': produk.gambar,
       'harga': produk.harga,
       'rating': produk.rating,
-      'jumlah_terjual': produk.jumlahTerjual,
-      'jumlah_suka': produk.jumlahSuka,
+      'jumlah_pembelian': produk.jumlahPembelian,
+      'jumlah_disukai': produk.jumlahDisukai,
+      'stok': produk.stok,
+      'terjual': produk.terjual,
       'quantity': quantity,
       'timestamp': FieldValue.serverTimestamp(),
     };

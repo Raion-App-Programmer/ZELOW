@@ -1,40 +1,46 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Produk {
-  final String idProduk;
-  final String idToko;
-  final String namaKategori;
-  final String nama;
-  final String urlGambar;
+  final String gambar;
   final int harga;
+  final String id;
+  final String idToko;
+  final int jumlahDisukai;
+  final int jumlahPembelian;
+  final String kategori;
+  final String nama;
   final double rating;
-  final int jumlahTerjual;
-  final int jumlahSuka;
+  final int stok;
+  final int terjual;
 
   Produk({
-    required this.idProduk,
+    required this.id,
     required this.idToko,
-    required this.namaKategori,
+    required this.kategori,
     required this.nama,
-    required this.urlGambar,
+    required this.gambar,
     required this.harga,
     required this.rating,
-    required this.jumlahTerjual,
-    required this.jumlahSuka,
+    required this.jumlahPembelian,
+    required this.jumlahDisukai,
+    required this.stok,
+    required this.terjual,
   });
 
   factory Produk.fromFirestore(DocumentSnapshot doc) {
     Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
     return Produk(
-      idProduk: doc.id,
-      idToko: data['id_toko'] ?? '',
-      namaKategori: data['nama_kategori'] ?? '',
-      nama: data['nama'] ?? 'Nama Produk Tidak Tersedia',
-      urlGambar: data['url_gambar'] ?? 'https://picsum.photos/200/200',
-      harga: (data['harga'] as num?)?.toInt() ?? 0,
-      rating: (data['rating'] as num?)?.toDouble() ?? 0.0,
-      jumlahTerjual: data['jumlah_terjual'] ?? 0,
-      jumlahSuka: data['jumlah_suka'] ?? 0,
+      id: doc.id,
+      idToko: data['id_toko'],
+      kategori: data['kategori'],
+      nama: data['nama'],
+      gambar: data['gambar'],
+      harga: data['harga'],
+      rating: data['rating'],
+      jumlahPembelian: data['jumlah_pembelian'],
+      jumlahDisukai: data['jumlah_disukai'],
+      stok: data['stok'],
+      terjual: data['terjual'],
     );
   }
 }

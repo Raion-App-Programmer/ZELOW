@@ -9,13 +9,13 @@ class ProductTokoCard extends StatelessWidget {
   final VoidCallback onTap;
 
   const ProductTokoCard({
-    Key? key,
+    super.key,
     required this.imageUrl,
     required this.restaurantName,
     required this.description,
     required this.harga,
     required this.onTap,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

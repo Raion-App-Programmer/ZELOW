@@ -41,6 +41,33 @@ class _TokoPageUserState extends State<TokoPageUser> {
     _produkList = _produkService.getProdukByToko(widget.tokoData.id);
   }
 
+  Widget buildProdukCardByCategory(final List<Produk> produk, String kategori) {
+    return ListView.builder(
+      padding: EdgeInsets.zero,
+      itemCount: produk.length,
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      itemBuilder: (context, index) {
+        final dataProduk = produk[index];
+        return ProductTokoCard(
+          imageUrl: dataProduk.gambar,
+          restaurantName: dataProduk.nama,
+          description:
+              '${dataProduk.jumlahPembelian} terjual | Disukai oleh ${dataProduk.jumlahDisukai}',
+          harga: dataProduk.harga,
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => ProductInfoPage(productData: dataProduk),
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -251,15 +278,20 @@ class _TokoPageUserState extends State<TokoPageUser> {
                           final makananProduk =
                               produkList
                                   .where(
-                                    (produk) =>
-                                        produk.namaKategori == 'makanan',
+                                    (produk) => produk.kategori == 'makanan',
                                   )
                                   .toList();
                           final minumanProduk =
                               produkList
                                   .where(
-                                    (produk) =>
-                                        produk.namaKategori == 'minuman',
+                                    (produk) => produk.kategori == 'minuman',
+                                  )
+                                  .toList();
+
+                          final tambahanProduk =
+                              produkList
+                                  .where(
+                                    (produk) => produk.kategori == 'tambahan',
                                   )
                                   .toList();
 
@@ -283,32 +315,9 @@ class _TokoPageUserState extends State<TokoPageUser> {
                                   ),
                                 ),
 
-                                ListView.builder(
-                                  padding: EdgeInsets.zero,
-                                  itemCount: makananProduk.length,
-                                  shrinkWrap: true,
-                                  physics: const NeverScrollableScrollPhysics(),
-                                  itemBuilder: (context, index) {
-                                    final produk = makananProduk[index];
-                                    return ProductTokoCard(
-                                      imageUrl: produk.urlGambar,
-                                      restaurantName: produk.nama,
-                                      description:
-                                          '${produk.jumlahTerjual} terjual | Disukai oleh ${produk.jumlahSuka}',
-                                      harga: produk.harga,
-                                      onTap: () {
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder:
-                                                (context) => ProductInfoPage(
-                                                  productData: produk,
-                                                ),
-                                          ),
-                                        );
-                                      },
-                                    );
-                                  },
+                                buildProdukCardByCategory(
+                                  makananProduk,
+                                  'makanan',
                                 ),
                               ],
 
@@ -329,32 +338,32 @@ class _TokoPageUserState extends State<TokoPageUser> {
                                   ),
                                 ),
 
-                                ListView.builder(
-                                  padding: EdgeInsets.zero,
-                                  itemCount: minumanProduk.length,
-                                  shrinkWrap: true,
-                                  physics: const NeverScrollableScrollPhysics(),
-                                  itemBuilder: (context, index) {
-                                    final produk = minumanProduk[index];
-                                    return ProductTokoCard(
-                                      imageUrl: produk.urlGambar,
-                                      restaurantName: produk.nama,
-                                      description:
-                                          '${produk.jumlahTerjual} terjual | Disukai oleh ${produk.jumlahSuka}',
-                                      harga: produk.harga,
-                                      onTap: () {
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder:
-                                                (context) => ProductInfoPage(
-                                                  productData: produk,
-                                                ),
-                                          ),
-                                        );
-                                      },
-                                    );
-                                  },
+                                buildProdukCardByCategory(
+                                  minumanProduk,
+                                  'minuman',
+                                ),
+                              ],
+
+                              if (tambahanProduk.isNotEmpty) ...[
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 16,
+                                    vertical: 8,
+                                  ),
+                                  child: Text(
+                                    'Tambahan',
+                                    style: blackTextStyle.copyWith(
+                                      fontSize:
+                                          MediaQuery.of(context).size.width *
+                                          0.045,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ),
+
+                                buildProdukCardByCategory(
+                                  tambahanProduk,
+                                  'tambahan',
                                 ),
                               ],
                             ],

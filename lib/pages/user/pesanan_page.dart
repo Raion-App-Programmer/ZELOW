@@ -36,8 +36,12 @@ class _PesananPageState extends State<PesananPage> {
         elevation: 0,
         leading: IconButton(
           icon: Icon(Icons.arrow_back, color: white),
-          onPressed: () {
-            Navigator.pop(context);
+            onPressed: () {
+            if (Navigator.of(context).canPop()) {
+              Navigator.of(context).pop();
+            } else {
+              Navigator.of(context).pushReplacementNamed('/home_page_user');
+            }
           },
         ),
         title: Text(

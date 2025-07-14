@@ -5,58 +5,6 @@ import 'package:zelow/models/keranjang_model.dart';
 import 'package:zelow/pages/user/chekout_page.dart';
 import 'package:zelow/services/keranjang_service.dart';
 
-// class KeranjangKu extends StatefulWidget {
-//   const KeranjangKu({super.key});
-
-//   @override
-//   State<KeranjangKu> createState() => _KeranjangKuState();
-// }
-
-// class _KeranjangKuState extends State<KeranjangKu> {
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: AppBar(
-//         backgroundColor: Color(0xff06C474),
-//         toolbarHeight: 92,
-//         elevation: 0,
-//         leading: IconButton(
-//           icon: Icon(Icons.arrow_back, color: Colors.white),
-//           onPressed: () {
-//             Navigator.pop(context);
-//           },
-//         ),
-//         title: Text(
-//           "KeranjangKu",
-//           style: TextStyle(
-//             fontSize: MediaQuery.of(context).size.width * 0.05,
-//             fontWeight: FontWeight.bold,
-//             color: Colors.white,
-//           ),
-//         ),
-//         centerTitle: true,
-//       ),
-
-//       body: SingleChildScrollView(
-//         child: Column(
-//           children: [
-//             SizedBox(height: 16,),
-//             //SAMPLE
-//             CardItemSample(),
-//             CardItemSample(),
-//             CardItemSample(),
-//             CardItemSample(),
-//             CardItemSample(),
-//             CardItemSample(),
-//           ],
-//         ),
-//       ),
-//       bottomNavigationBar: CartBottomNavBar(),
-//     );
-//   }
-// }
-
 class KeranjangKu extends StatefulWidget {
   const KeranjangKu({super.key});
 
@@ -65,16 +13,6 @@ class KeranjangKu extends StatefulWidget {
 }
 
 class _KeranjangKuState extends State<KeranjangKu> {
-  // List<Product> _products = List.generate(
-  //   6,
-  //   (index) => Product(
-  //     name: "Nasi Padang, Ayam Kare",
-  //     imagePath: 'assets/images/naspad.jpg',
-  //     quantity: 1,
-  //     price: 13000,
-  //     originalPrice: 23000,
-  //   ),
-  // );
 
   // Backend Keranjang
   final KeranjangService _keranjangService = KeranjangService();
@@ -95,7 +33,7 @@ class _KeranjangKuState extends State<KeranjangKu> {
   double get _selectedTotalPrice {
     double total = 0;
     for (var item in _cartItems) {
-      if (_selectedItems.contains(item.produk.idProduk)) {
+      if (_selectedItems.contains(item.produk.id)) {
         total += item.produk.harga * item.quantity;
       }
     }
@@ -108,12 +46,12 @@ class _KeranjangKuState extends State<KeranjangKu> {
 
   void _handleCheckout() {
     final selectedOrders = _cartItems
-        .where((item) => _selectedItems.contains(item.produk.idProduk))
+        .where((item) => _selectedItems.contains(item.produk.id))
         .map(
           (item) => {
-            'idProduk': item.produk.idProduk, // PENTING untuk menghapus dari keranjang nanti
+            'idProduk': item.produk.id, // PENTING untuk menghapus dari keranjang nanti
             'title': item.produk.nama,
-            'imageUrl': item.produk.urlGambar,
+            'imageUrl': item.produk.gambar,
             'price': item.produk.harga.toDouble(),
             'originalPrice': item.produk.harga.toDouble(), // Sesuaikan jika ada harga asli/diskon
             'quantity': item.quantity,
@@ -128,18 +66,6 @@ class _KeranjangKuState extends State<KeranjangKu> {
       ),
     );
   }
-
-  // void toggleSelection(int index) {
-  //   setState(() {
-  //     _products[index].isSelected = !_products[index].isSelected;
-  //   });
-  // }
-
-  // int get selectedCount => _products.where((p) => p.isSelected).length;
-
-  // double get totalPrice => _products
-  //     .where((p) => p.isSelected)
-  //     .fold(0, (sum, p) => sum + (p.price * p.quantity));
 
   @override
   Widget build(BuildContext context) {
@@ -163,19 +89,6 @@ class _KeranjangKuState extends State<KeranjangKu> {
         centerTitle: true,
       ),
 
-      // body: SingleChildScrollView(
-      //   child: Column(
-      //     children: List.generate(_products.length, (index) {
-      //       return GestureDetector(
-      //         onTap: () => toggleSelection(index),
-      //         child: CardItemSample(
-      //           product: _products[index],
-      //           onTap: () => toggleSelection(index),
-      //         ),
-      //       );
-      //     }),
-      //   ),
-      // ),
       body: StreamBuilder<List<KeranjangItem>>(
         stream: _keranjangService.getCartItems(),
         builder: (context, snapshot) {
@@ -208,26 +121,17 @@ class _KeranjangKuState extends State<KeranjangKu> {
             itemCount: _cartItems.length,
             itemBuilder: (context, index) {
               final item = _cartItems[index];
-              final isSelected = _selectedItems.contains(item.produk.idProduk);
+              final isSelected = _selectedItems.contains(item.produk.id);
 
               return Dismissible(
-                key: Key(item.produk.idProduk),
+                key: Key(item.produk.id),
                 direction: DismissDirection.endToStart,
                 onDismissed: (direction) {
-                  _keranjangService.removeFromCart(item.produk.idProduk);
-
-                  // ScaffoldMessenger.of(context).showSnackBar(
-                  //   SnackBar(
-                  //     content: Text(
-                  //       '${item.produk.nama} dihapus dari keranjang.',
-                  //     ),
-                  //     backgroundColor: Colors.red,
-                  //   ),
-                  // );
+                  _keranjangService.removeFromCart(item.produk.id);
 
                   setState(() {
-                    if (_selectedItems.contains(item.produk.idProduk)) {
-                      _selectedItems.remove(item.produk.idProduk);
+                    if (_selectedItems.contains(item.produk.id)) {
+                      _selectedItems.remove(item.produk.id);
                     }
                   });
                 },
@@ -243,7 +147,7 @@ class _KeranjangKuState extends State<KeranjangKu> {
                 child: CardItemSample(
                   item: item,
                   isSelected: isSelected,
-                  onTap: () => _toggleSelection(item.produk.idProduk), // Panggil fungsi toggle
+                  onTap: () => _toggleSelection(item.produk.id), // Panggil fungsi toggle
                 ),
               );
             },
@@ -251,10 +155,6 @@ class _KeranjangKuState extends State<KeranjangKu> {
         },
       ),
 
-      // bottomNavigationBar: CartBottomNavBar(
-      //   totalPrice: totalPrice,
-      //   itemCount: selectedCount,
-      // ),
       bottomNavigationBar: CartBottomNavBar(
         totalPrice: _selectedTotalPrice, 
         itemCount: _selectedItemsCount,
