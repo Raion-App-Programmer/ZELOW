@@ -39,7 +39,7 @@ class _BottomNavState extends State<BottomNav> {
     } else if (index == 3) {
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => const ChatPage()),
+        MaterialPageRoute(builder: (context) => const chatPage()),
       );
     } else if (index == 4) {
       Navigator.push(

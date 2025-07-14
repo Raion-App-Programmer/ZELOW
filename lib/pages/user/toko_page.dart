@@ -1,27 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:zelow/components/add_product_toko.dart';
-import 'package:zelow/components/box_button.dart';
 import 'package:zelow/components/constant.dart';
 import 'package:zelow/components/filter_toko_button.dart';
-import 'package:zelow/components/flash_sale_card.dart';
 import 'package:zelow/components/header_toko.dart';
-import 'package:zelow/components/navbar.dart';
-import 'package:zelow/components/product_card.dart';
-import 'package:zelow/components/product_card_horizontal.dart';
 import 'package:zelow/components/voucher_toko_card.dart';
-import 'package:zelow/components/widget_slider.dart';
-import 'package:zelow/pages/user/display_page.dart';
-import 'package:zelow/pages/user/flashsale_page.dart';
 import 'package:zelow/pages/user/infoproduk_page.dart';
-import 'package:zelow/pages/user/surprisebox_page.dart';
-import 'package:zelow/services/toko_service.dart';
 import 'package:zelow/models/produk_model.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-
 import '../../models/toko_model.dart';
-import '../../services/auth_service.dart';
-
-import '../../models/produk_model.dart';
 import '../../services/produk_service.dart';
 
 class TokoPageUser extends StatefulWidget {

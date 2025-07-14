@@ -6,7 +6,6 @@ import 'package:zelow/components/flash_sale_time.dart';
 import 'package:zelow/components/flashsale_container.dart';
 import 'package:zelow/components/flassale_button.dart';
 import 'package:zelow/components/navbar.dart';
-import 'package:zelow/pages/user/infoproduk_page.dart';
 import 'package:zelow/pages/user/keranjang_page.dart';
 import 'package:zelow/pages/user/search_page.dart';
 

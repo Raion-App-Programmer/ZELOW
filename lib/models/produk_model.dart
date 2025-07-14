@@ -13,7 +13,7 @@ class Produk {
   final int stok;
   final int terjual;
 
-  Product({
+  Produk({
     required this.id,
     required this.idToko,
     required this.kategori,
@@ -27,9 +27,9 @@ class Produk {
     required this.terjual,
   });
 
-  factory Product.fromFirestore(DocumentSnapshot doc) {
+  factory Produk.fromFirestore(DocumentSnapshot doc) {
     final data = doc.data() as Map<String, dynamic>;
-    return Product(
+    return Produk(
       id: doc.id,
       idToko: data['id_toko'],
       kategori: data['kategori'],

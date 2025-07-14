@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/rendering.dart';
 import 'package:zelow/components/constant.dart';
-import 'package:zelow/components/navbar.dart';
 import 'package:zelow/pages/user/edit_profile.dart';
 
 class DisplayProfile extends StatelessWidget{

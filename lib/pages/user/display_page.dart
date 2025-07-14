@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:zelow/components/constant.dart';
 import 'package:zelow/components/product_card_horizontal.dart';
-import 'package:zelow/models/produk_model.dart';
 import 'package:zelow/pages/user/toko_page.dart';
 import 'package:zelow/services/toko_service.dart';
 

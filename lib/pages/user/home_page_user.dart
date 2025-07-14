@@ -11,10 +11,8 @@ import 'package:zelow/models/toko_model.dart';
 import 'package:zelow/pages/user/display_page.dart';
 import 'package:zelow/pages/user/flashsale_page.dart';
 import 'package:zelow/pages/user/infoproduk_page.dart';
-import 'package:zelow/pages/user/rekomendasi_page.dart';
 import 'package:zelow/pages/user/search_page.dart';
 import 'package:zelow/pages/user/surprisebox_page.dart';
-import 'package:zelow/pages/user/toko_page.dart';
 import 'package:zelow/pages/user/toko_page.dart';
 import 'package:zelow/services/produk_service.dart';
 
