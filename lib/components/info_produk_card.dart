@@ -7,7 +7,7 @@ class InfoProdukCard extends StatelessWidget {
   final double rating;
   final int jumlahTerjual;
   final int likeCount;
-  final int price;
+  final double price;
   final List<ReviewItem> reviews;
   final VoidCallback? onSavePressed;
   final VoidCallback? onSharePressed;

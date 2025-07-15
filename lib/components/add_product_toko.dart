@@ -129,7 +129,7 @@ class ProductTokoCard extends StatelessWidget {
   final String imageUrl;
   final String restaurantName;
   final String description;
-  final int harga;
+  final double harga;
   final VoidCallback onTap;
 
   const ProductTokoCard({

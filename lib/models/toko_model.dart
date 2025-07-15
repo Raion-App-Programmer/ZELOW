@@ -24,17 +24,16 @@ class Toko {
   });
 
   factory Toko.fromFirestore(DocumentSnapshot doc) {
-    Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
+    final data = doc.data() as Map<String, dynamic>;
     return Toko(
       id: doc.id,
-      nama: data['nama'],
-      gambar: data['gambar'],
-      rating: data['rating'],
-      jarak: data['jarak'],
-      waktu: data['waktu'],
-      jumlahPenilaian: data['jpenilaian'],
-      deskripsi: data['deskripsi'],
-      // alamat: data['alamat'],
+      nama: data['nama'] ?? '',
+      gambar: data['gambar'] ?? '',
+      rating: (data['rating'] ?? 0).toDouble(),
+      jarak: data['jarak'] ?? 0,
+      waktu: data['waktu'] ?? '',
+      jumlahPenilaian: data['jpenilaian'] ?? 0,
+      deskripsi: data['deskripsi'] ?? '',
     );
   }
 }

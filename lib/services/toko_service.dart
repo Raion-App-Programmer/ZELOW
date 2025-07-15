@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:zelow/models/toko_model.dart';
 
+
 class TokoServices {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final String _tokoCollection = 'toko';

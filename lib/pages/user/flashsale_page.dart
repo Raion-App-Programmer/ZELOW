@@ -8,6 +8,16 @@ import 'package:zelow/components/flassale_button.dart';
 import 'package:zelow/components/navbar.dart';
 import 'package:zelow/pages/user/keranjang_page.dart';
 import 'package:zelow/pages/user/search_page.dart';
+import 'package:zelow/services/flashsale_service.dart';
+import 'package:zelow/models/produk_model.dart';
+import 'package:zelow/utils/time_slot_utils.dart';
+
+List<Map<String, DateTime>> rotateSlots(
+  List<Map<String, DateTime>> slots,
+  int startIndex,
+) {
+  return [...slots.sublist(startIndex), ...slots.sublist(0, startIndex)];
+}
 
 class FlashsalePage extends StatefulWidget {
   const FlashsalePage({super.key});
@@ -16,77 +26,95 @@ class FlashsalePage extends StatefulWidget {
   State<FlashsalePage> createState() => _FlashsalePageState();
 }
 
+late List<Map<String, DateTime>> rotatedSlots;
+late List<int> rotatedToOriginalIndex;
+
 class _FlashsalePageState extends State<FlashsalePage> {
-  int _currentTab = 0;
   int _selectedCategory = 0;
   int _selectedTab = 0;
   Duration _remainingTime = const Duration(hours: 1);
 
-  // hitung waktu flash sale tersisa
-  Duration getRemainingFlashSaleTime() {
-    final now = DateTime.now();
-    final today = DateTime(now.year, now.month, now.day);
-
-    final List<Map<String, DateTime>> timeSlots = [
-      {
-        'start': today.add(const Duration(hours: 0)),
-        'end': today.add(const Duration(hours: 9)),
-      },
-      {
-        'start': today.add(const Duration(hours: 9)),
-        'end': today.add(const Duration(hours: 12)),
-      },
-      {
-        'start': today.add(const Duration(hours: 12)),
-        'end': today.add(const Duration(hours: 18)),
-      },
-      {
-        'start': today.add(const Duration(hours: 18)),
-        'end': today.add(const Duration(days: 1)), // sampai 00:00 besok
-      },
-    ];
-
-    for (var slot in timeSlots) {
-      final start = slot['start']!;
-      final end = slot['end']!;
-      if (now.isAfter(start) && now.isBefore(end)) {
-        return end.difference(now);
-      }
-    }
-
-    return timeSlots[0]['end']!.difference(now);
-  }
-
-  void _onTabSelected(int index) {
-    setState(() {
-      _currentTab = index;
-      _selectedTab = index;
-    });
-  }
+  final FlashSaleService _flashSaleService = FlashSaleService();
+  Future<List<Produk>>? _flashSaleProdukList;
 
   final List<Map<String, dynamic>> _categories = [
-    {"icon": Icons.flash_on, "text": "All"},
+    {"icon": Icons.flash_on, "text": "Semua"},
     {"icon": Icons.access_time, "text": "Segera \nHabis"},
     {"icon": Icons.local_attraction, "text": "Ramadhan \nSale"},
     {"icon": Icons.location_on, "text": "Terdekat"},
     {"icon": Icons.sell_rounded, "text": "Termurah"},
   ];
 
+  Duration getRemainingFlashSaleTime() {
+    final now = DateTime.now();
+    final slots = getTimeSlots();
+    for (var slot in slots) {
+      if (now.isAfter(slot['start']!) && now.isBefore(slot['end']!)) {
+        return slot['end']!.difference(now);
+      }
+    }
+    return slots[0]['end']!.difference(now);
+  }
+
+  int getCurrentFlashSaleIndex() {
+    final now = DateTime.now();
+    final slots = getTimeSlots();
+    for (int i = 0; i < slots.length; i++) {
+      if (now.isAfter(slots[i]['start']!) && now.isBefore(slots[i]['end']!)) {
+        return i;
+      }
+    }
+    return 0;
+  }
+
+  void _onTabSelected(int index) {
+    setState(() {
+      _selectedTab = index;
+      _flashSaleProdukList = _flashSaleService.getFlashSaleProdukByTime(index);
+      _remainingTime = getRemainingFlashSaleTime();
+    });
+  }
+
   @override
   void initState() {
     super.initState();
 
+    final originalSlots = getTimeSlots();
+    final currentIndex = getCurrentFlashSaleIndex();
+
+    rotatedSlots = rotateSlots(originalSlots, currentIndex);
+    rotatedToOriginalIndex = List.generate(
+      rotatedSlots.length,
+      (i) => (currentIndex + i) % originalSlots.length,
+    );
+
+    _selectedTab = 0;
     _remainingTime = getRemainingFlashSaleTime();
+    _flashSaleProdukList = _flashSaleService.getFlashSaleProdukByTime(
+      rotatedToOriginalIndex[_selectedTab],
+    );
 
     Timer.periodic(const Duration(seconds: 1), (timer) {
       if (_remainingTime.inSeconds > 0) {
         setState(() {
-          _remainingTime = _remainingTime - const Duration(seconds: 1);
+          _remainingTime -= const Duration(seconds: 1);
         });
       } else {
         timer.cancel();
+
+        final newIndex = getCurrentFlashSaleIndex();
+        rotatedSlots = rotateSlots(originalSlots, newIndex);
+        rotatedToOriginalIndex = List.generate(
+          rotatedSlots.length,
+          (i) => (newIndex + i) % originalSlots.length,
+        );
+
         setState(() {
+          _selectedTab = 0;
           _remainingTime = getRemainingFlashSaleTime();
+          _flashSaleProdukList = _flashSaleService.getFlashSaleProdukByTime(
+            rotatedToOriginalIndex[_selectedTab],
+          );
         });
       }
     });
@@ -106,41 +134,31 @@ class _FlashsalePageState extends State<FlashsalePage> {
         centerTitle: false,
         leading: IconButton(
           icon: Icon(Icons.arrow_back, color: white),
-          onPressed: () {
-            Navigator.pop(context);
-          },
+          onPressed: () => Navigator.pop(context),
         ),
         title: Image.asset('assets/images/Zeflash.png', height: 30),
         actions: [
-          Row(
-            children: [
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 1),
-                child: CircleAvatar(
-                  backgroundColor: white,
-                  child: IconButton(
-                    icon: Icon(Icons.notifications, color: zelow),
-                    onPressed: () {},
-                  ),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 10),
-                child: CircleAvatar(
-                  backgroundColor: white,
-                  child: IconButton(
-                    icon: Icon(Icons.shopping_bag_rounded, color: zelow),
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => KeranjangKu()),
-                      );
-                    },
-                  ),
-                ),
-              ),
-            ],
+          CircleAvatar(
+            backgroundColor: white,
+            child: IconButton(
+              icon: Icon(Icons.notifications, color: zelow),
+              onPressed: () {},
+            ),
           ),
+          const SizedBox(width: 10),
+          CircleAvatar(
+            backgroundColor: white,
+            child: IconButton(
+              icon: Icon(Icons.shopping_bag_rounded, color: zelow),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (_) => KeranjangKu()),
+                );
+              },
+            ),
+          ),
+          const SizedBox(width: 10),
         ],
       ),
       backgroundColor: white,
@@ -153,52 +171,48 @@ class _FlashsalePageState extends State<FlashsalePage> {
               decoration: BoxDecoration(
                 color: white,
                 borderRadius: BorderRadius.circular(25),
-                border: Border.all(color: zelow, width: 1),
+                border: Border.all(color: zelow),
               ),
               child: TextField(
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => SearchPage()),
-                  );
-                },
+                onTap:
+                    () => Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (_) => SearchPage()),
+                    ),
                 decoration: InputDecoration(
-                  hintText: 'Lagi pengen makan apa',
+                  hintText: 'Lagi pengen makan apa?',
                   hintStyle: greyTextStyle,
                   prefixIcon: Icon(Icons.search, color: zelow),
                   border: InputBorder.none,
-                  contentPadding: EdgeInsets.symmetric(vertical: 11),
+                  contentPadding: const EdgeInsets.symmetric(vertical: 11),
                 ),
               ),
             ),
           ),
           FlashSaleTabs(onTabSelected: _onTabSelected),
+          const SizedBox(height: 4),
           SizedBox(
             height: 80,
-            child: SingleChildScrollView(
+            child: ListView.builder(
               scrollDirection: Axis.horizontal,
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 8),
-                child: Row(
-                  children: List.generate(
-                    _categories.length,
-                    (index) => FlashSaleBoxButton(
-                      icon: _categories[index]["icon"],
-                      text: _categories[index]["text"],
-                      isSelected: _selectedCategory == index,
-                      onPressed: () {
-                        setState(() {
-                          _selectedCategory = index;
-                        });
-                      },
-                    ),
-                  ),
-                ),
-              ),
+              padding: const EdgeInsets.only(left: 16, right: 8),
+              itemCount: _categories.length,
+              itemBuilder: (context, index) {
+                final category = _categories[index];
+                return FlashSaleBoxButton(
+                  icon: category["icon"],
+                  text: category["text"],
+                  isSelected: _selectedCategory == index,
+                  onPressed: () {
+                    setState(() {
+                      _selectedCategory = index;
+                    });
+                  },
+                );
+              },
             ),
           ),
-          SizedBox(height: 10),
-
+          const SizedBox(height: 8),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
             child: Row(
@@ -221,61 +235,34 @@ class _FlashsalePageState extends State<FlashsalePage> {
             ),
           ),
           Expanded(
-            child: ListView.builder(
-              padding: EdgeInsets.all(1),
-              itemCount:
-                  (_selectedTab == 1 || _selectedTab == 2 || _selectedTab == 3)
-                      ? 3
-                      : 5,
-              itemBuilder: (context, index) {
-                if (_selectedTab == 1 ||
-                    _selectedTab == 2 ||
-                    _selectedTab == 3) {
-                  return const AkandatangCard();
-                } else {
-                  return FoodSaleCard(
-                    sold: (index + 1) * 5,
-                    maxStock: 50,
-                    onBuyPressed: () {
-                      // Navigator.push(
-                      //   context,
-                      //   MaterialPageRoute(
-                      //     builder:
-                      //         (context) => ProductInfoPage(
-                      //           productData: {
-                      //             'id': (index + 1).toDouble(),
-                      //             'title':
-                      //                 'Masakan Padang Roda Dua, Bendungan Sutami',
-                      //             'imageUrl': 'https://picsum.photos/200/200',
-                      //             'rating': 4.5,
-                      //             'reviewCount': 688.toDouble(),
-                      //             'likeCount': 420.toDouble(),
-                      //             'price': 10000.toDouble(),
-                      //             'originalPrice': 12500.toDouble(),
-                      //             'distance': '1.2 km',
-                      //             'discount': '20%',
-                      //             'sold': ((index + 1) * 5).toDouble(),
-                      //             'reviews': [
-                      //               {
-                      //                 'name': 'Nana Mirdad',
-                      //                 'imageUrl':
-                      //                     'https://example.com/avatar1.jpg',
-                      //                 'rating': 5.0,
-                      //               },
-                      //               {
-                      //                 'name': 'Budi Santoso',
-                      //                 'imageUrl':
-                      //                     'https://example.com/avatar2.jpg',
-                      //                 'rating': 4.0,
-                      //               },
-                      //             ],
-                      //           },
-                      //         ),
-                      //   ),
-                      // );
-                    },
+            child: FutureBuilder<List<Produk>>(
+              future: _flashSaleProdukList,
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(child: CircularProgressIndicator());
+                }
+
+                if (snapshot.hasError) {
+                  return Center(
+                    child: Text('Gagal memuat data: ${snapshot.error}'),
                   );
                 }
+
+                final produkList = snapshot.data ?? [];
+                final isOngoing =
+                    rotatedToOriginalIndex[_selectedTab] ==
+                    getCurrentFlashSaleIndex();
+
+                return ListView.builder(
+                  padding: const EdgeInsets.only(bottom: 5),
+                  itemCount: produkList.length,
+                  itemBuilder: (context, index) {
+                    final produk = produkList[index];
+                    return isOngoing
+                        ? FoodSaleCard(produk: produk, onBuyPressed: () {})
+                        : AkandatangCard(produk: produk);
+                  },
+                );
               },
             ),
           ),

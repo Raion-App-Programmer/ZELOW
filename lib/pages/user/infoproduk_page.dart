@@ -91,8 +91,8 @@ class _ProductInfoPageState extends State<ProductInfoPage> {
     // double price = (widget.productData['price'] as num).toDouble();
     // double totalPrice = itemCount * price;
 
-    int price = widget.productData.harga;
-    int totalPrice = itemCount * price;
+    double price = widget.productData.harga;
+    double totalPrice = itemCount * price;
 
     return Scaffold(
       appBar: AppBar(title: Text('Detail Produk'), leading: BackButton()),

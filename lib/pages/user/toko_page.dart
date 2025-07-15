@@ -354,86 +354,11 @@ class _TokoPageUserState extends State<TokoPageUser> {
                                   'tambahan',
                                 ),
                               ],
+                              SizedBox(height: 25),
                             ],
                           );
                         },
                       ),
-                      // Column(
-                      //   crossAxisAlignment: CrossAxisAlignment.start,
-                      //   children: [
-                      //     Padding(
-                      //       padding: const EdgeInsets.symmetric(horizontal: 16),
-                      //       child: Text(
-                      //         'Flash Sale',
-                      //         style: blackTextStyle.copyWith(
-                      //           fontSize:
-                      //               MediaQuery.of(context).size.width * 0.045,
-                      //           fontWeight: FontWeight.bold,
-                      //         ),
-                      //       ),
-                      //     ),
-                      //     const SizedBox(height: 8),
-
-                      //     // List Card ke BAWAH
-                      //     SizedBox(
-                      //       child: ListView.builder(
-                      //         padding: EdgeInsets.zero,
-                      //         itemCount: 3, // Jumlah flash sale
-                      //         shrinkWrap: true,
-                      //         physics:
-                      //             const NeverScrollableScrollPhysics(), // Scroll bawaan dari Parent
-                      //         itemBuilder: (context, index) {
-                      //           return ProductTokoCard(
-                      //             imageUrl: 'assets/images/mie ayam.jpg',
-                      //             restaurantName: 'Nasi padang saus tiram',
-                      //             description: '6rb terjual | Disukai oleh 342',
-                      //             harga: 12.000,
-                      //             onTap: () {
-                      //               // Aksi ketika diklik
-                      //             },
-                      //           );
-                      //         },
-                      //       ),
-                      //     ),
-
-                      //     Padding(
-                      //       padding: const EdgeInsets.symmetric(
-                      //         horizontal: 16,
-                      //         vertical: 8,
-                      //       ),
-                      //       child: Text(
-                      //         'Makanan',
-                      //         style: blackTextStyle.copyWith(
-                      //           fontSize:
-                      //               MediaQuery.of(context).size.width * 0.045,
-                      //           fontWeight: FontWeight.bold,
-                      //         ),
-                      //       ),
-                      //     ),
-
-                      //     SizedBox(
-                      //       child: ListView.builder(
-                      //         padding: EdgeInsets.zero,
-                      //         itemCount: 3, // Jumlah makanan
-                      //         shrinkWrap: true,
-                      //         physics:
-                      //             const NeverScrollableScrollPhysics(), // Scroll bawaan dari Parent
-                      //         itemBuilder: (context, index) {
-                      //           return ProductTokoCard(
-                      //             imageUrl: 'assets/images/naspad.jpg',
-                      //             restaurantName: 'Rendang',
-                      //             description: '6rb terjual | Disukai oleh 342',
-                      //             harga: 12.000,
-                      //             onTap: () {
-                      //               // Aksi ketika diklik
-                      //             },
-                      //           );
-                      //         },
-                      //       ),
-                      //     ),
-                      //     const SizedBox(height: 30),
-                      //   ],
-                      // ),
                     ],
                   ),
                 ),
