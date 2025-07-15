@@ -1,6 +1,10 @@
-
 import 'package:flutter/material.dart';
 import 'package:zelow/components/constant.dart';
+import 'package:zelow/pages/user/home_page_user.dart';
+import 'package:zelow/pages/user/pesanan_page.dart';
+import 'package:zelow/pages/user/flashsale_page.dart';
+import 'package:zelow/pages/user/chat_page.dart';
+import 'package:zelow/pages/user/profile_page.dart';
 
 class BottomNav extends StatefulWidget {
   final int selectedItem;
@@ -18,15 +22,30 @@ class _BottomNavState extends State<BottomNav> {
       _currentIndex = index;
     });
     if (index == 0) {
-      Navigator.pushReplacementNamed(context, '/home_page_user');
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => const HomePageUser()),
+      );
     } else if (index == 1) {
-      Navigator.pushReplacementNamed(context, '/pesanan');
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => const PesananPage(orders: [])),
+      );
     } else if (index == 2) {
-      Navigator.pushReplacementNamed(context, '/flashsale');
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => const FlashsalePage()),
+      );
     } else if (index == 3) {
-      Navigator.pushReplacementNamed(context, '/chat');
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => const chatPage()),
+      );
     } else if (index == 4) {
-      Navigator.pushReplacementNamed(context, '/profile');
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => const ProfilePage()),
+      );
     }
   }
 
@@ -42,21 +61,12 @@ class _BottomNavState extends State<BottomNav> {
           label: 'Beranda',
         ),
         BottomNavigationBarItem(
-          icon:  Icon(Icons.receipt),
+          icon: Icon(Icons.receipt),
           label: 'Pesanan Saya',
         ),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.bolt),
-          label: 'Flash Sale',
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.chat),
-          label: 'Chat',
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.person),
-          label: 'Profile',
-        ),
+        BottomNavigationBarItem(icon: Icon(Icons.bolt), label: 'Flash Sale'),
+        BottomNavigationBarItem(icon: Icon(Icons.chat), label: 'Chat'),
+        BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile'),
       ],
       selectedItemColor: zelow,
       unselectedItemColor: Colors.black26,

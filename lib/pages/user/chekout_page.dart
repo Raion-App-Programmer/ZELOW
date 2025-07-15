@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:zelow/components/constant.dart';
 import 'package:zelow/components/order_item_card.dart';
 import 'package:zelow/pages/user/pesanan_page.dart';
+import 'package:zelow/services/pesanan_service.dart';
 
 class CheckoutPage extends StatefulWidget {
   final List<Map<String, dynamic>> orders;
@@ -16,7 +17,10 @@ class _CheckoutPageState extends State<CheckoutPage> {
   late List<Map<String, dynamic>> orders;
   double serviceFee = 4900.0;
   String _selectedPayment = "cash";
-  
+
+  // Backend service checkout
+  final PesananService _pesananService = PesananService();
+  bool _isProcessing = false;
 
   String getMonthName(int month) {
     List<String> months = [
@@ -40,7 +44,6 @@ class _CheckoutPageState extends State<CheckoutPage> {
   void initState() {
     super.initState();
     orders = List.from(widget.orders);
-     
   }
 
   void _increaseQuantity(int index) {
@@ -443,25 +446,23 @@ class _CheckoutPageState extends State<CheckoutPage> {
       bottomNavigationBar: Container(
         padding: EdgeInsets.all(16),
         child: ElevatedButton(
-            onPressed: () {
- 
-                Map<String, dynamic> order = {
-                  "orderNumber": DateTime.now().millisecondsSinceEpoch,
-                  "orderDate": "${DateTime.now().day} ${getMonthName(DateTime.now().month)} ${DateTime.now().year}",
-                  "items": List.from(orders),
-                };
-                
-                
-                List<Map<String, dynamic>> newOrdersList = [order];
-                
-                
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => PesananPage(orders: newOrdersList),
-                  ),
-                );
-              },
+          onPressed: () {
+            Map<String, dynamic> order = {
+              "orderNumber": DateTime.now().millisecondsSinceEpoch,
+              "orderDate":
+                  "${DateTime.now().day} ${getMonthName(DateTime.now().month)} ${DateTime.now().year}",
+              "items": List.from(orders),
+            };
+
+            List<Map<String, dynamic>> newOrdersList = [order];
+
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => PesananPage(orders: newOrdersList),
+              ),
+            );
+          },
 
           style: ElevatedButton.styleFrom(
             backgroundColor: zelow,

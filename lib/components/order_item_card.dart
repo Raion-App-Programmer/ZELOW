@@ -36,19 +36,32 @@ class OrderItemCard extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(title, style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                  Text(
+                    title,
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                  ),
                   SizedBox(height: 4),
                   Row(
                     children: [
                       Text(
                         "Rp${price.toStringAsFixed(0)}",
-                        style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: zelow),
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: zelow,
+                        ),
                       ),
                       SizedBox(width: 8),
-                      Text(
-                        "Rp${originalPrice.toStringAsFixed(0)}",
-                        style: TextStyle(fontSize: 14, color: Colors.grey, decoration: TextDecoration.lineThrough),
-                      ),
+                      if (price != originalPrice) ...[
+                        Text(
+                          "Rp${originalPrice.toStringAsFixed(0)}",
+                          style: TextStyle(
+                            fontSize: 14,
+                            color: Colors.grey,
+                            decoration: TextDecoration.lineThrough,
+                          ),
+                        ),
+                      ],
                     ],
                   ),
                 ],
@@ -60,7 +73,10 @@ class OrderItemCard extends StatelessWidget {
                   onPressed: onDecrease,
                   icon: Icon(Icons.remove_circle_outline, color: zelow),
                 ),
-                Text(quantity.toString(), style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                Text(
+                  quantity.toString(),
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                ),
                 IconButton(
                   onPressed: onIncrease,
                   icon: Icon(Icons.add_circle_outline, color: zelow),
