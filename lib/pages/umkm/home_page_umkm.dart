@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
-<<<<<<< HEAD
 import 'package:zelow/pages/umkm/stok_toko_umkm.dart';
 
-=======
->>>>>>> 01db41bbd58f5ed44b33bff4c78a84bbcd900e4b
 import '../../components/constant.dart';
 import '../../services/auth_service.dart';
 
@@ -15,12 +12,11 @@ class HomePageUmkm extends StatefulWidget {
 }
 
 class _HomePageUmkmState extends State<HomePageUmkm> {
-
   void _handleLogout() {
     AuthService().logout(context);
   }
 
-  void _tes(){
+  void _tes() {
     Navigator.pushReplacementNamed(context, '/laporan');
   }
 
@@ -34,19 +30,13 @@ class _HomePageUmkmState extends State<HomePageUmkm> {
         title: Text("Home Page Umkm", style: TextStyle(color: black)),
         automaticallyImplyLeading: false,
         actions: [
-          IconButton(
-            onPressed: _tes,
-            icon: Icon(Icons.logout, color: black),
-          ),
+          IconButton(onPressed: _tes, icon: Icon(Icons.logout, color: black)),
         ],
       ),
-      body: Center(
-        child: StokPage(),
-      ),
+      body: Center(child: StokPage()),
     );
   }
 }
-
 
 class StokPage extends StatelessWidget {
   const StokPage({super.key});
@@ -56,9 +46,9 @@ class StokPage extends StatelessWidget {
     return Container(
       child: TextButton(
         onPressed: () {
-          Navigator.of(context).push(
-            MaterialPageRoute(builder: (context) => const StokTokoUmkm())
-          );
+          Navigator.of(
+            context,
+          ).push(MaterialPageRoute(builder: (context) => StokTokoUmkm()));
         },
         child: Text('Navigate to Stok Toko UMKM', textAlign: TextAlign.center),
       ),
