@@ -158,8 +158,15 @@ class _ProductInfoPageState extends State<ProductInfoPage> {
             ),
             const SizedBox(height: 8),
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
+              padding: const EdgeInsets.symmetric(horizontal: 0),
               child: _buildReviews([
+                // dummy review
+                // {
+                //   'name': 'Nana Mirdad',
+                //   'imageUrl': 'https://i.imgur.com/QCNbOAo.png',
+                //   'komentar': 'enakkk',
+                //   'rating': 5.0,
+                // },
                 // {
                 //   'name': 'Nana Mirdad',
                 //   'imageUrl': 'https://i.imgur.com/QCNbOAo.png',
@@ -175,13 +182,8 @@ class _ProductInfoPageState extends State<ProductInfoPage> {
       bottomNavigationBar:
           itemCount > 0
               ? Container(
-                height: 100,
-                padding: EdgeInsets.only(
-                  top: 8,
-                  bottom: 20,
-                  left: 16,
-                  right: 16,
-                ),
+                height: 120,
+                padding: EdgeInsets.only(bottom: 24, left: 18, right: 18),
                 decoration: BoxDecoration(
                   color: Colors.white,
                   border: Border(
@@ -332,14 +334,20 @@ class _ProductInfoPageState extends State<ProductInfoPage> {
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
         itemCount: reviewsData.length,
+        padding: const EdgeInsets.only(
+          left: 16,
+        ),
         itemBuilder: (context, index) {
           final review = reviewsData[index];
-          return ReviewItem(
-            reviewerName: review['name'] ?? 'Anonim',
-            reviewerImageUrl:
-                review['imageUrl'] ?? 'https://i.imgur.com/QCNbOAo.png',
-            komentar: review['komentar'] ?? '',
-            rating: (review['rating'] ?? 5.0).toDouble(),
+          return Padding(
+            padding: EdgeInsets.only(right: 4),
+            child: ReviewItem(
+              reviewerName: review['name'] ?? 'Anonim',
+              reviewerImageUrl:
+                  review['imageUrl'] ?? 'https://i.imgur.com/QCNbOAo.png',
+              komentar: review['komentar'] ?? '',
+              rating: (review['rating'] ?? 5.0).toDouble(),
+            ),
           );
         },
       ),
