@@ -138,7 +138,7 @@ class AkandatangCard extends StatelessWidget {
                   Row(
                     children: [
                       Text(
-                        currencyFormat.format(produk.harga),
+                        currencyFormat.format(produk.harga * 0.8),
                         style: const TextStyle(
                           fontFamily: 'Nunito',
                           fontWeight: FontWeight.w600,
@@ -148,7 +148,7 @@ class AkandatangCard extends StatelessWidget {
                       ),
                       const SizedBox(width: 6),
                       Text(
-                        currencyFormat.format(produk.harga * 1.25),
+                        currencyFormat.format(produk.harga),
                         style: TextStyle(
                           fontFamily: 'Nunito',
                           fontSize: 12,
@@ -164,9 +164,7 @@ class AkandatangCard extends StatelessWidget {
                       onPressed: () => _showReminderDialog(context),
                       style: OutlinedButton.styleFrom(
                         backgroundColor: buttonBg,
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 14,
-                        ),
+                        padding: const EdgeInsets.symmetric(horizontal: 14),
                         minimumSize: const Size(0, 28),
                         side: const BorderSide(color: greenHex),
                         shape: RoundedRectangleBorder(

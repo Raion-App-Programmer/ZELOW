@@ -11,6 +11,7 @@ import 'package:zelow/pages/user/search_page.dart';
 import 'package:zelow/services/flashsale_service.dart';
 import 'package:zelow/models/produk_model.dart';
 import 'package:zelow/utils/time_slot_utils.dart';
+import 'package:zelow/pages/user/infoproduk_page.dart';
 
 List<Map<String, DateTime>> rotateSlots(
   List<Map<String, DateTime>> slots,
@@ -259,7 +260,30 @@ class _FlashsalePageState extends State<FlashsalePage> {
                   itemBuilder: (context, index) {
                     final produk = produkList[index];
                     return isOngoing
-                        ? FoodSaleCard(produk: produk, onBuyPressed: () {})
+                        ? GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder:
+                                    (_) => ProductInfoPage(productData: produk),
+                              ),
+                            );
+                          },
+                          child: FoodSaleCard(
+                            produk: produk,
+                            onBuyPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder:
+                                      (_) =>
+                                          ProductInfoPage(productData: produk),
+                                ),
+                              );
+                            },
+                          ),
+                        )
                         : AkandatangCard(produk: produk);
                   },
                 );
