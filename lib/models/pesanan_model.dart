@@ -9,7 +9,7 @@ class Pesanan {
   final int quantity;
   final String idToko;
   final String idUser;
-  final List<String> listIdProduk;
+  final String idProduk;
 
   Pesanan({
     required this.idPesanan,
@@ -20,7 +20,7 @@ class Pesanan {
     required this.quantity,
     required this.idToko,
     required this.idUser,
-    required this.listIdProduk,
+    required this.idProduk,
   });
 
   factory Pesanan.fromFirestore(DocumentSnapshot doc) {
@@ -34,7 +34,7 @@ class Pesanan {
       quantity: data['quantity'],
       idToko: data['id_toko'],
       idUser: data['id_user'],
-      listIdProduk: List<String>.from(data['list_id_produk']),
+      idProduk: data['id_produk'],
     );
   }
 
@@ -46,7 +46,7 @@ class Pesanan {
       'waktu_pesan': waktuPesan,
       'quantity': quantity,
       'id_toko': idToko,
-      'id_produk': listIdProduk,
+      'id_produk': idProduk,
       'id_user': idUser,
       'timestamp': FieldValue.serverTimestamp(), // Untuk mengurutkan pesanan berdasarkan waktu
     };

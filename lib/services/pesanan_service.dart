@@ -4,11 +4,11 @@ import 'package:zelow/models/pesanan_model.dart';
 
 class PesananService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  final String? userId = FirebaseAuth.instance.currentUser?.uid;
+  final String? idUser = FirebaseAuth.instance.currentUser?.uid;
 
   Future<void> addPesanan(Pesanan pesanan) async {
     try {
-      if (userId == null) {
+      if (idUser == null) {
         print("User tidak ditemukan, tidak bisa menambahkan pesanan.");
         return;
       }
@@ -22,13 +22,22 @@ class PesananService {
     }
   }
 
-  Stream<List<Pesanan>> getAllPesanan() {
-    if (userId == null) {
-      return Stream.value([]);
-    }
-
+  Stream<List<Pesanan>> getPesananByIdUser() {
     return _firestore
         .collection('pesanan')
+        .where('id_user', isEqualTo: idUser)
+        .orderBy('timestamp', descending: true)
+        .snapshots()
+        .map(
+          (snapshot) =>
+              snapshot.docs.map((doc) => Pesanan.fromFirestore(doc)).toList(),
+        );
+  }
+
+  Stream<List<Pesanan>> getPesananByIdToko (String idToko) {
+    return _firestore
+        .collection('pesanan')
+        .where('id_toko', isEqualTo: idToko)
         .orderBy('timestamp', descending: true)
         .snapshots()
         .map(
@@ -39,7 +48,7 @@ class PesananService {
 
   // Fungsi untuk mengupdate status pesanan
   Future<void> updateStatusPesanan(String pesananId, String status) async {
-    if (userId == null) {
+    if (idUser == null) {
       print("User tidak ditemukan, tidak bisa mengupdate status pesanan.");
       return;
     }

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:zelow/components/constant.dart';
 import 'package:zelow/components/order_item_card.dart';
 import 'package:zelow/pages/user/pesanan_page.dart';
-import 'package:zelow/services/pesanan_service.dart';
 
 class CheckoutPage extends StatefulWidget {
   final List<Map<String, dynamic>> orders;
@@ -14,15 +13,14 @@ class CheckoutPage extends StatefulWidget {
 }
 
 class _checkoutPageState extends State<CheckoutPage> {
-  late List<Map<String, dynamic>> orders;
   late Set<String> alamatOrders;
 
   double serviceFee = 4900.0;
   String _selectedPayment = "cash";
 
   // Backend service checkout
-  final PesananService _pesananService = PesananService();
-  bool _isProcessing = false;
+  // final PesananService _pesananService = PesananService();
+  // bool _isProcessing = false;
 
   String getMonthName(int month) {
     List<String> months = [
@@ -45,21 +43,19 @@ class _checkoutPageState extends State<CheckoutPage> {
   @override
   void initState() {
     super.initState();
-    orders = List.from(widget.orders);
-    // mengambil alamat dari setiap toko produk di orders lalu memasukkannnya ke variable alamatOrders
-    alamatOrders = orders.map((order) => order['address'].toString()).toSet();
+    alamatOrders = widget.orders.map((order) => order['address'].toString()).toSet();
   }
 
   void _increaseQuantity(int index) {
     setState(() {
-      orders[index]['quantity']++;
+      widget.orders[index]['quantity']++;
     });
   }
 
   void _decreaseQuantity(int index) {
-    if (orders[index]['quantity'] > 1) {
+    if (widget.orders[index]['quantity'] > 1) {
       setState(() {
-        orders[index]['quantity']--;
+        widget.orders[index]['quantity']--;
       });
     }
   }
@@ -88,8 +84,8 @@ class _checkoutPageState extends State<CheckoutPage> {
   }
 
   void _showOrderTypeModal(BuildContext context) {
-    String _selectedTab = "Pick Up"; // Default Pick Up
-    String _selectedSchedule = "10:00 - 11:00"; // Default Radio Button
+    String selectedTab = "Pick Up"; // Default Pick Up
+    String selectedSchedule = "10:00 - 11:00"; // Default Radio Button
 
     showModalBottomSheet(
       context: context,
@@ -113,12 +109,12 @@ class _checkoutPageState extends State<CheckoutPage> {
                         child: ElevatedButton(
                           onPressed: () {
                             setState(() {
-                              _selectedTab = "Pick Up";
+                              selectedTab = "Pick Up";
                             });
                           },
                           style: ElevatedButton.styleFrom(
                             backgroundColor:
-                                _selectedTab == "Pick Up"
+                                selectedTab == "Pick Up"
                                     ? zelow
                                     : Colors.white,
                             shape: RoundedRectangleBorder(
@@ -130,7 +126,7 @@ class _checkoutPageState extends State<CheckoutPage> {
                             "Pick Up",
                             style: TextStyle(
                               color:
-                                  _selectedTab == "Pick Up"
+                                  selectedTab == "Pick Up"
                                       ? Colors.white
                                       : zelow,
                             ),
@@ -142,12 +138,12 @@ class _checkoutPageState extends State<CheckoutPage> {
                         child: ElevatedButton(
                           onPressed: () {
                             setState(() {
-                              _selectedTab = "Delivery";
+                              selectedTab = "Delivery";
                             });
                           },
                           style: ElevatedButton.styleFrom(
                             backgroundColor:
-                                _selectedTab == "Delivery"
+                                selectedTab == "Delivery"
                                     ? zelow
                                     : Colors.white,
                             shape: RoundedRectangleBorder(
@@ -159,7 +155,7 @@ class _checkoutPageState extends State<CheckoutPage> {
                             "Delivery",
                             style: TextStyle(
                               color:
-                                  _selectedTab == "Delivery"
+                                  selectedTab == "Delivery"
                                       ? Colors.white
                                       : zelow,
                             ),
@@ -170,7 +166,7 @@ class _checkoutPageState extends State<CheckoutPage> {
                   ),
                   SizedBox(height: 16),
 
-                  _selectedTab == "Pick Up"
+                  selectedTab == "Pick Up"
                       ? Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -223,11 +219,11 @@ class _checkoutPageState extends State<CheckoutPage> {
                               ListTile(
                                 leading: Radio(
                                   value: "10:00 - 11:00",
-                                  groupValue: _selectedSchedule,
+                                  groupValue: selectedSchedule,
                                   activeColor: zelow,
                                   onChanged: (val) {
                                     setState(() {
-                                      _selectedSchedule = val.toString();
+                                      selectedSchedule = val.toString();
                                     });
                                   },
                                 ),
@@ -236,11 +232,11 @@ class _checkoutPageState extends State<CheckoutPage> {
                               ListTile(
                                 leading: Radio(
                                   value: "21:00 - 22:00",
-                                  groupValue: _selectedSchedule,
+                                  groupValue: selectedSchedule,
                                   activeColor: zelow,
                                   onChanged: (val) {
                                     setState(() {
-                                      _selectedSchedule = val.toString();
+                                      selectedSchedule = val.toString();
                                     });
                                   },
                                 ),
@@ -298,7 +294,7 @@ class _checkoutPageState extends State<CheckoutPage> {
   }
 
   double get subtotal {
-    return orders.fold(
+    return widget.orders.fold(
       0,
       (total, item) => total + (item['price'] * item['quantity']),
     );
@@ -358,7 +354,7 @@ class _checkoutPageState extends State<CheckoutPage> {
               ),
               Column(
                 children:
-                    orders.asMap().entries.map((entry) {
+                    widget.orders.asMap().entries.map((entry) {
                       int index = entry.key;
                       var item = entry.value;
                       return OrderItemCard(
@@ -478,7 +474,7 @@ class _checkoutPageState extends State<CheckoutPage> {
               "orderNumber": DateTime.now().millisecondsSinceEpoch,
               "orderDate":
                   "${DateTime.now().day} ${getMonthName(DateTime.now().month)} ${DateTime.now().year}",
-              "items": List.from(orders),
+              "items": List.from(widget.orders),
             };
 
             List<Map<String, dynamic>> newOrdersList = [order];
