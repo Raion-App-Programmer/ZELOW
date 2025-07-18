@@ -4,7 +4,7 @@ import 'package:zelow/models/toko_model.dart';
 class Produk {
   final String gambar;
   final double harga;
-  final String id;
+  final String idProduk;
   final String idToko;
   final int jumlahDisukai;
   final int jumlahPembelian;
@@ -13,10 +13,9 @@ class Produk {
   final double rating;
   final int stok;
   final int terjual;
-  final Toko? toko;
 
   Produk({
-    required this.id,
+    required this.idProduk,
     required this.idToko,
     required this.kategori,
     required this.nama,
@@ -27,7 +26,6 @@ class Produk {
     required this.jumlahDisukai,
     required this.stok,
     required this.terjual,
-    this.toko,
   });
 
   factory Produk.fromFirestore(DocumentSnapshot doc) {
@@ -40,7 +38,7 @@ class Produk {
     }
 
     return Produk(
-      id: doc.id,
+      idProduk: doc.id,
       idToko: data['id_toko'] ?? '',
       kategori: data['kategori'] ?? '',
       nama: data['nama'] ?? '',
@@ -56,7 +54,7 @@ class Produk {
 
   Produk copyWithToko(Toko tokoBaru) {
     return Produk(
-      id: id,
+      idProduk: idProduk,
       idToko: idToko,
       kategori: kategori,
       nama: nama,
@@ -67,7 +65,6 @@ class Produk {
       jumlahDisukai: jumlahDisukai,
       stok: stok,
       terjual: terjual,
-      toko: tokoBaru,
     );
   }
 }

@@ -5,7 +5,7 @@ import 'package:zelow/models/keranjang_model.dart';
 
 class CardItemSample extends StatelessWidget {
   // final Product product;
-  final KeranjangItem item;
+  final KeranjangModel item;
   final VoidCallback onTap;
   final bool isSelected;
 
@@ -46,10 +46,10 @@ class CardItemSample extends StatelessWidget {
               children: [
                 Image.asset('assets/images/lets-icons_shop.png', width: 17.0),
                 const SizedBox(width: 4),
-                const Expanded(
+                Expanded(
                   child: Text(
-                    "Masakan Padang Roda Dua, Bendungan Suta...", // Alamat toko, nanti saja
-                    style: TextStyle(fontSize: 12, fontWeight: FontWeight.w400),
+                    item.alamat,
+                    style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w400),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),

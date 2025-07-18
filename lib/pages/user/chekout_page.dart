@@ -10,11 +10,13 @@ class CheckoutPage extends StatefulWidget {
   const CheckoutPage({super.key, required this.orders});
 
   @override
-  _CheckoutPageState createState() => _CheckoutPageState();
+  _checkoutPageState createState() => _checkoutPageState();
 }
 
-class _CheckoutPageState extends State<CheckoutPage> {
+class _checkoutPageState extends State<CheckoutPage> {
   late List<Map<String, dynamic>> orders;
+  late Set<String> alamatOrders;
+
   double serviceFee = 4900.0;
   String _selectedPayment = "cash";
 
@@ -44,6 +46,8 @@ class _CheckoutPageState extends State<CheckoutPage> {
   void initState() {
     super.initState();
     orders = List.from(widget.orders);
+    // mengambil alamat dari setiap toko produk di orders lalu memasukkannnya ke variable alamatOrders
+    alamatOrders = orders.map((order) => order['address'].toString()).toSet();
   }
 
   void _increaseQuantity(int index) {
@@ -57,6 +61,29 @@ class _CheckoutPageState extends State<CheckoutPage> {
       setState(() {
         orders[index]['quantity']--;
       });
+    }
+  }
+
+  // Ini menampilkan alamat toko yang diambil dari variable alamatOrders
+  // Jika hanya ada satu alamat, tampilkan sebagai teks biasa
+  // Jika ada lebih dari satu alamat, tampilkan sebagai daftar dengan bullet points
+  Widget buildAlamatToko(Set<String> alamatOrders) {
+    if (alamatOrders.length == 1) {
+      return Text(alamatOrders.first, style: TextStyle(fontSize: 14));
+    } else {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          for (final alamat in alamatOrders) 
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text("•  ", style: TextStyle(fontSize: 14)),
+                Expanded(child: Text(alamat, style: TextStyle(fontSize: 14))),
+              ],
+            ),
+        ],
+      );
     }
   }
 
@@ -160,14 +187,13 @@ class _CheckoutPageState extends State<CheckoutPage> {
                           ),
                           SizedBox(height: 8),
                           Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Icon(Icons.store, color: zelow),
                               SizedBox(width: 8),
-                              Expanded(
-                                child: Text(
-                                  "Masakan Padang Roda Dua\nJl. jalan No. X, Landungsari, Kota Malang",
-                                ),
-                              ),
+
+                              // ini daftar alamatnya
+                              Expanded(child: buildAlamatToko(alamatOrders)),
                             ],
                           ),
                           Text(
@@ -283,6 +309,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Checkout', style: whiteTextStyle),
+        centerTitle: true,
         leading: BackButton(color: white),
         backgroundColor: zelow,
         iconTheme: IconThemeData(color: white),
@@ -297,9 +324,9 @@ class _CheckoutPageState extends State<CheckoutPage> {
                 "Alamat Resto",
                 style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
               ),
-              Text(
-                "Jalan Bedungan Sutami No12, Penanggungan, Klojen, Kota Malang",
-              ),
+
+              buildAlamatToko(alamatOrders),
+
               SizedBox(height: 16),
               Text(
                 "Tipe Pemesanan",

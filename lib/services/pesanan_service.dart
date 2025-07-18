@@ -4,64 +4,54 @@ import 'package:zelow/models/pesanan_model.dart';
 
 class PesananService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  final FirebaseAuth _auth = FirebaseAuth.instance;
+  final String? userId = FirebaseAuth.instance.currentUser?.uid;
 
-  String? get _userId => _auth.currentUser?.uid;
-
-  Future<void> createPesanan({
-    required List<Map<String, dynamic>> items,
-    required double totalPrice,
-    required double serviceFee,
-  }) async {
-    
-    final docRef = _firestore
-        .collection('user')
-        .doc(_userId)
-        .collection('checkout')
-        .doc();
-
-    final orderData = {
-      'items': items,
-      'totalPrice': totalPrice,
-      'serviceFee': serviceFee,
-      'status': 'Berlangsung',
-      'orderDate': Timestamp.now(),
-      'userId': _userId,
-      'orderNumber': DateTime.now().millisecondsSinceEpoch,
-    };
-
-    await docRef.set(orderData);
-
-    final keranjangCollection = _firestore
-        .collection('user')
-        .doc(_userId)
-        .collection('keranjang');
-
-    WriteBatch batch = _firestore.batch();
-    for (var item in items) {
-      if (item['idProduk'] != null) {
-        batch.delete(keranjangCollection.doc(item['idProduk']));
+  Future<void> addPesanan(Pesanan pesanan) async {
+    try {
+      if (userId == null) {
+        print("User tidak ditemukan, tidak bisa menambahkan pesanan.");
+        return;
       }
+
+      // Simpan pesanan ke Firestore
+      await _firestore.collection('pesanan').add(pesanan.toFirestore());
+
+      print("Pesanan berhasil ditambahkan: ${pesanan.idPesanan}");
+    } catch (e) {
+      print('Error menambahkan pesanan: $e');
     }
-    await batch.commit();
   }
 
-  Stream<List<Pesanan>> getPesanan() {
-    if (_userId == null) return Stream.value([]);
-    
+  Stream<List<Pesanan>> getAllPesanan() {
+    if (userId == null) {
+      return Stream.value([]);
+    }
+
     return _firestore
-        .collection('user')
-        .doc(_userId)
-        .collection('checkout')
-        .orderBy('orderDate', descending: true)
+        .collection('pesanan')
+        .orderBy('timestamp', descending: true)
         .snapshots()
-        .map((snapshot) {
-      try {
-        return snapshot.docs.map((doc) => Pesanan.fromFirestore(doc)).toList();
-      } catch (e) {
-        print("Error parsing pesanan: $e");
-        return [];
-      }
-    });
+        .map(
+          (snapshot) =>
+              snapshot.docs.map((doc) => Pesanan.fromFirestore(doc)).toList(),
+        );
+  }
+
+  // Fungsi untuk mengupdate status pesanan
+  Future<void> updateStatusPesanan(String pesananId, String status) async {
+    if (userId == null) {
+      print("User tidak ditemukan, tidak bisa mengupdate status pesanan.");
+      return;
+    }
+
+    try {
+      await _firestore.collection('pesanan').doc(pesananId).update({
+        'status': status,
+      });
+
+      print("Status pesanan $pesananId berhasil diupdate ke $status");
+    } catch (e) {
+      print("Error mengupdate status pesanan: $e");
+    }
   }
 }

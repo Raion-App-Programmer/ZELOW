@@ -18,7 +18,7 @@ class _KeranjangKuState extends State<KeranjangKu> {
   final KeranjangService _keranjangService = KeranjangService();
 
   final Set<String> _selectedItems = {};
-  List<KeranjangItem> _cartItems = [];
+  List<KeranjangModel> _cartItems = [];
 
   void _toggleSelection(String idProduk) {
     setState(() {
@@ -33,7 +33,7 @@ class _KeranjangKuState extends State<KeranjangKu> {
   double get _selectedTotalPrice {
     double total = 0;
     for (var item in _cartItems) {
-      if (_selectedItems.contains(item.produk.id)) {
+      if (_selectedItems.contains(item.produk.idProduk)) {
         total += item.produk.harga * item.quantity;
       }
     }
@@ -46,15 +46,16 @@ class _KeranjangKuState extends State<KeranjangKu> {
 
   void _handleCheckout() {
     final selectedOrders = _cartItems
-        .where((item) => _selectedItems.contains(item.produk.id))
+        .where((item) => _selectedItems.contains(item.produk.idProduk))
         .map(
           (item) => {
-            'idProduk': item.produk.id, // PENTING untuk menghapus dari keranjang nanti
+            'idProduk': item.produk.idProduk, // PENTING untuk menghapus dari keranjang nanti
             'title': item.produk.nama,
             'imageUrl': item.produk.gambar,
             'price': item.produk.harga.toDouble(),
             'originalPrice': item.produk.harga.toDouble(), // Sesuaikan jika ada harga asli/diskon
             'quantity': item.quantity,
+            'address': item.alamat,
           },
         )
         .toList();
@@ -89,7 +90,7 @@ class _KeranjangKuState extends State<KeranjangKu> {
         centerTitle: true,
       ),
 
-      body: StreamBuilder<List<KeranjangItem>>(
+      body: StreamBuilder<List<KeranjangModel>>(
         stream: _keranjangService.getCartItems(),
         builder: (context, snapshot) {
           // Loading
@@ -121,17 +122,17 @@ class _KeranjangKuState extends State<KeranjangKu> {
             itemCount: _cartItems.length,
             itemBuilder: (context, index) {
               final item = _cartItems[index];
-              final isSelected = _selectedItems.contains(item.produk.id);
+              final isSelected = _selectedItems.contains(item.produk.idProduk);
 
               return Dismissible(
-                key: Key(item.produk.id),
+                key: Key(item.produk.idProduk),
                 direction: DismissDirection.endToStart,
                 onDismissed: (direction) {
-                  _keranjangService.removeFromCart(item.produk.id);
+                  _keranjangService.removeFromCart(item.produk.idProduk);
 
                   setState(() {
-                    if (_selectedItems.contains(item.produk.id)) {
-                      _selectedItems.remove(item.produk.id);
+                    if (_selectedItems.contains(item.produk.idProduk)) {
+                      _selectedItems.remove(item.produk.idProduk);
                     }
                   });
                 },
@@ -147,7 +148,7 @@ class _KeranjangKuState extends State<KeranjangKu> {
                 child: CardItemSample(
                   item: item,
                   isSelected: isSelected,
-                  onTap: () => _toggleSelection(item.produk.id), // Panggil fungsi toggle
+                  onTap: () => _toggleSelection(item.produk.idProduk), // Panggil fungsi toggle
                 ),
               );
             },

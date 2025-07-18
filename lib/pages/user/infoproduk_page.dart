@@ -6,10 +6,10 @@ import 'package:zelow/pages/user/chekout_page.dart';
 import 'package:zelow/models/produk_model.dart';
 
 import 'package:zelow/pages/user/keranjang_page.dart'; // Tambahkan import ini
-import 'package:zelow/services/keranjang_service.dart'; // Tambahkan import ini
+import 'package:zelow/services/keranjang_service.dart';
+import 'package:zelow/services/produk_service.dart'; // Tambahkan import ini
 
 class ProductInfoPage extends StatefulWidget {
-
   final Produk productData;
 
   const ProductInfoPage({super.key, required this.productData});
@@ -19,7 +19,21 @@ class ProductInfoPage extends StatefulWidget {
 }
 
 class _ProductInfoPageState extends State<ProductInfoPage> {
+  final ProdukService _produkService = ProdukService();
   int itemCount = 0;
+  String? alamatTokoProduk;
+
+  @override
+  void initState() {
+    super.initState();
+    _produkService.getAlamatTokoByProdukId(widget.productData.idToko).then((
+      alamat,
+    ) {
+      setState(() {
+        alamatTokoProduk = alamat;
+      });
+    });
+  }
 
   void _addItem() {
     setState(() {
@@ -39,14 +53,6 @@ class _ProductInfoPageState extends State<ProductInfoPage> {
   final KeranjangService _keranjangService = KeranjangService();
   bool isAddingToCart = false;
   Future<void> _handleAddToCart() async {
-    if (itemCount <= 0) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Tentukan jumlah barang terlebih dahulu'),
-          backgroundColor: Colors.orange,
-        ),
-      );
-    }
     setState(() {
       isAddingToCart = true;
     });
@@ -56,21 +62,21 @@ class _ProductInfoPageState extends State<ProductInfoPage> {
       await _keranjangService.addToCart(widget.productData, itemCount);
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('$itemCount ${widget.productData.nama} ditambahkan ke keranjang!'),
+          content: Text(
+            '$itemCount ${widget.productData.nama} ditambahkan ke keranjang!',
+          ),
           backgroundColor: zelow,
           action: SnackBarAction(
             label: 'LIHAT',
             textColor: Colors.white,
-            onPressed: () { // User dapat langsung pindah ke halaman keranjang
+            onPressed: () {
               Navigator.push(
-                context, 
-                MaterialPageRoute(
-                  builder: (context) => KeranjangKu()
-                )
+                context,
+                MaterialPageRoute(builder: (context) => KeranjangKu()),
               );
             },
           ),
-        )
+        ),
       );
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -93,7 +99,7 @@ class _ProductInfoPageState extends State<ProductInfoPage> {
 
     double price = widget.productData.harga;
     double totalPrice = itemCount * price;
-
+    
     return Scaffold(
       appBar: AppBar(title: Text('Detail Produk'), leading: BackButton()),
       body: SingleChildScrollView(
@@ -134,14 +140,21 @@ class _ProductInfoPageState extends State<ProductInfoPage> {
                         // Icon(
                         //   Icons.shopping_bag,
                         //   size: 30,
-                        //   color: zelow, 
+                        //   color: zelow,
                         //   // Warna Zelow
                         // ),
                         IconButton(
-                          onPressed: isAddingToCart ? null : _handleAddToCart, 
-                          icon: isAddingToCart
-                          ? CircularProgressIndicator(color: zelow, strokeWidth: 3)
-                          : Image.asset('assets/images/keranjangKu-icon.png', width: 25,)
+                          onPressed: isAddingToCart ? null : _handleAddToCart,
+                          icon:
+                              isAddingToCart
+                                  ? CircularProgressIndicator(
+                                    color: zelow,
+                                    strokeWidth: 3,
+                                  )
+                                  : Image.asset(
+                                    'assets/images/keranjangKu-icon.png',
+                                    width: 25,
+                                  ),
                         ),
                         if (itemCount > 0)
                           Positioned(
@@ -190,12 +203,12 @@ class _ProductInfoPageState extends State<ProductInfoPage> {
                                     orders: [
                                       {
                                         'title': widget.productData.nama,
-                                        'imageUrl':
-                                            widget.productData.gambar,
+                                        'imageUrl': widget.productData.gambar,
                                         'price': price,
                                         'quantity': itemCount,
                                         'originalPrice':
                                             widget.productData.harga,
+                                        'address': alamatTokoProduk,
                                       },
                                     ],
                                   ),

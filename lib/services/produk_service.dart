@@ -6,10 +6,11 @@ class ProdukService {
 
   Future<List<Produk>> getProdukByToko(String tokoId) async {
     try {
-      QuerySnapshot snapshot = await _firestore
-          .collection('produk')
-          .where('id_toko', isEqualTo: tokoId)
-          .get();
+      QuerySnapshot snapshot =
+          await _firestore
+              .collection('produk')
+              .where('id_toko', isEqualTo: tokoId)
+              .get();
 
       if (snapshot.docs.isEmpty) {
         print("Tidak ada produk ditemukan untuk toko dengan ID: $tokoId");
@@ -17,9 +18,8 @@ class ProdukService {
         return [];
       }
 
-      List<Produk> produkList = snapshot.docs
-          .map((doc) => Produk.fromFirestore(doc))
-          .toList();
+      List<Produk> produkList =
+          snapshot.docs.map((doc) => Produk.fromFirestore(doc)).toList();
 
       return produkList;
     } catch (e) {
@@ -28,17 +28,26 @@ class ProdukService {
     }
   }
 
+  // fungsi untuk mengambil alamat toko produk
+  Future<String> getAlamatTokoByProdukId(String tokoId) async {
+    final alamatTokoProduk =
+        (await _firestore.collection('toko').doc(tokoId).get())
+            .data()?['alamat'];
+
+    return alamatTokoProduk;
+  }
+
   Future<List<Produk>> getProdukRandom({int limit = 10}) async {
     try {
-      QuerySnapshot snapshot = await _firestore
-          .collection('produk') // karena kamu pakai struktur: produk > uid
-          .get();
+      QuerySnapshot snapshot =
+          await _firestore
+              .collection('produk') // karena kamu pakai struktur: produk > uid
+              .get();
 
       print('Total produk ditemukan: ${snapshot.docs.length}');
 
-      List<Produk> produkList = snapshot.docs
-          .map((doc) => Produk.fromFirestore(doc))
-          .toList();
+      List<Produk> produkList =
+          snapshot.docs.map((doc) => Produk.fromFirestore(doc)).toList();
 
       produkList.shuffle(); // acak
       return produkList.take(limit).toList(); // batasi hasil

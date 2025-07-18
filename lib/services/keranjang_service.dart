@@ -6,21 +6,30 @@ import 'package:zelow/models/produk_model.dart';
 class KeranjangService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FirebaseAuth _auth = FirebaseAuth.instance;
-  
+
   // ngambil id user yang sedang login
   String? get _userId => _auth.currentUser?.uid;
 
   // nambah atau update item di keranjang
   Future<void> addToCart(Produk produk, int quantity) async {
     try {
+      // ambil alamat dari collection toko produk berdasarkan id toko produk bersangkutan
+      final alamatTokoProduk =
+          (await _firestore.collection('toko').doc(produk.idToko).get())
+              .data()?['alamat'];
+
       final docRef = _firestore
           .collection('user')
           .doc(_userId)
           .collection('keranjang')
-          .doc(produk.id);
-      
+          .doc(produk.idProduk);
+
       // buat item keranjang baru
-      final keranjangItem = KeranjangItem(produk: produk, quantity: quantity);
+      final keranjangItem = KeranjangModel(
+        produk: produk,
+        quantity: quantity,
+        alamat: alamatTokoProduk,
+      );
 
       // jika dokumen sudah ada, update quantity saja dengan menambah jumlahnya dengan quantity baru tapi jika belum ada, buat dokumen baru
       final docSnapshot = await docRef.get();
@@ -44,16 +53,18 @@ class KeranjangService {
   }
 
   // buat ngambil semua item di keranjang
-  Stream<List<KeranjangItem>> getCartItems() {
+  Stream<List<KeranjangModel>> getCartItems() {
     return _firestore
-    .collection('user')
-    .doc(_userId)
-    .collection('keranjang')
-    .orderBy('timestamp', descending: true) // urutkan berdasarkan waktu
-    .snapshots()
-    .map((snapshot) {
-      return snapshot.docs.map((doc) => KeranjangItem.fromFirestore(doc)).toList();
-    });
+        .collection('user')
+        .doc(_userId)
+        .collection('keranjang')
+        .orderBy('timestamp', descending: true) // urutkan berdasarkan waktu
+        .snapshots()
+        .map((snapshot) {
+          return snapshot.docs
+              .map((doc) => KeranjangModel.fromFirestore(doc))
+              .toList();
+        });
   }
 
   // buat hapus item dari keranjang

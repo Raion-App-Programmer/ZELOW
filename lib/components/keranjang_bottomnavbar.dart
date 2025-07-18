@@ -179,9 +179,13 @@ class _CartBottomNavBarState extends State<CartBottomNavBar> {
                 Expanded(
                   child: GestureDetector(
                     onTap:
-                        widget.itemCount > 0 ? widget.onCheckoutPressed : () {
-                          print("Checkout button pressed, but no items in cart.");
-                        },
+                        widget.itemCount > 0
+                            ? widget.onCheckoutPressed
+                            : () {
+                              print(
+                                "Checkout button pressed, but no items in cart.",
+                              );
+                            },
                     child: Container(
                       alignment: Alignment.center,
                       height: 44,

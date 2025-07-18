@@ -13,19 +13,18 @@ class FlashSaleService {
     for (var tokoDoc in tokoSnapshot.docs) {
       final tokoData = Toko.fromFirestore(tokoDoc);
 
-      final produkSnapshot = await _firestore
-          .collection('produk')
-          .where('id_toko', isEqualTo: tokoDoc.id)
-          .where('kategori', isEqualTo: 'makanan')
-          .get();
+      final produkSnapshot =
+          await _firestore
+              .collection('produk')
+              .where('id_toko', isEqualTo: tokoDoc.id)
+              .where('kategori', isEqualTo: 'makanan')
+              .get();
 
-      final produkList = produkSnapshot.docs
-          .map((doc) => Produk.fromFirestore(doc))
-          .toList();
+      final produkList =
+          produkSnapshot.docs.map((doc) => Produk.fromFirestore(doc)).toList();
 
       if (produkList.length > targetIndex) {
-        final produkDenganToko =
-            produkList[targetIndex].copyWithToko(tokoData);
+        final produkDenganToko = produkList[targetIndex].copyWithToko(tokoData);
         result.add(produkDenganToko);
       }
     }
