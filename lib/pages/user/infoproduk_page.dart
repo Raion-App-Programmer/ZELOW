@@ -3,6 +3,7 @@ import 'package:zelow/components/constant.dart';
 import 'package:zelow/components/info_produk_card.dart';
 import 'package:zelow/components/review_item.dart';
 import 'package:zelow/models/produk_model.dart';
+import 'package:zelow/models/toko_model.dart';
 import 'package:zelow/pages/user/keranjang_page.dart';
 import 'package:zelow/pages/user/chekout_page.dart';
 import 'package:zelow/services/keranjang_service.dart';
@@ -10,8 +11,13 @@ import 'package:intl/intl.dart';
 
 class ProductInfoPage extends StatefulWidget {
   final Produk productData;
+  final Toko tokoData;
 
-  const ProductInfoPage({super.key, required this.productData});
+  const ProductInfoPage({
+    super.key,
+    required this.productData,
+    required this.tokoData,
+  });
 
   @override
   _ProductInfoPageState createState() => _ProductInfoPageState();
@@ -101,7 +107,7 @@ class _ProductInfoPageState extends State<ProductInfoPage> {
             color: Colors.white,
           ),
         ),
-        backgroundColor: Color(0xFF06C474),
+        backgroundColor: zelow,
         iconTheme: const IconThemeData(color: Colors.white),
         elevation: 0,
       ),
@@ -203,7 +209,7 @@ class _ProductInfoPageState extends State<ProductInfoPage> {
                                     width: 24,
                                     height: 24,
                                     child: CircularProgressIndicator(
-                                      color: Color(0xFF06C474),
+                                      color: zelow,
                                       strokeWidth: 3,
                                     ),
                                   )
@@ -219,7 +225,7 @@ class _ProductInfoPageState extends State<ProductInfoPage> {
                             child: Container(
                               padding: EdgeInsets.all(4),
                               decoration: BoxDecoration(
-                                color: Color(0xFF06C474),
+                                color: zelow,
                                 shape: BoxShape.circle,
                               ),
                               constraints: BoxConstraints(
@@ -252,7 +258,7 @@ class _ProductInfoPageState extends State<ProductInfoPage> {
                           ).format(totalPrice),
                           style: TextStyle(
                             fontFamily: 'Nunito',
-                            color: Color(0xFF06C474),
+                            color: zelow,
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
                           ),
@@ -277,6 +283,7 @@ class _ProductInfoPageState extends State<ProductInfoPage> {
                                         'quantity': itemCount,
                                         'originalPrice':
                                             widget.productData.harga,
+                                        'alamat': widget.tokoData.alamat,
                                       },
                                     ],
                                   ),
@@ -285,7 +292,7 @@ class _ProductInfoPageState extends State<ProductInfoPage> {
                         }
                       },
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Color(0xFF06C474),
+                        backgroundColor: zelow,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(24),
                         ),
@@ -334,9 +341,7 @@ class _ProductInfoPageState extends State<ProductInfoPage> {
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
         itemCount: reviewsData.length,
-        padding: const EdgeInsets.only(
-          left: 16,
-        ),
+        padding: const EdgeInsets.only(left: 16),
         itemBuilder: (context, index) {
           final review = reviewsData[index];
           return Padding(

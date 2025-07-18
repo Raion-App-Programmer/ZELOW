@@ -173,6 +173,7 @@ class _HomePageUserState extends State<HomePageUser> {
                           MaterialPageRoute(
                             builder: (context) => ProductInfoPage(
                               productData: produk,
+                              tokoData: produk.toko!
                             ),
                           ),
                         );

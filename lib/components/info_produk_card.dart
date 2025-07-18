@@ -168,7 +168,7 @@ class InfoProdukCard extends StatelessWidget {
         shape: BoxShape.circle,
         border:
             borderColor != null
-                ? Border.all(color: borderColor, width: 1)
+                ? Border.all(color: borderColor, width: 2)
                 : null,
       ),
       child: IconButton(

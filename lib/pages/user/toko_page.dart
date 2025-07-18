@@ -46,7 +46,11 @@ class _TokoPageUserState extends State<TokoPageUser> {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => ProductInfoPage(productData: dataProduk),
+                builder:
+                    (context) => ProductInfoPage(
+                      productData: dataProduk,
+                      tokoData: dataProduk.toko!,
+                    ),
               ),
             );
           },

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:zelow/components/constant.dart';
 import 'package:zelow/components/order_item_card.dart';
 import 'package:zelow/pages/user/pesanan_page.dart';
@@ -17,6 +18,12 @@ class _CheckoutPageState extends State<CheckoutPage> {
   late List<Map<String, dynamic>> orders;
   double serviceFee = 4900.0;
   String _selectedPayment = "cash";
+
+  final currencyFormatter = NumberFormat("#,##0", "id_ID");
+
+  String formatRupiah(num value) {
+    return "Rp${currencyFormatter.format(value)}";
+  }
 
   // Backend service checkout
   final PesananService _pesananService = PesananService();
@@ -150,6 +157,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                           Text(
                             "Ambil Langsung ke Toko",
                             style: TextStyle(
+                              fontFamily: "Nunito",
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
                             ),
@@ -186,6 +194,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                           Text(
                             "Jadwal Pengambilan",
                             style: TextStyle(
+                              fontFamily: "Nunito",
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
                             ),
@@ -233,6 +242,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                             Text(
                               "Coming Soon",
                               style: TextStyle(
+                                fontFamily: "Nunito",
                                 fontSize: 20,
                                 fontWeight: FontWeight.bold,
                                 color: Colors.black54,
@@ -257,7 +267,11 @@ class _CheckoutPageState extends State<CheckoutPage> {
                         padding: EdgeInsets.symmetric(vertical: 12),
                         child: Text(
                           "Terapkan",
-                          style: TextStyle(fontSize: 18, color: Colors.white),
+                          style: TextStyle(
+                            fontFamily: "Nunito",
+                            fontSize: 18,
+                            color: Colors.white,
+                          ),
                         ),
                       ),
                     ),
@@ -271,7 +285,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
     );
   }
 
-  double get subtotal {
+  double get harga {
     return orders.fold(
       0,
       (total, item) => total + (item['price'] * item['quantity']),
@@ -281,32 +295,57 @@ class _CheckoutPageState extends State<CheckoutPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
-        title: Text('Checkout', style: whiteTextStyle),
+        title: Text(
+          'Checkout',
+          style: TextStyle(
+            fontFamily: 'Nunito',
+            fontWeight: FontWeight.bold,
+            color: Colors.white,
+          ),
+        ),
         leading: BackButton(color: white),
         backgroundColor: zelow,
         iconTheme: IconThemeData(color: white),
       ),
       body: SingleChildScrollView(
         child: Padding(
-          padding: EdgeInsets.all(16.0),
+          padding: EdgeInsets.all(16),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
                 "Alamat Resto",
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                style: TextStyle(
+                  fontFamily: "Nunito",
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
+              SizedBox(height: 4),
               Text(
-                "Jalan Bedungan Sutami No12, Penanggungan, Klojen, Kota Malang",
+                widget.orders.isNotEmpty && widget.orders[0]["alamat"] != null
+                    ? widget.orders[0]["alamat"]
+                    : "-",
+                style: TextStyle(
+                  fontFamily: 'Nunito',
+                  fontSize: 15,
+                  color: Colors.grey.shade700,
+                ),
               ),
               SizedBox(height: 16),
               Text(
                 "Tipe Pemesanan",
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                style: TextStyle(
+                  fontFamily: "Nunito",
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
+              SizedBox(height: 8),
               Container(
-                padding: EdgeInsets.all(12),
+                padding: EdgeInsets.all(14),
                 decoration: BoxDecoration(
                   border: Border.all(color: Colors.grey.shade300),
                   borderRadius: BorderRadius.circular(12),
@@ -318,16 +357,27 @@ class _CheckoutPageState extends State<CheckoutPage> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text("Pilih Tipe Pemesanan"),
-                      Icon(Icons.arrow_forward_ios, size: 16),
+                      Text(
+                        "Pilih Tipe Pemesanan",
+                        style: TextStyle(
+                          fontFamily: 'Nunito',
+                          fontWeight: FontWeight.w600,
+                          fontSize: 15,
+                        ),
+                      ),
+                      Icon(Icons.arrow_forward_ios, size: 18, color: zelow),
                     ],
                   ),
                 ),
               ),
-              SizedBox(height: 16),
+              SizedBox(height: 20),
               Text(
                 "Rincian Pesanan",
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                style: TextStyle(
+                  fontFamily: "Nunito",
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
               Column(
                 children:
@@ -347,42 +397,93 @@ class _CheckoutPageState extends State<CheckoutPage> {
               ),
               SizedBox(height: 16),
               Text(
-                "Rincian Pembayaran",
-                style: blackTextStyle.copyWith(
-                  fontSize: 16,
+                "Ringkasan Pembayaran",
+                style: TextStyle(
+                  fontFamily: "Nunito",
+                  fontSize: 18,
                   fontWeight: FontWeight.bold,
                 ),
               ),
+              const SizedBox(height: 8),
               Container(
-                padding: EdgeInsets.all(12),
+                padding: EdgeInsets.all(16),
                 decoration: BoxDecoration(
-                  color: Colors.grey.shade200,
+                  color: Colors.white,
                   borderRadius: BorderRadius.circular(12),
+                  border: Border.all(color: Colors.grey.shade300),
                 ),
                 child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    // Baris Harga
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text("Biaya Layanan", style: blackTextStyle),
-                        Text("Rp$serviceFee", style: blackTextStyle),
+                        Text(
+                          "Harga",
+                          style: TextStyle(
+                            fontFamily: "Nunito",
+                            fontSize: 14,
+                            color: Colors.black87,
+                          ),
+                        ),
+                        Text(
+                          formatRupiah(
+                            harga,
+                          ), // ganti dengan nilai harga sebenarnya
+                          style: TextStyle(
+                            fontFamily: "Nunito",
+                            fontSize: 14,
+                            color: Colors.black87,
+                          ),
+                        ),
                       ],
                     ),
+                    const SizedBox(height: 6),
+
+                    // Baris Biaya Layanan
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          "Biaya Layanan",
+                          style: TextStyle(
+                            fontFamily: "Nunito",
+                            fontSize: 14,
+                            color: Colors.black87,
+                          ),
+                        ),
+                        Text(
+                          formatRupiah(serviceFee),
+                          style: TextStyle(
+                            fontFamily: "Nunito",
+                            fontSize: 14,
+                            color: Colors.black87,
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 4),
                     Divider(),
+
+                    // Subtotal
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
                           "Subtotal",
-                          style: blackTextStyle.copyWith(
+                          style: TextStyle(
+                            fontFamily: "Nunito",
+                            fontSize: 18,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
                         Text(
-                          "Rp${subtotal + serviceFee}",
-                          style: blackTextStyle.copyWith(
+                          formatRupiah(harga + serviceFee),
+                          style: TextStyle(
+                            fontFamily: "Nunito",
+                            fontSize: 18,
                             fontWeight: FontWeight.bold,
-                            fontSize: 16,
                           ),
                         ),
                       ],
@@ -390,91 +491,168 @@ class _CheckoutPageState extends State<CheckoutPage> {
                   ],
                 ),
               ),
+
               SizedBox(height: 16),
               Container(
-                padding: EdgeInsets.all(12),
+                padding: EdgeInsets.all(14),
                 decoration: BoxDecoration(
+                  border: Border.all(color: Colors.grey.shade300),
                   borderRadius: BorderRadius.circular(12),
                 ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text("Mau pake voucher?", style: blackTextStyle),
-                    Icon(Icons.arrow_forward_ios, size: 16, color: zelow),
-                  ],
+                child: InkWell(
+                  onTap: () {
+                    // tampilkan modal atau navigasi ke halaman voucher
+                  },
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        "Mau pakai voucher?",
+                        style: TextStyle(
+                          fontFamily: 'Nunito',
+                          fontSize: 16,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                      Icon(Icons.arrow_forward_ios, size: 18, color: zelow),
+                    ],
+                  ),
                 ),
               ),
-              SizedBox(height: 16),
+              SizedBox(height: 24),
               Text(
                 "Metode Pembayaran",
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                style: TextStyle(
+                  fontFamily: "Nunito",
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
-              Column(
-                children: [
-                  ListTile(
-                    leading: Radio(
-                      value: "cash",
-                      groupValue: _selectedPayment,
-                      activeColor: zelow, // Mengubah warna saat dipilih
-                      onChanged: (val) {
-                        setState(() {
-                          _selectedPayment = val.toString();
-                        });
-                      },
+              SizedBox(height: 8),
+              Container(
+                width: double.infinity,
+                padding: EdgeInsets.all(14),
+                decoration: BoxDecoration(
+                  border: Border.all(color: Colors.grey.shade300),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "Mau pakai metode bayar apa?",
+                      style: TextStyle(
+                        fontFamily: "Nunito",
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
-                    title: Text("Cash"),
-                  ),
-                  ListTile(
-                    leading: Radio(
-                      value: "card",
-                      groupValue: _selectedPayment,
-                      activeColor: zelow,
-                      onChanged: (val) {
-                        setState(() {
-                          _selectedPayment = val.toString();
-                        });
-                      },
+                    SizedBox(height: 2),
+                    Row(
+                      children: [
+                        Radio(
+                          value: "cash",
+                          groupValue: _selectedPayment,
+                          activeColor: zelow,
+                          materialTapTargetSize:
+                              MaterialTapTargetSize.shrinkWrap,
+                          onChanged: (val) {
+                            setState(() {
+                              _selectedPayment = val.toString();
+                            });
+                          },
+                        ),
+                        Text(
+                          "Cash",
+                          style: TextStyle(
+                            fontFamily: "Nunito",
+                            fontSize: 16,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ],
                     ),
-                    title: Text("Kartu Debit"),
-                  ),
-                ],
+                    Row(
+                      children: [
+                        Radio(
+                          value: "card",
+                          groupValue: _selectedPayment,
+                          activeColor: zelow,
+                          materialTapTargetSize:
+                              MaterialTapTargetSize.shrinkWrap,
+                          onChanged: (val) {
+                            setState(() {
+                              _selectedPayment = val.toString();
+                            });
+                          },
+                        ),
+                        Text(
+                          "Kartu Debit",
+                          style: TextStyle(
+                            fontFamily: "Nunito",
+                            fontSize: 16,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
               ),
             ],
           ),
         ),
       ),
       bottomNavigationBar: Container(
-        padding: EdgeInsets.all(16),
-        child: ElevatedButton(
-          onPressed: () {
-            Map<String, dynamic> order = {
-              "orderNumber": DateTime.now().millisecondsSinceEpoch,
-              "orderDate":
-                  "${DateTime.now().day} ${getMonthName(DateTime.now().month)} ${DateTime.now().year}",
-              "items": List.from(orders),
-            };
-
-            List<Map<String, dynamic>> newOrdersList = [order];
-
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => PesananPage(orders: newOrdersList),
-              ),
-            );
-          },
-
-          style: ElevatedButton.styleFrom(
-            backgroundColor: zelow,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(24),
-            ),
+        height: 100,
+        padding: const EdgeInsets.only(bottom: 24, left: 18, right: 18),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          border: Border(
+            top: BorderSide(color: Colors.grey.shade300, width: 1),
           ),
-          child: Padding(
-            padding: EdgeInsets.symmetric(vertical: 12),
-            child: Text(
-              "Checkout",
-              style: TextStyle(fontSize: 18, color: Colors.white),
+        ),
+        child: Center(
+          child: SizedBox(
+            width: double.infinity,
+            height: 48,
+            child: ElevatedButton(
+              onPressed: () {
+                Map<String, dynamic> order = {
+                  "orderNumber": DateTime.now().millisecondsSinceEpoch,
+                  "orderDate":
+                      "${DateTime.now().day} ${getMonthName(DateTime.now().month)} ${DateTime.now().year}",
+                  "items": List.from(orders),
+                };
+
+                List<Map<String, dynamic>> newOrdersList = [order];
+
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => PesananPage(orders: newOrdersList),
+                  ),
+                );
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: zelow,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(24),
+                ),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 40,
+                  vertical: 10,
+                ),
+              ),
+              child: const Text(
+                "Checkout",
+                style: TextStyle(
+                  fontFamily: "Nunito",
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                ),
+              ),
             ),
           ),
         ),

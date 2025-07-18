@@ -5,29 +5,37 @@ import 'package:zelow/models/toko_model.dart';
 class FlashSaleService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  // mendapatkan produk flash sale berdasarkan indeks waktu
+  // Mendapatkan 1 produk flash sale per toko untuk slot waktu tertentu
   Future<List<Produk>> getFlashSaleProdukByTime(int targetIndex) async {
-    final tokoSnapshot = await _firestore.collection('toko').get();
     List<Produk> result = [];
 
-    for (var tokoDoc in tokoSnapshot.docs) {
-      final tokoData = Toko.fromFirestore(tokoDoc);
+    try {
+      final tokoSnapshot = await _firestore.collection('toko').get();
 
-      final produkSnapshot = await _firestore
-          .collection('produk')
-          .where('id_toko', isEqualTo: tokoDoc.id)
-          .where('kategori', isEqualTo: 'makanan')
-          .get();
+      for (var tokoDoc in tokoSnapshot.docs) {
+        final tokoData = Toko.fromFirestore(tokoDoc);
 
-      final produkList = produkSnapshot.docs
-          .map((doc) => Produk.fromFirestore(doc))
-          .toList();
+        final produkSnapshot =
+            await _firestore
+                .collection('produk')
+                .where('id_toko', isEqualTo: tokoDoc.id)
+                .where('kategori', isEqualTo: 'makanan')
+                .get();
 
-      if (produkList.length > targetIndex) {
-        final produkDenganToko =
-            produkList[targetIndex].copyWithToko(tokoData);
-        result.add(produkDenganToko);
+        final produkList =
+            produkSnapshot.docs
+                .map((doc) => Produk.fromFirestore(doc).copyWithToko(tokoData))
+                .toList();
+
+        // Cek apakah ada produk dengan index targetIndex
+        if (produkList.length > targetIndex) {
+          result.add(produkList[targetIndex]);
+        } else if (produkList.isNotEmpty) {
+          result.add(produkList.first);
+        }
       }
+    } catch (e) {
+      print('Error mengambil data flash sale: $e');
     }
 
     return result;

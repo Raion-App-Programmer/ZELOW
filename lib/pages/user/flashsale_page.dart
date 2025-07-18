@@ -260,30 +260,37 @@ class _FlashsalePageState extends State<FlashsalePage> {
                   itemBuilder: (context, index) {
                     final produk = produkList[index];
                     return isOngoing
-                        ? GestureDetector(
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder:
-                                    (_) => ProductInfoPage(productData: produk),
+                        ? (produk.toko != null
+                            ? GestureDetector(
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder:
+                                        (_) => ProductInfoPage(
+                                          productData: produk,
+                                          tokoData: produk.toko!,
+                                        ),
+                                  ),
+                                );
+                              },
+                              child: FoodSaleCard(
+                                produk: produk,
+                                onBuyPressed: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder:
+                                          (_) => ProductInfoPage(
+                                            productData: produk,
+                                            tokoData: produk.toko!,
+                                          ),
+                                    ),
+                                  );
+                                },
                               ),
-                            );
-                          },
-                          child: FoodSaleCard(
-                            produk: produk,
-                            onBuyPressed: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder:
-                                      (_) =>
-                                          ProductInfoPage(productData: produk),
-                                ),
-                              );
-                            },
-                          ),
-                        )
+                            )
+                            : const SizedBox.shrink())
                         : AkandatangCard(produk: produk);
                   },
                 );
