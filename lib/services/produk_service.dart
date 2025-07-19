@@ -72,8 +72,23 @@ class ProdukService {
       print('Firebase Error incrementing stock: ${e.message}');
       rethrow;
     } catch (e) {
-      print('Non firebase-related erorr at updateing stock: $e');
+      print('Non firebase-related error at updating stock: $e');
       rethrow;
+    }
+  }
+
+  // decrement stocks
+  Future<void> decreaseProductStock(String produkId, int amount) async {
+    DocumentReference produkRef = _produkCollection.doc(produkId);
+
+    try {
+      await produkRef.update({'stok': FieldValue.increment(-1)});
+      print('Stock for product: $produkId has been decremented.');
+    } on FirebaseException catch (e) {
+      print('Firebase Error incrementing stock: ${e.message}');
+      rethrow;
+    } catch (e) {
+      print('Non firebase-related error at updating stock: $e');
     }
   }
 }

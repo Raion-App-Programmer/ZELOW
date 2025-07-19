@@ -81,12 +81,12 @@ class _StokTokoUmkmState extends State<StokTokoUmkm> {
                         if (!snapshot.hasData || snapshot.data!.isEmpty) {
                           return const Center(
                             child: Text(
-                              'Tidak ada produk ditemukan untuk toko ini',
+                              'Tidak flutter ada produk ditemukan untuk toko ini',
                             ),
                           );
                         }
 
-                        // kalau data ada
+                        // kalau data
                         final List<Produk> produkList = snapshot.data!;
                         return ListView.builder(
                           itemCount: produkList.length,
@@ -235,10 +235,8 @@ class ProdukListItem extends StatelessWidget {
                                   GestureDetector(
                                     onTap: () async {
                                       if (stocks > 0) {
-                                        await _produkService.updateProductStock(
-                                          produkId,
-                                          -1,
-                                        );
+                                        await _produkService
+                                            .decreaseProductStock(produkId, -1);
                                       }
                                     },
                                     child: Container(
