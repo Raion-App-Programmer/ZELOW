@@ -18,6 +18,8 @@ class _CheckoutPageState extends State<CheckoutPage> {
   late List<Map<String, dynamic>> orders;
   double serviceFee = 4900.0;
   String _selectedPayment = "cash";
+  String _selectedTab = "Pick Up";
+  String _selectedSchedule = "12:00 - 13:00";
 
   final currencyFormatter = NumberFormat("#,##0", "id_ID");
 
@@ -68,220 +70,320 @@ class _CheckoutPageState extends State<CheckoutPage> {
   }
 
   void _showOrderTypeModal(BuildContext context) {
-    String _selectedTab = "Pick Up"; // Default Pick Up
-    String _selectedSchedule = "10:00 - 11:00"; // Default Radio Button
-
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
       ),
+      backgroundColor: Colors.white,
       builder: (BuildContext context) {
         return StatefulBuilder(
-          builder: (context, setState) {
-            return Container(
-              padding: EdgeInsets.all(16),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Expanded(
-                        child: ElevatedButton(
-                          onPressed: () {
-                            setState(() {
-                              _selectedTab = "Pick Up";
-                            });
-                          },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor:
-                                _selectedTab == "Pick Up"
-                                    ? zelow
-                                    : Colors.white,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(20),
-                              side: BorderSide(color: zelow),
-                            ),
-                          ),
-                          child: Text(
-                            "Pick Up",
-                            style: TextStyle(
-                              color:
-                                  _selectedTab == "Pick Up"
-                                      ? Colors.white
-                                      : zelow,
-                            ),
-                          ),
+          builder: (context, setModalState) {
+            return Padding(
+              padding: MediaQuery.of(context).viewInsets,
+              child: Container(
+                padding: EdgeInsets.fromLTRB(20, 15, 20, 40),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Garis drag indikator
+                    Center(
+                      child: Container(
+                        width: 50,
+                        height: 5,
+                        margin: EdgeInsets.only(bottom: 16),
+                        decoration: BoxDecoration(
+                          color: Colors.grey.shade300,
+                          borderRadius: BorderRadius.circular(10),
                         ),
                       ),
-                      SizedBox(width: 8),
-                      Expanded(
-                        child: ElevatedButton(
-                          onPressed: () {
-                            setState(() {
-                              _selectedTab = "Delivery";
-                            });
-                          },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor:
-                                _selectedTab == "Delivery"
-                                    ? zelow
-                                    : Colors.white,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(20),
-                              side: BorderSide(color: zelow),
-                            ),
-                          ),
-                          child: Text(
-                            "Delivery",
-                            style: TextStyle(
-                              color:
-                                  _selectedTab == "Delivery"
-                                      ? Colors.white
-                                      : zelow,
-                            ),
-                          ),
+                    ),
+                    // Tab Switcher
+                    Row(
+                      children: [
+                        _buildTabButton(
+                          "Pick Up",
+                          _selectedTab,
+                          zelow,
+                          setModalState,
                         ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: 16),
+                        SizedBox(width: 12),
+                        _buildTabButton(
+                          "Delivery",
+                          _selectedTab,
+                          zelow,
+                          setModalState,
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 24),
 
-                  _selectedTab == "Pick Up"
-                      ? Column(
+                    if (_selectedTab == "Pick Up") ...[
+                      Text(
+                        "Ambil Langsung ke Toko",
+                        style: TextStyle(
+                          fontFamily: 'Nunito',
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      SizedBox(height: 4),
+                      Text(
+                        "Langsung ambil belanjaanmu tanpa perlu menunggu",
+                        style: TextStyle(
+                          fontFamily: 'Nunito',
+                          fontSize: 14,
+                          color: Colors.grey.shade600,
+                        ),
+                      ),
+                      SizedBox(height: 16),
+
+                      // Toko Info
+                      Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
-                            "Ambil Langsung ke Toko",
-                            style: TextStyle(
-                              fontFamily: "Nunito",
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          Text(
-                            "Langsung ambil belanjaanmu tanpa perlu menunggu",
-                            style: TextStyle(color: Colors.grey),
-                          ),
-                          SizedBox(height: 8),
-                          Row(
-                            children: [
-                              Icon(Icons.store, color: zelow),
-                              SizedBox(width: 8),
-                              Expanded(
-                                child: Text(
-                                  "Masakan Padang Roda Dua\nJl. jalan No. X, Landungsari, Kota Malang",
+                          Icon(Icons.store, color: zelow),
+                          SizedBox(width: 8),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                // Nama Toko
+                                Text(
+                                  widget.orders.isNotEmpty &&
+                                          widget.orders[0]["nama"] != null
+                                      ? widget.orders[0]["nama"]
+                                      : "-",
+                                  style: TextStyle(
+                                    fontFamily: 'Nunito',
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 16,
+                                  ),
                                 ),
-                              ),
-                            ],
-                          ),
-                          Text(
-                            "Buka 07:00 - 23:00",
-                            style: TextStyle(color: Colors.grey),
-                          ),
-                          SizedBox(height: 8),
-                          Text(
-                            "Informasi Toko",
-                            style: TextStyle(
-                              color: zelow,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          SizedBox(height: 16),
-                          Text(
-                            "Jadwal Pengambilan",
-                            style: TextStyle(
-                              fontFamily: "Nunito",
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          Text("Pilih Jadwal yang tersedia"),
-                          SizedBox(height: 8),
-                          Column(
-                            children: [
-                              ListTile(
-                                leading: Radio(
-                                  value: "10:00 - 11:00",
-                                  groupValue: _selectedSchedule,
-                                  activeColor: zelow,
-                                  onChanged: (val) {
-                                    setState(() {
-                                      _selectedSchedule = val.toString();
-                                    });
+                                SizedBox(height: 4),
+
+                                // Alamat Toko
+                                Text(
+                                  widget.orders.isNotEmpty &&
+                                          widget.orders[0]["alamat"] != null
+                                      ? widget.orders[0]["alamat"]
+                                      : "-",
+                                  style: TextStyle(
+                                    fontFamily: 'Nunito',
+                                    fontSize: 14,
+                                  ),
+                                ),
+                                SizedBox(height: 4),
+
+                                Text(
+                                  "Buka 07.00 - 23.00",
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    fontFamily: 'Nunito',
+                                  ),
+                                ),
+                                SizedBox(height: 8),
+
+                                GestureDetector(
+                                  onTap: () {
+                                    // Navigasi ke detail toko
                                   },
+                                  child: Text(
+                                    "Informasi Toko",
+                                    style: TextStyle(
+                                      color: zelow,
+                                      fontWeight: FontWeight.bold,
+                                      fontFamily: 'Nunito',
+                                      fontSize: 14,
+                                    ),
+                                  ),
                                 ),
-                                title: Text("10:00 - 11:00"),
-                              ),
-                              ListTile(
-                                leading: Radio(
-                                  value: "21:00 - 22:00",
-                                  groupValue: _selectedSchedule,
-                                  activeColor: zelow,
-                                  onChanged: (val) {
-                                    setState(() {
-                                      _selectedSchedule = val.toString();
-                                    });
-                                  },
-                                ),
-                                title: Text("21:00 - 22:00"),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
                         ],
-                      )
-                      : Center(
+                      ),
+                      SizedBox(height: 16),
+
+                      // Jadwal
+                      Container(
+                        padding: EdgeInsets.all(16),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(12),
+                          border: Border.all(color: Colors.grey.shade300),
+                        ),
                         child: Column(
-                          mainAxisSize: MainAxisSize.min,
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            // Image.asset("assets/images/logo_zelow.png", width: 100),
-                            SizedBox(height: 12),
                             Text(
-                              "Coming Soon",
+                              "Jadwal Pengambilan",
                               style: TextStyle(
-                                fontFamily: "Nunito",
-                                fontSize: 20,
+                                fontFamily: 'Nunito',
                                 fontWeight: FontWeight.bold,
-                                color: Colors.black54,
+                                fontSize: 18,
                               ),
+                            ),
+                            SizedBox(height: 2),
+                            Text(
+                              "Pilih Jadwal yang Tersedia",
+                              style: TextStyle(
+                                fontSize: 14,
+                                fontFamily: 'Nunito',
+                              ),
+                            ),
+
+                            Divider(height: 20),
+
+                            Text(
+                              "Hari Ini",
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 15,
+                                fontFamily: 'Nunito',
+                              ),
+                            ),
+                            Text(
+                              DateFormat(
+                                "d MMMM yyyy",
+                                'id_ID',
+                              ).format(DateTime.now()),
+                              style: TextStyle(
+                                fontSize: 14,
+                                fontFamily: 'Nunito',
+                              ),
+                            ),
+                            SizedBox(height: 4),
+
+                            Column(
+                              children: [
+                                _buildScheduleRadio(
+                                  "12:00 - 13:00",
+                                  _selectedSchedule,
+                                  zelow,
+                                  setModalState,
+                                ),
+                                _buildScheduleRadio(
+                                  "18:00 - 19:00",
+                                  _selectedSchedule,
+                                  zelow,
+                                  setModalState,
+                                ),
+                              ],
                             ),
                           ],
                         ),
                       ),
-
-                  SizedBox(height: 16),
-                  SizedBox(
-                    width: double.infinity,
-                    child: ElevatedButton(
-                      onPressed: () => Navigator.pop(context),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: zelow,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(24),
+                    ] else ...[
+                      SizedBox(height: 190),
+                      Center(
+                        child: Text(
+                          "Segera Hadir...",
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                            fontFamily: 'Nunito',
+                            color: Colors.grey
+                          ),
                         ),
                       ),
-                      child: Padding(
-                        padding: EdgeInsets.symmetric(vertical: 12),
+                      SizedBox(height: 190),
+                    ],
+                    SizedBox(height: 36),
+
+                    SizedBox(
+                      width: double.infinity,
+                      child: ElevatedButton(
+                        onPressed: () => Navigator.pop(context),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: zelow,
+                          padding: EdgeInsets.symmetric(vertical: 14),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(28),
+                          ),
+                        ),
                         child: Text(
                           "Terapkan",
                           style: TextStyle(
-                            fontFamily: "Nunito",
                             fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            fontFamily: 'Nunito',
                             color: Colors.white,
                           ),
                         ),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             );
           },
         );
       },
+    );
+  }
+
+  Widget _buildTabButton(
+    String label,
+    String selected,
+    Color color,
+    void Function(void Function()) setModalState,
+  ) {
+    final isSelected = label == selected;
+    return Expanded(
+      child: InkWell(
+        onTap: () => setModalState(() => _selectedTab = label),
+        child: Container(
+          padding: EdgeInsets.symmetric(vertical: 8),
+          decoration: BoxDecoration(
+            color: isSelected ? color : Colors.white,
+            borderRadius: BorderRadius.circular(24),
+            border: Border.all(color: color, width: 2),
+          ),
+          alignment: Alignment.center,
+          child: Text(
+            label,
+            style: TextStyle(
+              fontFamily: 'Nunito',
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+              color: isSelected ? Colors.white : color,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildScheduleRadio(
+    String value,
+    String groupValue,
+    Color color,
+    void Function(void Function()) setModalState,
+  ) {
+    return Row(
+      children: [
+        Radio(
+          value: value,
+          groupValue: groupValue,
+          activeColor: color,
+          materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+          onChanged: (val) {
+            setModalState(() {
+              _selectedSchedule = val.toString();
+            });
+          },
+        ),
+        Text(
+          value,
+          style: TextStyle(
+            fontFamily: "Nunito",
+            fontSize: 16,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+      ],
     );
   }
 

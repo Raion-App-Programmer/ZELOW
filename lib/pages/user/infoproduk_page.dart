@@ -283,6 +283,7 @@ class _ProductInfoPageState extends State<ProductInfoPage> {
                                         'quantity': itemCount,
                                         'originalPrice':
                                             widget.productData.harga,
+                                        'nama': widget.tokoData.nama,
                                         'alamat': widget.tokoData.alamat,
                                       },
                                     ],
