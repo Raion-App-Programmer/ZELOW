@@ -48,6 +48,7 @@ dependencies:
   badges: ^3.1.2
   readmore: ^3.0.0
   flutter_svg: ^2.0.7
+  intl: ^0.20.2
   
 
 dev_dependencies:
@@ -78,6 +79,7 @@ flutter:
       - assets/images/lets-icons_shop.png
       - assets/images/naspad.jpg
       - assets/images/keranjangKu-icon.png
+      - assets/images/Mask_group.png
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

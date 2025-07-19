@@ -90,45 +90,7 @@ class _UlasanPageState extends State<UlasanPage> {
 
             //ULASAN NYA
             SizedBox(height: MediaQuery.of(context).size.height * 0.048),
-            Expanded(child: ListView(
-              children: [
-              UserReview(profil: Image.asset('assets/images/Mask_group.png'),
-              name: 'Selena Marie Gomez Selena',
-              review: 'Nasi Padangnya juara! Rendangnya empuk, kuah gulainya nendang, bikin nagih. Worth it banget! 😋🍛, Masakan Padangnya mantap! Porsinya pas, rasa otentik, dan harganya ramah di kantong. Fix bakal repeat order nihhh! 🍛🔥, Nasi Padangnya juara! Rendangnya empuk, kuah gulainya nendang, bikin nagih. Worth it banget! 😋🍛, Masakan Padangnya mantap! Porsinya pas, rasa otentik, dan harganya ramah di kantong. Fix bakal repeat order nihhh! 🍛🔥',
-              valuerate: 5),
-            
-
-            UserReview(profil: Image.asset('assets/images/Mask_group.png'),
-            name: 'Gabriel Guevara',
-            review: 'Enakk mengenyangkan',
-            valuerate: 4),
-
-            UserReview(profil: Image.asset('assets/images/Mask_group.png'),
-            name: 'Nadin Amizah',
-            review: 'B aja',
-            valuerate: 2.6),
-
-            UserReview(profil: Image.asset('assets/images/Mask_group.png'),
-            name: 'Olivia Rodrigo',
-            review: 'Ga enak',
-            valuerate: 1),
-
-            UserReview(profil: Image.asset('assets/images/Mask_group.png'),
-            name: 'Gabriel Guevara',
-            review: 'Enakk mengenyangkan',
-            valuerate: 3.7),
-
-            UserReview(profil: Image.asset('assets/images/Mask_group.png'),
-            name: 'Gabriel Guevara',
-            review: 'Enakk mengenyangkan',
-            valuerate: 4.5),
-
-            UserReview(profil: Image.asset('assets/images/Mask_group.png'),
-            name: 'Gabriel Guevara',
-            review: 'Enakk mengenyangkan',
-            valuerate: 4.2),
-              ],
-            ))
+            Expanded(child: UserReview())
            
             
           ],

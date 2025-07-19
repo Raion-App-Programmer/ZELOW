@@ -7,12 +7,12 @@ import 'package:zelow/pages/user/home_page_user.dart';
 // import 'package:zelow/pages/user/infoproduk_page.dart';
 import 'package:zelow/pages/user/pesanan_page.dart';
 import 'package:zelow/pages/user/profile_page.dart';
-
+import 'firebase_options.dart';
 import 'pages/splash_page.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform,);
   runApp(const MyApp());
 }
 
@@ -23,7 +23,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      initialRoute: '/splash',
+      initialRoute: '/home_page_umkm',
       debugShowCheckedModeBanner: false,
       routes: {
         '/splash': (context) => SplashPage(),

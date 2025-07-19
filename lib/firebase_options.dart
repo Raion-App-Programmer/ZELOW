@@ -41,13 +41,13 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyBkPnIBY_pm7Hje5ES-v8Zq4ODNReBcjeo',
-    appId: '1:735929071770:web:061389658b1824ec828723',
-    messagingSenderId: '735929071770',
-    projectId: 'zelow-d4440',
-    authDomain: 'zelow-d4440.firebaseapp.com',
-    storageBucket: 'zelow-d4440.firebasestorage.app',
-    measurementId: 'G-MYR76QN1YF',
+  apiKey: "AIzaSyDunGIPLmrsDkj51nn8dVKrrWt6xK4SOlo",
+  authDomain: "zelow-dbf83.firebaseapp.com",
+  projectId: "zelow-dbf83",
+  storageBucket: "zelow-dbf83.firebasestorage.app",
+  messagingSenderId: "471777658274",
+  appId: "1:471777658274:web:0e7e06fa25f21dbf8ddefb"
+
   );
 
   static const FirebaseOptions android = FirebaseOptions(
