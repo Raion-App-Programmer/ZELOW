@@ -21,6 +21,28 @@ class Pesanan {
     required this.orderNumber,
   });
 
+  Pesanan copyWith({
+    String? id,
+    List<Map<String, dynamic>>? items,
+    double? totalPrice,
+    double? serviceFee,
+    String? status,
+    Timestamp? orderDate,
+    String? userId,
+    int? orderNumber,
+  }) {
+    return Pesanan(
+      id: id ?? this.id,
+      items: items ?? this.items,
+      totalPrice: totalPrice ?? this.totalPrice,
+      serviceFee: serviceFee ?? this.serviceFee,
+      status: status ?? this.status,
+      orderDate: orderDate ?? this.orderDate,
+      userId: userId ?? this.userId,
+      orderNumber: orderNumber ?? this.orderNumber,
+    );
+  }
+
   factory Pesanan.fromFirestore(DocumentSnapshot doc) {
     Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
     return Pesanan(

@@ -1,12 +1,14 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:zelow/components/berlangsung_card.dart';
 import 'package:zelow/components/constant.dart';
 import 'package:zelow/components/navbar.dart';
 import 'package:zelow/components/selesai_card.dart';
 import 'package:zelow/components/batal_card.dart';
+import 'package:zelow/models/pesanan_model.dart';
 
 class PesananPage extends StatefulWidget {
-  final List<Map<String, dynamic>> orders;
+  final List<Pesanan> orders;
 
   const PesananPage({super.key, required this.orders});
 
@@ -18,14 +20,22 @@ class _PesananPageState extends State<PesananPage> {
   int _selectedIndex = 0;
   final List<String> _buttonLabels = ["Berlangsung", "Selesai", "Dibatalkan"];
 
-  List<Map<String, dynamic>> _pesananList = [];
-  List<Map<String, dynamic>> _pesananSelesaiList = [];
-  List<Map<String, dynamic>> _pesananBatalList = [];
+  List<Pesanan> _pesananList = [];
+  List<Pesanan> _pesananSelesaiList = [];
+  List<Pesanan> _pesananBatalList = [];
 
   @override
   void initState() {
     super.initState();
-    _pesananList = List.from(widget.orders);
+    _pesananList = widget.orders.where((order) => order.status == 'berlangsung').toList();
+    _pesananSelesaiList = widget.orders.where((order) => order.status == 'selesai').toList();
+    _pesananBatalList = widget.orders.where((order) => order.status == 'batal').toList();
+
+  }
+
+  String formatDate(Timestamp timestamp) {
+    final dateTime = timestamp.toDate();
+    return "${dateTime.day.toString().padLeft(2, '0')}-${dateTime.month.toString().padLeft(2,'0')}-${dateTime.year}";
   }
 
   @override
@@ -103,19 +113,22 @@ class _PesananPageState extends State<PesananPage> {
                       : _pesananBatalList.length,
               itemBuilder: (context, index) {
                 if (_selectedIndex == 0) {
+                  final order = _pesananList[index];
                   return PesananBerlangsungCard(
-                    orderNumber: _pesananList[index]['orderNumber'],
-                    orderDate: _pesananList[index]['orderDate'],
+                    orderNumber: order.orderNumber,
+                    orderDate: formatDate(order.orderDate),
                   );
                 } else if (_selectedIndex == 1) {
+                  final order = _pesananSelesaiList[index];
                   return PesananSelesaiCard(
-                    orderNumber: _pesananSelesaiList[index]['orderNumber'],
-                    orderDate: _pesananSelesaiList[index]['orderDate'],
+                    orderNumber: order.orderNumber,
+                    orderDate: formatDate(order.orderDate),
                   );
                 } else {
+                  final order = _pesananBatalList[index];
                   return PesananBatalCard(
-                    orderNumber: _pesananBatalList[index]['orderNumber'],
-                    orderDate: _pesananBatalList[index]['orderDate'],
+                    orderNumber: order.orderNumber,
+                    orderDate: formatDate(order.orderDate),
                   );
                 }
               },

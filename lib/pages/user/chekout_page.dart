@@ -1,8 +1,11 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:zelow/components/constant.dart';
 import 'package:zelow/components/order_item_card.dart';
 import 'package:zelow/pages/user/pesanan_page.dart';
 import 'package:zelow/services/pesanan_service.dart';
+import 'package:zelow/models/pesanan_model.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class CheckoutPage extends StatefulWidget {
   final List<Map<String, dynamic>> orders;
@@ -17,7 +20,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
   late List<Map<String, dynamic>> orders;
   double serviceFee = 4900.0;
   String _selectedPayment = "cash";
-
+  String userId = '';
   // Backend service checkout
   final PesananService _pesananService = PesananService();
   bool _isProcessing = false;
@@ -44,6 +47,11 @@ class _CheckoutPageState extends State<CheckoutPage> {
   void initState() {
     super.initState();
     orders = List.from(widget.orders);
+
+    final user = FirebaseAuth.instance.currentUser;
+    setState(() {
+    userId = user?.uid ?? '';
+    });
   }
 
   void _increaseQuantity(int index) {
@@ -446,20 +454,26 @@ class _CheckoutPageState extends State<CheckoutPage> {
       bottomNavigationBar: Container(
         padding: EdgeInsets.all(16),
         child: ElevatedButton(
-          onPressed: () {
-            Map<String, dynamic> order = {
-              "orderNumber": DateTime.now().millisecondsSinceEpoch,
-              "orderDate":
-                  "${DateTime.now().day} ${getMonthName(DateTime.now().month)} ${DateTime.now().year}",
-              "items": List.from(orders),
-            };
+          onPressed: () async {
+            final newOrder = Pesanan(
+              id: '', // Akan didapat dari Firestore jika perlu disimpan
+              items: orders,
+              totalPrice: subtotal,
+              serviceFee: serviceFee,
+              status: 'berlangsung',
+              orderDate: Timestamp.now(),
+              userId: userId, // Ganti dengan ID user aktif
+              orderNumber: DateTime.now().millisecondsSinceEpoch,
+            );
 
-            List<Map<String, dynamic>> newOrdersList = [order];
+            await FirebaseFirestore.instance
+            .collection('pesanan')
+            .add(newOrder.toFirestore());
 
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => PesananPage(orders: newOrdersList),
+                builder: (context) => PesananPage(orders: [newOrder]),
               ),
             );
           },
