@@ -3,10 +3,10 @@ import 'package:zelow/components/berlangsung_card.dart';
 import 'package:zelow/components/constant.dart';
 import 'package:zelow/components/navbar.dart';
 import 'package:zelow/components/selesai_card.dart';
-import 'package:zelow/components/batal_card.dart'; 
+import 'package:zelow/components/batal_card.dart';
 
 class PesananPage extends StatefulWidget {
-  final List<Map<String, dynamic>> orders; 
+  final List<Map<String, dynamic>> orders;
 
   const PesananPage({super.key, required this.orders});
 
@@ -22,10 +22,10 @@ class _PesananPageState extends State<PesananPage> {
   List<Map<String, dynamic>> _pesananSelesaiList = [];
   List<Map<String, dynamic>> _pesananBatalList = [];
 
-   @override
+  @override
   void initState() {
     super.initState();
-    _pesananList = List.from(widget.orders); 
+    _pesananList = List.from(widget.orders);
   }
 
   @override
@@ -36,8 +36,12 @@ class _PesananPageState extends State<PesananPage> {
         elevation: 0,
         leading: IconButton(
           icon: Icon(Icons.arrow_back, color: white),
-          onPressed: () {
-            Navigator.pop(context);
+            onPressed: () {
+            if (Navigator.of(context).canPop()) {
+              Navigator.of(context).pop();
+            } else {
+              Navigator.of(context).pushReplacementNamed('/home_page_user');
+            }
           },
         ),
         title: Text(
@@ -71,7 +75,10 @@ class _PesananPageState extends State<PesananPage> {
                       borderRadius: BorderRadius.circular(20),
                       side: BorderSide(color: zelow),
                     ),
-                    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 20,
+                      vertical: 10,
+                    ),
                   ),
                   child: Text(
                     _buttonLabels[index],
@@ -88,9 +95,10 @@ class _PesananPageState extends State<PesananPage> {
           Expanded(
             child: ListView.builder(
               padding: const EdgeInsets.symmetric(horizontal: 16),
-              itemCount: _selectedIndex == 0
-                  ? _pesananList.length
-                  : _selectedIndex == 1
+              itemCount:
+                  _selectedIndex == 0
+                      ? _pesananList.length
+                      : _selectedIndex == 1
                       ? _pesananSelesaiList.length
                       : _pesananBatalList.length,
               itemBuilder: (context, index) {

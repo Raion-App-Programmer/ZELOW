@@ -13,8 +13,8 @@ class BoxButton extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        width: 78,
-        height: 70,
+        width: 80,
+        height: 80,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(12),
           gradient: LinearGradient(

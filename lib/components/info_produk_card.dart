@@ -5,27 +5,32 @@ class InfoProdukCard extends StatelessWidget {
   final String title;
   final String imageUrl;
   final double rating;
-  final int reviewCount;
+  final int jumlahTerjual;
   final int likeCount;
   final double price;
   final List<ReviewItem> reviews;
   final VoidCallback? onSavePressed;
   final VoidCallback? onSharePressed;
   final VoidCallback? onAddPressed;
+  final VoidCallback? onRemovePressed;
+  final int itemCount;
 
   const InfoProdukCard({
     super.key,
     required this.title,
     required this.imageUrl,
     required this.rating,
-    required this.reviewCount,
+    required this.jumlahTerjual,
     required this.likeCount,
     required this.price,
+    required this.itemCount,
     this.reviews = const [],
     this.onSavePressed,
     this.onSharePressed,
     this.onAddPressed,
+    this.onRemovePressed,
   });
+
 
   @override
   Widget build(BuildContext context) {
@@ -68,19 +73,24 @@ class InfoProdukCard extends StatelessWidget {
                 SizedBox(height: 8),
                 
                 // Rating and reviews count
-                Row(
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Icon(Icons.star, color: Colors.amber, size: 18),
-                    SizedBox(width: 4),
-                    Text(
-                      rating.toString(),
-                      style: TextStyle(fontWeight: FontWeight.bold),
+                    Row(
+                      children: [
+                        Icon(Icons.star, color: Colors.amber, size: 18),
+                        SizedBox(width: 4),
+                        Text(
+                          rating.toString(),
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                      ],
                     ),
                     SizedBox(width: 8),
                     Text(
-                      '$reviewCount Disukai oleh $likeCount',
+                      '$jumlahTerjual terjual | Disukai oleh $likeCount',
                       style: TextStyle(
-                        color: Colors.grey[600],
+                        color: const Color.fromARGB(255, 34, 29, 29),
                         fontSize: 14,
                       ),
                     ),
@@ -101,21 +111,58 @@ class InfoProdukCard extends StatelessWidget {
                         fontSize: 16,
                       ),
                     ),
-                    Container(
-                      decoration: BoxDecoration(
-                        color: zelow,
-                        shape: BoxShape.circle,
-                      ),
-                      child: IconButton(
-                        icon: Icon(Icons.add, color: Colors.white),
-                        onPressed: onAddPressed,
-                        constraints: BoxConstraints(
-                          minHeight: 36,
-                          minWidth: 36,
+                    Row(
+                      children: [
+                        if (itemCount > 0)
+                          Container(
+                            decoration: BoxDecoration(
+                              color: white,
+                              shape: BoxShape.circle,
+                              border: Border.all(color: zelow, width: 1),
+                            ),
+                            child: IconButton(
+                              icon: Icon(Icons.remove, color: zelow),
+                              onPressed: onRemovePressed,
+                              constraints: BoxConstraints(
+                                minHeight: 36,
+                                minWidth: 36,
+                              ),
+                              padding: EdgeInsets.zero,
+                              iconSize: 20,
+                            ),
+                          ),
+
+                        SizedBox(width: 10),
+
+                        if (itemCount > 0)
+                          Text(
+                            itemCount.toString(),
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black,
+                            ),
+                          ),
+
+                        SizedBox(width: 10),
+
+                        Container(
+                          decoration: BoxDecoration(
+                            color: zelow,
+                            shape: BoxShape.circle,
+                          ),
+                          child: IconButton(
+                            icon: Icon(Icons.add, color: Colors.white),
+                            onPressed: onAddPressed,
+                            constraints: BoxConstraints(
+                              minHeight: 36,
+                              minWidth: 36,
+                            ),
+                            padding: EdgeInsets.zero,
+                            iconSize: 20,
+                          ),
                         ),
-                        padding: EdgeInsets.zero,
-                        iconSize: 20,
-                      ),
+                      ],
                     ),
                   ],
                 ),
@@ -252,42 +299,42 @@ class ReviewItem extends StatelessWidget {
 }
 
 // Example usage
-class FoodItemExample extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text("Food Item"),
-        leading: BackButton(),
-      ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: InfoProdukCard(
-            title: "Nasi Padang Ayam Kari",
-            imageUrl: "https://example.com/nasi-padang.jpg",
-            rating: 4.9,
-            reviewCount: 689,
-            likeCount: 342,
-            price: 20000,
-            reviews: [
-              ReviewItem(
-                reviewerName: "Nana Mirdad",
-                reviewerImageUrl: "https://example.com/avatar1.jpg",
-                rating: 5,
-              ),
-              ReviewItem(
-                reviewerName: "Nana Mirdad",
-                reviewerImageUrl: "https://example.com/avatar1.jpg",
-                rating: 5,
-              ),
-            ],
-            onSavePressed: () {},
-            onSharePressed: () {},
-            onAddPressed: () {},
-          ),
-        ),
-      ),
-    );
-  }
-}
+// class FoodItemExample extends StatelessWidget {
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       appBar: AppBar(
+//         title: Text("Food Item"),
+//         leading: BackButton(),
+//       ),
+//       body: SingleChildScrollView(
+//         child: Padding(
+//           padding: const EdgeInsets.all(16.0),
+//           child: InfoProdukCard(
+//             title: "Nasi Padang Ayam Kari",
+//             imageUrl: "https://example.com/nasi-padang.jpg",
+//             rating: 4.9,
+//             jumlahTerjual: 689,
+//             likeCount: 342,
+//             price: 20000,
+//             reviews: [
+//               ReviewItem(
+//                 reviewerName: "Nana Mirdad",
+//                 reviewerImageUrl: "https://example.com/avatar1.jpg",
+//                 rating: 5,
+//               ),
+//               ReviewItem(
+//                 reviewerName: "Nana Mirdad",
+//                 reviewerImageUrl: "https://example.com/avatar1.jpg",
+//                 rating: 5,
+//               ),
+//             ],
+//             onSavePressed: () {},
+//             onSharePressed: () {},
+//             onAddPressed: () {},
+//           ),
+//         ),
+//       ),
+//     );
+//   }
+// }

@@ -26,7 +26,7 @@ class DisplayCard extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        width: MediaQuery.of(context).size.width * 0.9, // Lebar card panjang
+        width: MediaQuery.of(context).size.width * 0.7, // Lebar card panjang
         margin: const EdgeInsets.symmetric(vertical: 2, horizontal: 12),
         padding: const EdgeInsets.all(10),
         decoration: BoxDecoration(
@@ -46,11 +46,31 @@ class DisplayCard extends StatelessWidget {
             // Gambar Produk (Kotak di kiri)
             ClipRRect(
               borderRadius: BorderRadius.circular(8),
-              child: Image.network(
+              child: Image.network( // Ganti menjadi Image.network
                 imageUrl,
                 height: 80,
                 width: 80,
                 fit: BoxFit.cover,
+                loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent? loadingProgress) {
+                  if (loadingProgress == null) return child;
+                  return Container(
+                    height: 80, width: 80, color: Colors.grey[200],
+                    child: Center(
+                      child: CircularProgressIndicator(
+                        value: loadingProgress.expectedTotalBytes != null
+                            ? loadingProgress.cumulativeBytesLoaded / loadingProgress.expectedTotalBytes!
+                            : null,
+                        color: zelow,
+                      ),
+                    ),
+                  );
+                },
+                errorBuilder: (BuildContext context, Object exception, StackTrace? stackTrace) {
+                  return Container(
+                    height: 80, width: 80, color: Colors.grey[300],
+                    child: Icon(Icons.broken_image_outlined, color: Colors.grey[600], size: 30),
+                  );
+                },
               ),
             ),
             const SizedBox(width: 10),

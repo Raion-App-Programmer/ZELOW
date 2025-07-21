@@ -17,12 +17,12 @@ class _SplashPageState extends State<SplashPage> {
     return AnimatedSplashScreen(
       backgroundColor: Color(0xff06C474),
       splash: 'assets/images/zelow.png',
-      nextScreen: OnBoardingPage(),
       splashIconSize: MediaQuery.of(context).size.width * 1,
       centered: true,
       duration: 2100,
       splashTransition: SplashTransition.fadeTransition,
       pageTransitionType: PageTransitionType.fade,
+      nextScreen: OnBoardingPage(),
     );
   }
 }

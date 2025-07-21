@@ -30,7 +30,8 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-
+  
+  flutter_rating_bar: ^4.0.0
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.8
@@ -45,6 +46,12 @@ dependencies:
   cloud_firestore: ^5.6.5
   flutter_mailer: ^3.0.0
   mailer: ^6.4.1
+  url_launcher: ^6.2.5
+
+  badges: ^3.1.2
+  intl: ^0.20.2
+  readmore: ^3.0.0
+  flutter_svg: ^2.0.7
 
 dev_dependencies:
   flutter_test:
@@ -63,7 +70,14 @@ dev_dependencies:
 
 # The following section is specific to Flutter packages.
 flutter:
-
+  fonts:
+    - family: nunito  # Nama custom untuk font family
+      fonts:
+        - asset: assets/fonts/Nunito.ttf
+        - asset: assets/fonts/Nunito-Regular.ttf
+        - asset: assets/fonts/Nunito-Medium.ttf
+        - asset: assets/fonts/Nunito-SemiBold.ttf
+        - asset: assets/fonts/Nunito-Bold.ttf
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
   # the material Icons class.
@@ -72,6 +86,23 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
       - assets/images/
+      - assets/images/lets-icons_shop.png
+      - assets/images/naspad.jpg
+      - assets/images/keranjangKu-icon.png
+      - assets/images/VectorLocation.png
+      - assets/images/icon_wallet.svg
+      - assets/images/icon_money.svg
+      - assets/images/icon_laporan.svg
+      - assets/images/icon_cart.svg
+      - assets/images/icon_dollarcoin.svg
+      - assets/images/icon_star.svg
+      - assets/images/paket_ramadhan.png
+      - assets/images/arrow-left.png
+      - assets/images/Home.svg
+      - assets/images/lets-icons_shop.svg
+      - assets/images/icon_profil.svg
+      - assets/images/Chat.svg
+      - assets/images/Mask_group.png
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see
@@ -96,6 +127,10 @@ flutter:
   #       - asset: fonts/TrajanPro.ttf
   #       - asset: fonts/TrajanPro_Bold.ttf
   #         weight: 700
+  #   - family: Nunito
+  #     fonts:
+  #       - asset: fonts/Nunito-Regular.ttf
+  #       - asset: fonts/Nunito-Bold.ttf
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/to/font-from-package

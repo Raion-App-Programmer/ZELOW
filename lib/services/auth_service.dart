@@ -16,7 +16,7 @@ class AuthService {
       BuildContext context,
       Function(String) onError,
       Function(bool) onLoading,
-      ) async {
+  ) async {
     Timer? timer;
     try {
       onLoading(true);

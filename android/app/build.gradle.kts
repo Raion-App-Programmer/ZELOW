@@ -8,7 +8,7 @@ plugins {
 android {
     namespace = "com.example.zelow"
     compileSdk = flutter.compileSdkVersion
-    ndkVersion = "27.0.12077973"
+    ndkVersion = flutter.ndkVersion
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
@@ -21,6 +21,7 @@ android {
     }
 
     defaultConfig {
+        // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
         applicationId = "com.example.zelow"
         minSdk = 23
         targetSdk = flutter.targetSdkVersion

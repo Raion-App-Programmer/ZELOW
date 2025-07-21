@@ -3,10 +3,10 @@ import 'package:zelow/components/constant.dart';
 
 class ProductCard extends StatelessWidget {
   final String imageUrl;
-  final double rating; // Rating produk
-  final String restaurantName; // Nama resto
-  final String distance; // Jarak resto
-  final String estimatedTime; // Estimasi waktu pengantaran
+  final double rating;
+  final String restaurantName;
+  final String distance;
+  final String estimatedTime;
   final VoidCallback onTap;
 
   const ProductCard({
@@ -42,66 +42,106 @@ class ProductCard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
           children: [
-            // Stack untuk gambar dan rating di pojok kiri bawah
-            Stack(
-              children: [
-                // Gambar Produk
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(8),
-                  child: Image.asset(
-                    imageUrl,
-                    height: 90,
-                    width: double.infinity,
-                    fit: BoxFit.cover,
-                  ),
-                ),
-
-                // Badge Rating di pojok kiri bawah
-                Positioned(
-                  bottom: 8,
-                  left: 8,
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 6,
-                      vertical: 3,
-                    ),
-                    decoration: BoxDecoration(
-                      color: Colors.black.withOpacity(0.7),
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: Row(
-                      children: [
-                        const Icon(Icons.star, color: Colors.yellow, size: 12),
-                        const SizedBox(width: 3),
-                        Text(
-                          rating.toStringAsFixed(
-                            1,
-                          ), // Menampilkan rating dengan 1 desimal
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 11,
-                            fontWeight: FontWeight.bold,
+            SizedBox(
+              height: 80,
+              child: Stack(
+                children: [
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(8),
+                    child: Image.network(
+                      imageUrl,
+                      height:
+                          80.0,
+                      width: double.infinity,
+                      fit: BoxFit.cover,
+                      loadingBuilder: (
+                        BuildContext context,
+                        Widget child,
+                        ImageChunkEvent? loadingProgress,
+                      ) {
+                        if (loadingProgress == null) return child;
+                        return Container(
+                          height: 80,
+                          width: double.infinity,
+                          color: Colors.grey[200],
+                          child: Center(
+                            child: CircularProgressIndicator(
+                              value:
+                                  loadingProgress.expectedTotalBytes != null
+                                      ? loadingProgress.cumulativeBytesLoaded /
+                                          loadingProgress.expectedTotalBytes!
+                                      : null,
+                              color: zelow,
+                            ),
                           ),
-                        ),
-                      ],
+                        );
+                      },
+                      errorBuilder: (
+                        BuildContext context,
+                        Object exception,
+                        StackTrace? stackTrace,
+                      ) {
+                        return Container(
+                          height: 80,
+                          width: double.infinity,
+                          color: Colors.grey[300],
+                          child: Icon(
+                            Icons.broken_image_outlined,
+                            color: Colors.grey[600],
+                            size: 40,
+                          ),
+                        );
+                      },
                     ),
                   ),
-                ),
-              ],
+                  Positioned(
+                    bottom: 8,
+                    left: 8,
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 6,
+                        vertical: 3,
+                      ),
+                      decoration: BoxDecoration(
+                        color: Colors.black.withOpacity(0.7),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Row(
+                        children: [
+                          const Icon(
+                            Icons.star,
+                            color: Colors.yellow,
+                            size: 12,
+                          ),
+                          const SizedBox(width: 3),
+                          Text(
+                            rating.toStringAsFixed(1),
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 10.0,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
-            const SizedBox(height: 8),
+            const SizedBox(height: 6),
 
-            // Nama Resto
             Text(
               restaurantName,
               style: blackTextStyle.copyWith(
-                fontSize: MediaQuery.of(context).size.width * 0.035,
+                fontSize: 9,
                 fontWeight: FontWeight.bold,
               ),
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
             ),
             const SizedBox(height: 4),
 
-            // Box kecil untuk jarak dan estimasi waktu di bawah kiri resto name
             Row(
               children: [
                 Container(
@@ -110,7 +150,7 @@ class ProductCard extends StatelessWidget {
                     vertical: 3,
                   ),
                   decoration: BoxDecoration(
-                    color: zelow.withOpacity(0.3), // Warna zelow dengan opacity
+                    color: zelow.withOpacity(0.3),
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Row(
@@ -139,7 +179,7 @@ class ProductCard extends StatelessWidget {
                   child: Row(
                     children: [
                       Text(
-                        estimatedTime,
+                        "$estimatedTime min",
                         style: TextStyle(
                           fontSize: 9,
                           color: zelow,
