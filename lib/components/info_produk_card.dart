@@ -8,6 +8,10 @@ class InfoProdukCard extends StatelessWidget {
   final int jumlahTerjual;
   final int likeCount;
   final double price;
+  final int stok;
+  final int terjual;
+  final double originalPrice;
+  final bool isFlashSale;
   final VoidCallback? onSavePressed;
   final VoidCallback? onSharePressed;
   final VoidCallback? onAddPressed;
@@ -21,13 +25,21 @@ class InfoProdukCard extends StatelessWidget {
     required this.rating,
     required this.jumlahTerjual,
     required this.likeCount,
-    required this.price,
     required this.itemCount,
+    required this.price,
+    required this.stok,
+    required this.terjual,
+    this.originalPrice = 0,
+    this.isFlashSale = false,
     this.onSavePressed,
     this.onSharePressed,
     this.onAddPressed,
     this.onRemovePressed,
   });
+
+  String formatRupiah(num value) {
+    return 'Rp${value.toInt().toString().replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (m) => '${m[1]}.')}';
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -88,15 +100,34 @@ class InfoProdukCard extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(
-                    'Rp${price.toInt().toString().replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (m) => '${m[1]}.')}',
-                    style: const TextStyle(
-                      fontFamily: 'Nunito',
-                      fontSize: 22,
-                      fontWeight: FontWeight.bold,
-                      color: Color(0xFF06C474),
-                    ),
+                  Row(
+                    children: [
+                      Text(
+                        // Harga diskon
+                        formatRupiah(price),
+                        style: const TextStyle(
+                          fontFamily: 'Nunito',
+                          fontSize: 22,
+                          fontWeight: FontWeight.bold,
+                          color: Color(0xFF06C474),
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      if (isFlashSale)
+                        Text(
+                          // Harga coret
+                          formatRupiah(originalPrice),
+                          style: const TextStyle(
+                            fontFamily: 'Nunito',
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                            color: Colors.grey,
+                            decoration: TextDecoration.lineThrough,
+                          ),
+                        ),
+                    ],
                   ),
+
                   Row(
                     children: [
                       if (itemCount > 0)

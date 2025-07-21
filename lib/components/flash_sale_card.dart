@@ -26,31 +26,31 @@ class FlashCard extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        width: 140,
-        height: 180, // FIXED HEIGHT agar tidak overflow
-        margin: const EdgeInsets.symmetric(vertical: 6, horizontal: 3),
-        padding: const EdgeInsets.all(6),
+        width: 155,
+        margin: const EdgeInsets.symmetric(horizontal: 4),
+        padding: const EdgeInsets.all(8),
         decoration: BoxDecoration(
           color: Colors.white,
-          borderRadius: BorderRadius.circular(8),
-          border: Border.all(color: Colors.grey.shade300, width: 0.5),
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: Colors.grey.shade300, width: 1),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.05),
-              blurRadius: 4,
-              spreadRadius: 1,
-              offset: const Offset(0, 2),
+              color: Colors.black.withOpacity(0.02),
+              blurRadius: 2,
+              spreadRadius: 0.4,
+              offset: Offset(0, 1),
             ),
           ],
         ),
+
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             ClipRRect(
-              borderRadius: BorderRadius.circular(6),
+              borderRadius: BorderRadius.circular(8),
               child: Image.network(
                 imageUrl,
-                height: 90,
+                height: 110,
                 width: double.infinity,
                 fit: BoxFit.cover,
 
@@ -61,7 +61,7 @@ class FlashCard extends StatelessWidget {
                 ) {
                   if (loadingProgress == null) return child;
                   return Container(
-                    height: 90,
+                    height: 110,
                     width: double.infinity,
                     color: Colors.grey[200],
                     child: Center(
@@ -83,7 +83,7 @@ class FlashCard extends StatelessWidget {
                   StackTrace? stackTrace,
                 ) {
                   return Container(
-                    height: 90,
+                    height: 110,
                     width: double.infinity,
                     color: Colors.grey[300],
                     child: Icon(
@@ -99,7 +99,7 @@ class FlashCard extends StatelessWidget {
             Text(
               title,
               style: blackTextStyle.copyWith(
-                fontSize: 10,
+                fontSize: 13,
                 fontWeight: FontWeight.bold,
               ),
               maxLines: 2,
@@ -109,25 +109,42 @@ class FlashCard extends StatelessWidget {
             Text(
               price,
               style: greenTextStyle.copyWith(
-                fontSize: 10,
+                fontSize: 13,
                 fontWeight: FontWeight.bold,
               ),
             ),
-            const SizedBox(height: 4),
-            LinearProgressIndicator(
-              value: progress,
-              backgroundColor: Colors.grey[300],
-              color: zelow,
-              minHeight: 6,
-            ),
-            const SizedBox(height: 2),
-            Text(
-              "Stok: $sold/$stock",
-              style: const TextStyle(
-                fontSize: 9,
-                fontWeight: FontWeight.w500,
-                color: Colors.black54,
-                overflow: TextOverflow.ellipsis,
+            const SizedBox(height: 8),
+            Container(
+              height: 14,
+              decoration: BoxDecoration(
+                color: Colors.red.withOpacity(0.25),
+                borderRadius: BorderRadius.circular(20),
+              ),
+              child: Stack(
+                children: [
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(20),
+                    child: LinearProgressIndicator(
+                      value: progress,
+                      backgroundColor: Colors.red.withOpacity(0.25),
+                      valueColor: const AlwaysStoppedAnimation<Color>(
+                        Colors.red,
+                      ),
+                      minHeight: 16,
+                    ),
+                  ),
+                  Center(
+                    child: Text(
+                      '$sold TERJUAL',
+                      style: const TextStyle(
+                        fontFamily: 'Nunito',
+                        color: Colors.white,
+                        fontSize: 9,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
           ],

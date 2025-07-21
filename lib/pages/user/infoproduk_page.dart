@@ -27,6 +27,28 @@ class _ProductInfoPageState extends State<ProductInfoPage> {
   int itemCount = 0;
 
   void _addItem() {
+    int stokTersisa = widget.productData.stok - widget.productData.terjual;
+    int maxPembelian = widget.productData.isFlashSale ? 2 : stokTersisa;
+
+    if (itemCount >= maxPembelian) {
+      if (mounted) {
+        ScaffoldMessenger.of(context)
+          ..removeCurrentSnackBar()
+          ..showSnackBar(
+            SnackBar(
+              content: Text(
+                widget.productData.isFlashSale
+                    ? 'Pembelian flash sale maksimal 2 item'
+                    : 'Pembelian mencapai batas maksimum stok',
+              ),
+              backgroundColor: zelow,
+              duration: Duration(seconds: 1),
+            ),
+          );
+      }
+      return;
+    }
+
     setState(() {
       itemCount++;
     });
@@ -93,7 +115,9 @@ class _ProductInfoPageState extends State<ProductInfoPage> {
 
   @override
   Widget build(BuildContext context) {
-    double price = widget.productData.harga;
+    bool isFlashSale = widget.productData.isFlashSale;
+    double originalPrice = widget.productData.harga;
+    double price = isFlashSale ? originalPrice * 0.8 : originalPrice;
     double totalPrice = itemCount * price;
 
     return Scaffold(
@@ -122,12 +146,17 @@ class _ProductInfoPageState extends State<ProductInfoPage> {
               jumlahTerjual: widget.productData.jumlahPembelian,
               likeCount: widget.productData.jumlahDisukai,
               price: price,
+              stok: widget.productData.stok,
+              terjual: widget.productData.terjual,
+              originalPrice: widget.productData.harga,
+              isFlashSale: widget.productData.isFlashSale,
               itemCount: itemCount,
               onSavePressed: () {},
               onSharePressed: () {},
               onAddPressed: _addItem,
               onRemovePressed: _removeItem,
             ),
+
             const SizedBox(height: 16),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -285,6 +314,10 @@ class _ProductInfoPageState extends State<ProductInfoPage> {
                                             widget.productData.harga,
                                         'nama': widget.tokoData.nama,
                                         'alamat': widget.tokoData.alamat,
+                                        'stok': widget.productData.stok,
+                                        'terjual': widget.productData.terjual,
+                                        'isFlashSale':
+                                            widget.productData.isFlashSale,
                                       },
                                     ],
                                   ),

@@ -18,8 +18,8 @@ import 'package:zelow/pages/user/search_page.dart';
 import 'package:zelow/pages/user/surprisebox_page.dart';
 import 'package:zelow/pages/user/toko_page.dart';
 import 'package:zelow/services/produk_service.dart';
-
 import '../../services/toko_service.dart';
+import 'package:intl/intl.dart';
 
 class HomePageUser extends StatefulWidget {
   const HomePageUser({super.key});
@@ -32,6 +32,11 @@ class HomePageUser extends StatefulWidget {
 class _HomePageUserState extends State<HomePageUser> {
   final TokoServices _tokoService = TokoServices();
   final ProdukService _produkService = ProdukService();
+  final NumberFormat currencyFormatter = NumberFormat.currency(
+    locale: 'id_ID',
+    symbol: 'Rp',
+    decimalDigits: 0,
+  );
 
   Widget _buildSectionTitle(
     BuildContext context,
@@ -42,24 +47,31 @@ class _HomePageUserState extends State<HomePageUser> {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Padding(
-          padding: EdgeInsets.only(left: 16),
+          padding: const EdgeInsets.only(left: 16),
           child: Text(
             title,
             style: blackTextStyle.copyWith(
-              fontSize: MediaQuery.of(context).size.width * 0.04,
+              fontSize: 18,
               fontWeight: FontWeight.bold,
             ),
           ),
         ),
         Padding(
-          padding: EdgeInsets.only(right: 16),
+          padding: const EdgeInsets.only(right: 16),
           child: TextButton(
             onPressed: onSeeAllPressed,
-            child: Text(
+            style: TextButton.styleFrom(
+              backgroundColor: const Color(0xFFE6F9F1),
+              padding: const EdgeInsets.symmetric(horizontal: 12),
+              minimumSize: const Size(0, 24),
+            ),
+            child: const Text(
               'Lihat Semua',
-              style: greenTextStyle.copyWith(
-                fontSize: MediaQuery.of(context).size.width * 0.03,
+              style: TextStyle(
+                fontFamily: 'Nunito',
                 fontWeight: FontWeight.bold,
+                fontSize: 13,
+                color: Color(0xFF06C474),
               ),
             ),
           ),
@@ -73,7 +85,7 @@ class _HomePageUserState extends State<HomePageUser> {
     String sectionTypeForNavigation,
   ) {
     return SizedBox(
-      height: MediaQuery.of(context).size.height * 0.17,
+      height: 220,
       child: FutureBuilder<List<Toko>>(
         future: futureToko,
         builder: (context, snapshot) {
@@ -92,13 +104,13 @@ class _HomePageUserState extends State<HomePageUser> {
           final tokoList = snapshot.data!;
 
           return ListView.builder(
+            padding: const EdgeInsets.only(left: 8, right: 8),
             scrollDirection: Axis.horizontal,
             itemCount: tokoList.length,
             itemBuilder: (context, index) {
               final toko = tokoList[index];
-              return Container(
-                width: 130.0,
-                margin: const EdgeInsets.symmetric(horizontal: 2.0),
+              return Padding(
+                padding: const EdgeInsets.only(left: 1, right: 1),
                 child: ProductCard(
                   imageUrl: toko.gambar,
                   rating: toko.rating,
@@ -106,7 +118,6 @@ class _HomePageUserState extends State<HomePageUser> {
                   distance: '${toko.jarak} km',
                   estimatedTime: toko.waktu,
                   onTap: () {
-                    print('Toko ${toko.nama} diklik. ID: ${toko.id}');
                     Navigator.push(
                       context,
                       MaterialPageRoute(
@@ -134,7 +145,7 @@ class _HomePageUserState extends State<HomePageUser> {
           );
         }),
         SizedBox(
-          height: 185,
+          height: 200,
           child: FutureBuilder<List<Produk>>(
             future: _produkService.getProdukRandom(limit: 10),
             builder: (context, snapshot) {
@@ -154,27 +165,29 @@ class _HomePageUserState extends State<HomePageUser> {
               final produkList = snapshot.data!;
 
               return ListView.builder(
+                padding: const EdgeInsets.only(left: 8, right: 8),
+
                 scrollDirection: Axis.horizontal,
                 itemCount: produkList.length,
                 itemBuilder: (context, index) {
                   final produk = produkList[index];
                   return Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 1),
+                    padding: const EdgeInsets.only(left: 1, right: 1),
                     child: FlashCard(
                       imageUrl: produk.gambar,
                       title: produk.nama,
-                      price: 'Rp.${produk.harga.toStringAsFixed(0)}',
-                      stock:
-                          10, // opsional: bisa tambahkan field baru untuk stok
-                      sold: produk.jumlahPembelian,
+                      price: currencyFormatter.format(produk.harga),
+                      stock: produk.stok,
+                      sold: produk.terjual,
                       onTap: () {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => ProductInfoPage(
-                              productData: produk,
-                              tokoData: produk.toko!
-                            ),
+                            builder:
+                                (context) => ProductInfoPage(
+                                  productData: produk,
+                                  tokoData: produk.toko!,
+                                ),
                           ),
                         );
                       },
@@ -191,19 +204,17 @@ class _HomePageUserState extends State<HomePageUser> {
 
   Widget _buildRekomendasiSection() {
     return Padding(
-      padding: const EdgeInsets.only(
-        bottom: 10.0,
-      ),
+      padding: const EdgeInsets.only(bottom: 10.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const SizedBox(height: 16), // jarak atas
+          const SizedBox(height: 16),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
             child: Text(
               'Rekomendasi Untukmu',
               style: blackTextStyle.copyWith(
-                fontSize: MediaQuery.of(context).size.width * 0.05,
+                fontSize: 18,
                 fontWeight: FontWeight.bold,
               ),
             ),
@@ -233,22 +244,25 @@ class _HomePageUserState extends State<HomePageUser> {
                 physics: const NeverScrollableScrollPhysics(),
                 itemBuilder: (context, index) {
                   final toko = tokoList[index];
-                  return DisplayCard(
-                    imageUrl: toko.gambar,
-                    restaurantName: toko.nama,
-                    description:
-                        '${toko.deskripsi ?? 'Toko enak dan terjangkau!'}',
-                    rating: toko.rating,
-                    distance: '${toko.jarak} km',
-                    estimatedTime: toko.waktu,
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => TokoPageUser(tokoData: toko),
-                        ),
-                      );
-                    },
+                  return Padding(
+                    padding: const EdgeInsets.only(bottom: 4),
+                    child: DisplayCard(
+                      imageUrl: toko.gambar,
+                      restaurantName: toko.nama,
+                      description:
+                          '${toko.deskripsi ?? 'Toko enak dan terjangkau!'}',
+                      rating: toko.rating,
+                      distance: '${toko.jarak} km',
+                      estimatedTime: toko.waktu,
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => TokoPageUser(tokoData: toko),
+                          ),
+                        );
+                      },
+                    ),
                   );
                 },
               );
@@ -356,6 +370,7 @@ class _HomePageUserState extends State<HomePageUser> {
                         height: MediaQuery.of(context).size.height * 0.02,
                       ),
                       _buildZeflashSection(),
+                      SizedBox(height: 4),
                       _buildSectionTitle(context, 'Terdekat', () {
                         Navigator.push(
                           context,

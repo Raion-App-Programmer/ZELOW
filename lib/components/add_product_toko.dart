@@ -1,126 +1,3 @@
-// import 'package:flutter/material.dart';
-// import 'package:zelow/components/constant.dart';
-
-// class ProductTokoCard extends StatelessWidget {
-//   final String imageUrl;
-//   final String restaurantName;
-//   final String description;
-//   final double harga;
-//   final VoidCallback onTap;
-
-//   const ProductTokoCard({
-//     Key? key,
-//     required this.imageUrl,
-//     required this.restaurantName,
-//     required this.description,
-//     required this.harga,
-//     required this.onTap,
-//   }) : super(key: key);
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return GestureDetector(
-//       onTap: onTap,
-//       child: Container(
-//         width: MediaQuery.of(context).size.width * 0.9, // Lebar card panjang
-//         margin: const EdgeInsets.symmetric(vertical: 2, horizontal: 12),
-//         padding: const EdgeInsets.all(10),
-//         decoration: BoxDecoration(
-//           color: Colors.white,
-//           borderRadius: BorderRadius.circular(12),
-//           boxShadow: [
-//             BoxShadow(
-//               color: Colors.black.withOpacity(0.1),
-//               blurRadius: 6,
-//               spreadRadius: 2,
-//               offset: const Offset(0, 2),
-//             ),
-//           ],
-//         ),
-//         child: Row(
-//           children: [
-//             // Gambar Produk (Kotak di kiri)
-//             ClipRRect(
-//               borderRadius: BorderRadius.circular(8),
-//               child: Image.asset(
-//                 imageUrl,
-//                 height: 80,
-//                 width: 80,
-//                 fit: BoxFit.cover,
-//               ),
-//             ),
-//             const SizedBox(width: 10),
-
-//             //Isi Utama
-//             Expanded(
-//               child: Column(
-//                 crossAxisAlignment: CrossAxisAlignment.start,
-//                 children: [
-//                   // Nama Resto
-//                   Column(
-//                     crossAxisAlignment: CrossAxisAlignment.start,
-//                     children: [
-//                       Text(
-//                         restaurantName,
-//                         style: blackTextStyle.copyWith(
-//                           fontSize: 16,
-//                           fontWeight: FontWeight.bold,
-//                         ),
-//                       ),
-
-//                       // Deskripsi Singkat
-//                       Text(
-//                         description,
-//                         style: const TextStyle(
-//                           fontSize: 12,
-//                           color: Colors.grey,
-//                           fontWeight: FontWeight.w500,
-//                         ),
-//                         maxLines: 1,
-//                         overflow: TextOverflow.ellipsis,
-//                       ),
-//                     ],
-//                   ),
-//                   const SizedBox(height: 18),
-
-//                   Padding(
-//                     padding: const EdgeInsets.only(right: 8.0),
-//                     child: Row(
-//                       children: [
-//                         Text(
-//                           "RP${harga.toStringAsFixed(3)}",
-//                           style: TextStyle(
-//                               color: zelow,
-//                               fontSize: 20,
-//                               fontWeight: FontWeight.w700
-//                           ),
-//                         ),
-//                         Spacer(),
-//                         Container(
-//                             decoration: BoxDecoration(
-//                               color: zelow,
-//                               shape: BoxShape.circle, // Bentuk lingkaran
-//                             ),
-//                             child: Icon(
-//                                 Icons.add,
-//                               color: Colors.white,
-//                             )
-//                         )
-//                       ],
-//                     ),
-//                   ),
-//                   const SizedBox(width: 6),
-
-//                 ],
-//               ),
-//             ),
-//           ],
-//         ),
-//       ),
-//     );
-//   }
-// }
-
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:zelow/components/constant.dart';
@@ -158,34 +35,31 @@ class ProductTokoCard extends StatelessWidget {
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: Colors.grey.shade300, width: 1),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.1),
-              blurRadius: 6,
-              spreadRadius: 2,
-              offset: const Offset(0, 2),
+              color: Colors.black.withOpacity(0.02),
+              blurRadius: 2,
+              spreadRadius: 0.4,
+              offset: const Offset(0, 1),
             ),
           ],
         ),
         child: Row(
           children: [
-            // Gambar Produk (Kotak di kiri)
+            // Gambar Produk
             ClipRRect(
               borderRadius: BorderRadius.circular(8),
               child: Image.network(
                 imageUrl,
-                height: 80,
-                width: 80,
+                height: 95,
+                width: 95,
                 fit: BoxFit.cover,
-                loadingBuilder: (
-                  BuildContext context,
-                  Widget child,
-                  ImageChunkEvent? loadingProgress,
-                ) {
+                loadingBuilder: (context, child, loadingProgress) {
                   if (loadingProgress == null) return child;
                   return Container(
-                    height: 90,
-                    width: double.infinity,
+                    height: 95,
+                    width: 95,
                     color: Colors.grey[200],
                     child: Center(
                       child: CircularProgressIndicator(
@@ -199,15 +73,10 @@ class ProductTokoCard extends StatelessWidget {
                     ),
                   );
                 },
-
-                errorBuilder: (
-                  BuildContext context,
-                  Object exception,
-                  StackTrace? stackTrace,
-                ) {
+                errorBuilder: (context, exception, stackTrace) {
                   return Container(
-                    height: 90,
-                    width: double.infinity,
+                    height: 95,
+                    width: 95,
                     color: Colors.grey[300],
                     child: Icon(
                       Icons.broken_image_outlined,
@@ -218,64 +87,62 @@ class ProductTokoCard extends StatelessWidget {
                 },
               ),
             ),
-            const SizedBox(width: 10),
+            const SizedBox(width: 16),
 
-            //Isi Utama
+            // Konten Teks
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Nama Resto
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                  Text(
+                    restaurantName,
+                    style: const TextStyle(
+                      fontFamily: 'Nunito',
+                      fontSize: 18,
+                      fontWeight: FontWeight.w800,
+                      color: Colors.black,
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    description,
+                    style: TextStyle(
+                      fontFamily: 'Nunito',
+                      fontSize: 14,
+                      color: Colors.grey[600],
+                      fontWeight: FontWeight.w500,
+                    ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  const SizedBox(height: 14),
+                  Row(
                     children: [
                       Text(
-                        restaurantName,
-                        style: blackTextStyle.copyWith(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
+                        formattedHarga,
+                        style: TextStyle(
+                          fontFamily: 'Nunito',
+                          fontSize: 21,
+                          color: zelow,
+                          fontWeight: FontWeight.w800,
                         ),
                       ),
-
-                      // Deskripsi Singkat
-                      Text(
-                        description,
-                        style: const TextStyle(
-                          fontSize: 12,
-                          color: Colors.grey,
-                          fontWeight: FontWeight.w500,
+                      const Spacer(),
+                      Container(
+                        height: 36,
+                        width: 36,
+                        decoration: BoxDecoration(
+                          color: zelow,
+                          shape: BoxShape.circle,
                         ),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
+                        child: const Icon(
+                          Icons.add,
+                          color: Colors.white,
+                          size: 30,
+                        ),
                       ),
                     ],
                   ),
-                  const SizedBox(height: 18),
-
-                  Padding(
-                    padding: const EdgeInsets.only(right: 8.0),
-                    child: Row(
-                      children: [
-                        Text(
-                          formattedHarga,
-                          style: TextStyle(
-                            color: zelow,
-                            fontSize: 20,
-                            fontWeight: FontWeight.w700,
-                          ),
-                        ),
-                        Spacer(),
-                        Container(
-                          decoration: BoxDecoration(
-                            color: zelow,
-                            shape: BoxShape.circle,
-                          ),
-                          child: Icon(Icons.add, color: Colors.white),
-                        ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(width: 6),
                 ],
               ),
             ),

@@ -63,9 +63,17 @@ class AkandatangCard extends StatelessWidget {
         margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
         padding: const EdgeInsets.all(8),
         decoration: BoxDecoration(
-          color: white,
+          color: Colors.white,
           borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: Colors.grey.shade300),
+          border: Border.all(color: Colors.grey.shade300, width: 1),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.02),
+              blurRadius: 2,
+              spreadRadius: 0.4,
+              offset: Offset(0, 1),
+            ),
+          ],
         ),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -141,7 +149,7 @@ class AkandatangCard extends StatelessWidget {
                         currencyFormat.format(produk.harga * 0.8),
                         style: const TextStyle(
                           fontFamily: 'Nunito',
-                          fontWeight: FontWeight.w600,
+                          fontWeight: FontWeight.w800,
                           fontSize: 18,
                           color: greenHex,
                         ),

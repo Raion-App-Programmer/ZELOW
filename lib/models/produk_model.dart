@@ -14,6 +14,7 @@ class Produk {
   final int stok;
   final int terjual;
   final Toko? toko;
+  final bool isFlashSale;
 
   Produk({
     required this.id,
@@ -28,6 +29,7 @@ class Produk {
     required this.stok,
     required this.terjual,
     this.toko,
+    this.isFlashSale = false,
   });
 
   factory Produk.fromFirestore(DocumentSnapshot doc) {
@@ -51,10 +53,29 @@ class Produk {
       jumlahDisukai: data['jumlah_disukai'] ?? 0,
       stok: data['stok'] ?? 0,
       terjual: data['terjual'] ?? 0,
+      isFlashSale: false,
     );
   }
 
-  Produk copyWithToko(Toko tokoBaru) {
+  Produk copyWith({bool? isFlashSale, Toko? toko}) {
+    return Produk(
+      id: id,
+      idToko: idToko,
+      kategori: kategori,
+      nama: nama,
+      gambar: gambar,
+      harga: harga,
+      rating: rating,
+      jumlahPembelian: jumlahPembelian,
+      jumlahDisukai: jumlahDisukai,
+      stok: stok,
+      terjual: terjual,
+      toko: toko ?? this.toko,
+      isFlashSale: isFlashSale ?? this.isFlashSale,
+    );
+  }
+
+  Produk copyWithToko(Toko tokoBaru, {bool? isFlashSale}) {
     return Produk(
       id: id,
       idToko: idToko,
@@ -68,6 +89,7 @@ class Produk {
       stok: stok,
       terjual: terjual,
       toko: tokoBaru,
+      isFlashSale: isFlashSale ?? this.isFlashSale,
     );
   }
 }

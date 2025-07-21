@@ -31,7 +31,15 @@ class FoodSaleCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Colors.grey.shade300),
+        border: Border.all(color: Colors.grey.shade300, width: 1),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.02),
+            blurRadius: 2,
+            spreadRadius: 0.4,
+            offset: Offset(0, 1),
+          ),
+        ],
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -111,12 +119,12 @@ class FoodSaleCard extends StatelessWidget {
                       currencyFormat.format(produk.harga * 0.8),
                       style: const TextStyle(
                         fontFamily: 'Nunito',
-                        fontWeight: FontWeight.w600,
+                        fontWeight: FontWeight.w800,
                         fontSize: 18,
                         color: greenHex,
                       ),
                     ),
-                    const SizedBox(width: 2),
+                    const SizedBox(width: 4),
                     Text(
                       currencyFormat.format(produk.harga),
                       style: TextStyle(

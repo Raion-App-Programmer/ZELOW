@@ -71,7 +71,9 @@ class _FlashsalePageState extends State<FlashsalePage> {
   void _onTabSelected(int index) {
     setState(() {
       _selectedTab = index;
-      _flashSaleProdukList = _flashSaleService.getFlashSaleProdukByTime(index);
+      _flashSaleProdukList = _flashSaleService.getFlashSaleProdukByTime(
+        rotatedToOriginalIndex[index],
+      );
       _remainingTime = getRemainingFlashSaleTime();
     });
   }
@@ -263,27 +265,33 @@ class _FlashsalePageState extends State<FlashsalePage> {
                         ? (produk.toko != null
                             ? GestureDetector(
                               onTap: () {
+                                final flashSaleProduk = produk.copyWith(
+                                  isFlashSale: true,
+                                );
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
                                     builder:
                                         (_) => ProductInfoPage(
-                                          productData: produk,
-                                          tokoData: produk.toko!,
+                                          productData: flashSaleProduk,
+                                          tokoData: flashSaleProduk.toko!,
                                         ),
                                   ),
                                 );
                               },
                               child: FoodSaleCard(
-                                produk: produk,
+                                produk: produk.copyWith(isFlashSale: true),
                                 onBuyPressed: () {
+                                  final flashSaleProduk = produk.copyWith(
+                                    isFlashSale: true,
+                                  );
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
                                       builder:
                                           (_) => ProductInfoPage(
-                                            productData: produk,
-                                            tokoData: produk.toko!,
+                                            productData: flashSaleProduk,
+                                            tokoData: flashSaleProduk.toko!,
                                           ),
                                     ),
                                   );

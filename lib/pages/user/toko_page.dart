@@ -28,7 +28,7 @@ class _TokoPageUserState extends State<TokoPageUser> {
     _produkList = _produkService.getProdukByToko(widget.tokoData.id);
   }
 
-  Widget buildProdukCardByCategory(final List<Produk> produk, String kategori) {
+  Widget buildProdukCardByCategory(List<Produk> produk, String kategori) {
     return ListView.builder(
       padding: EdgeInsets.zero,
       itemCount: produk.length,
@@ -36,24 +36,27 @@ class _TokoPageUserState extends State<TokoPageUser> {
       physics: const NeverScrollableScrollPhysics(),
       itemBuilder: (context, index) {
         final dataProduk = produk[index];
-        return ProductTokoCard(
-          imageUrl: dataProduk.gambar,
-          restaurantName: dataProduk.nama,
-          description:
-              '${dataProduk.jumlahPembelian} terjual | Disukai oleh ${dataProduk.jumlahDisukai}',
-          harga: dataProduk.harga,
-          onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder:
-                    (context) => ProductInfoPage(
-                      productData: dataProduk,
-                      tokoData: dataProduk.toko!,
-                    ),
-              ),
-            );
-          },
+        return Padding(
+          padding: const EdgeInsets.symmetric(vertical: 4.0),
+          child: ProductTokoCard(
+            imageUrl: dataProduk.gambar,
+            restaurantName: dataProduk.nama,
+            description:
+                '${dataProduk.jumlahPembelian} terjual | Disukai oleh ${dataProduk.jumlahDisukai}',
+            harga: dataProduk.harga,
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder:
+                      (context) => ProductInfoPage(
+                        productData: dataProduk,
+                        tokoData: dataProduk.toko!,
+                      ),
+                ),
+              );
+            },
+          ),
         );
       },
     );
@@ -73,7 +76,7 @@ class _TokoPageUserState extends State<TokoPageUser> {
                   child: Column(
                     children: [
                       SizedBox(
-                        height: MediaQuery.of(context).size.height * 0.25,
+                        height: MediaQuery.of(context).size.height * 0.3,
                         child: HeaderToko(imageUrl: widget.tokoData.gambar),
                       ),
                       SizedBox(
@@ -81,8 +84,8 @@ class _TokoPageUserState extends State<TokoPageUser> {
                         child: Padding(
                           padding: const EdgeInsets.only(
                             top: 10.0,
-                            left: 10.0,
-                            right: 10.0,
+                            left: 14.0,
+                            right: 14.0,
                           ),
                           child: Column(
                             mainAxisSize: MainAxisSize.min,
@@ -94,9 +97,10 @@ class _TokoPageUserState extends State<TokoPageUser> {
                                 style: TextStyle(
                                   fontFamily: 'nunito',
                                   fontSize: 24,
-                                  fontWeight: FontWeight.w700,
+                                  fontWeight: FontWeight.bold,
                                 ),
                               ),
+                              SizedBox(height: 6),
                               Text(
                                 widget.tokoData.deskripsi,
                                 style: TextStyle(
@@ -107,7 +111,7 @@ class _TokoPageUserState extends State<TokoPageUser> {
                               ),
 
                               Padding(
-                                padding: const EdgeInsets.all(15.0),
+                                padding: const EdgeInsets.all(15),
                                 child: Row(
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,
@@ -118,14 +122,14 @@ class _TokoPageUserState extends State<TokoPageUser> {
                                           Icons.star,
                                           color: Color(0xFFFFC837),
                                         ),
+                                        SizedBox(width: 6),
                                         Text(
                                           widget.tokoData.rating
                                               .toStringAsFixed(1),
                                           style: TextStyle(
                                             fontFamily: 'nunito',
-                                            fontSize: 16,
+                                            fontSize: 18,
                                             fontWeight: FontWeight.w600,
-                                            color: Color(0xFF676767),
                                           ),
                                         ),
                                       ],
@@ -136,6 +140,7 @@ class _TokoPageUserState extends State<TokoPageUser> {
                                           Icons.location_on_outlined,
                                           color: Color(0xFF676767),
                                         ),
+                                        SizedBox(width: 4),
                                         Text(
                                           "${widget.tokoData.jarak} km",
                                           style: TextStyle(
@@ -154,6 +159,7 @@ class _TokoPageUserState extends State<TokoPageUser> {
                                           Icons.access_time,
                                           color: Color(0xFF676767),
                                         ),
+                                        SizedBox(width: 8),
                                         Text(
                                           "${widget.tokoData.waktu} min",
                                           style: TextStyle(
@@ -168,7 +174,7 @@ class _TokoPageUserState extends State<TokoPageUser> {
                                   ],
                                 ),
                               ),
-                              Divider(thickness: 1),
+                              Divider(thickness: 0.8),
                             ],
                           ),
                         ),
@@ -176,7 +182,10 @@ class _TokoPageUserState extends State<TokoPageUser> {
                       SingleChildScrollView(
                         scrollDirection: Axis.horizontal,
                         child: Padding(
-                          padding: const EdgeInsets.all(10.0),
+                          padding: const EdgeInsets.symmetric(
+                            vertical: 8,
+                            horizontal: 16,
+                          ),
                           child: Row(
                             spacing: 10,
                             children: [
@@ -198,7 +207,7 @@ class _TokoPageUserState extends State<TokoPageUser> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               FilterTokoButton(
-                                text: 'Favorit',
+                                text: 'Flash Sale',
                                 onPressed: () {},
                                 isSelected: false,
                               ),
@@ -213,17 +222,7 @@ class _TokoPageUserState extends State<TokoPageUser> {
                                 isSelected: false,
                               ),
                               FilterTokoButton(
-                                text: 'Flash Sale',
-                                onPressed: () {},
-                                isSelected: false,
-                              ),
-                              FilterTokoButton(
                                 text: 'Tambahan',
-                                onPressed: () {},
-                                isSelected: false,
-                              ),
-                              FilterTokoButton(
-                                text: 'Filter',
                                 onPressed: () {},
                                 isSelected: false,
                               ),

@@ -1,4 +1,4 @@
-// 
+//
 
 import 'package:flutter/material.dart';
 import 'package:zelow/components/constant.dart';
@@ -18,8 +18,8 @@ class _VoucherTokoCardState extends State<VoucherTokoCard> {
       child: Stack(
         children: [
           Container(
-            height: 64,
-            width: 175,
+            height: 70,
+            width: 180,
             decoration: BoxDecoration(
               color: Color(0xFF06C474),
               borderRadius: BorderRadius.circular(10),
@@ -28,7 +28,7 @@ class _VoucherTokoCardState extends State<VoucherTokoCard> {
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: SizedBox(
-              height: 48,
+              height: 50,
               width: 160,
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -37,12 +37,9 @@ class _VoucherTokoCardState extends State<VoucherTokoCard> {
                   Icon(
                     Icons.shopping_basket_outlined,
                     color: Colors.white,
-                    size: 30,
+                    size: 35,
                   ),
-                  VerticalDivider(
-                    thickness: 2,
-                    color: Colors.white,
-                  ),
+                  VerticalDivider(thickness: 1, color: Colors.white),
                   SizedBox(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -53,7 +50,7 @@ class _VoucherTokoCardState extends State<VoucherTokoCard> {
                           textAlign: TextAlign.start,
                           style: TextStyle(
                             fontFamily: 'nunito',
-                            fontSize: 12,
+                            fontSize: 14,
                             fontWeight: FontWeight.w700,
                             color: Colors.white,
                           ),
@@ -63,7 +60,7 @@ class _VoucherTokoCardState extends State<VoucherTokoCard> {
                           textAlign: TextAlign.start,
                           style: TextStyle(
                             fontFamily: 'nunito',
-                            fontSize: 8,
+                            fontSize: 10,
                             fontWeight: FontWeight.w400,
                             color: Colors.white,
                           ),
@@ -75,38 +72,40 @@ class _VoucherTokoCardState extends State<VoucherTokoCard> {
                               textAlign: TextAlign.start,
                               style: TextStyle(
                                 fontFamily: 'nunito',
-                                fontSize: 8,
+                                fontSize: 10,
                                 fontWeight: FontWeight.w700,
                                 color: Color(0xFFE6E6E6),
                               ),
                             ),
-                            SizedBox(width: 20),
+                            SizedBox(width: 24),
                             Container(
                               decoration: BoxDecoration(
                                 color: Colors.white,
                                 borderRadius: BorderRadius.circular(10),
                               ),
-                              width: 46.5,
-                              height: 12,
+                              width: 50,
+                              height: 14,
                               child: Center(
                                 child: Text(
                                   'Klaim',
                                   style: TextStyle(
-                                    fontSize: 6,
+                                    fontFamily: 'nunito',
+                                    fontSize: 10,
+                                    fontWeight: FontWeight.w800,
                                     color: zelow,
                                   ),
                                 ),
                               ),
-                            )
+                            ),
                           ],
-                        )
+                        ),
                       ],
                     ),
-                  )
+                  ),
                 ],
               ),
             ),
-          )
+          ),
         ],
       ),
     );

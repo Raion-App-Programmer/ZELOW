@@ -56,8 +56,36 @@ class _CheckoutPageState extends State<CheckoutPage> {
   }
 
   void _increaseQuantity(int index) {
+    final order = orders[index];
+    final int stok = order['stok'] ?? 0;
+    final int terjual = order['terjual'] ?? 0;
+    final bool isFlashSale = order['isFlashSale'] ?? false;
+    final int quantity = order['quantity'] ?? 0;
+
+    int stokTersisa = stok - terjual;
+    int maxPembelian = isFlashSale ? 2 : stokTersisa;
+
+    if (quantity >= maxPembelian) {
+      if (mounted) {
+        ScaffoldMessenger.of(context)
+          ..removeCurrentSnackBar()
+          ..showSnackBar(
+            SnackBar(
+              content: Text(
+                isFlashSale
+                    ? 'Pembelian flash sale maksimal 2 item'
+                    : 'Pembelian mencapai batas maksimum stok',
+              ),
+              backgroundColor: zelow,
+              duration: const Duration(seconds: 1),
+            ),
+          );
+      }
+      return;
+    }
+
     setState(() {
-      orders[index]['quantity']++;
+      orders[index]['quantity'] = quantity + 1;
     });
   }
 
@@ -284,7 +312,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                             fontSize: 20,
                             fontWeight: FontWeight.bold,
                             fontFamily: 'Nunito',
-                            color: Colors.grey
+                            color: Colors.grey,
                           ),
                         ),
                       ),
