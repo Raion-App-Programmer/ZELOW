@@ -48,7 +48,7 @@ class SurpirseCard extends StatelessWidget {
               children: [
                 ClipRRect(
                   borderRadius: BorderRadius.circular(8),
-                  child: Image.asset(
+                  child: Image.network(
                     imageUrl,
                     height: 80,
                     width: 80,
