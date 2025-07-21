@@ -169,7 +169,7 @@ class _HomePageUserState extends State<HomePageUser> {
                           context,
                           MaterialPageRoute(
                             builder: (context) => ProductInfoPage(
-                              productData: produk,
+                              produk: produk,
                             ),
                           ),
                         );

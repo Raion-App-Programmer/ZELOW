@@ -1,14 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:zelow/models/keranjang_model.dart';
 import 'package:zelow/models/produk_model.dart';
 
 class KeranjangService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  final FirebaseAuth _auth = FirebaseAuth.instance;
-
-  // ngambil id user yang sedang login
-  String? get _userId => _auth.currentUser?.uid;
+  final String? _userId = FirebaseAuth.instance.currentUser?.uid;
 
   // nambah atau update item di keranjang
   Future<void> addToCart(Produk produk, int quantity) async {

@@ -10,9 +10,9 @@ import 'package:zelow/services/keranjang_service.dart';
 import 'package:zelow/services/produk_service.dart'; // Tambahkan import ini
 
 class ProductInfoPage extends StatefulWidget {
-  final Produk productData;
+  final Produk produk;
 
-  const ProductInfoPage({super.key, required this.productData});
+  const ProductInfoPage({super.key, required this.produk});
 
   @override
   _ProductInfoPageState createState() => _ProductInfoPageState();
@@ -26,7 +26,7 @@ class _ProductInfoPageState extends State<ProductInfoPage> {
   @override
   void initState() {
     super.initState();
-    _produkService.getAlamatTokoByProdukId(widget.productData.idToko).then((
+    _produkService.getAlamatTokoByProdukId(widget.produk.idToko).then((
       alamat,
     ) {
       setState(() {
@@ -59,11 +59,11 @@ class _ProductInfoPageState extends State<ProductInfoPage> {
 
     try {
       // manggil fungsi keranjang service
-      await _keranjangService.addToCart(widget.productData, itemCount);
+      await _keranjangService.addToCart(widget.produk, itemCount);
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(
-            '$itemCount ${widget.productData.nama} ditambahkan ke keranjang!',
+            '$itemCount ${widget.produk.nama} ditambahkan ke keranjang!',
           ),
           backgroundColor: zelow,
           action: SnackBarAction(
@@ -94,10 +94,7 @@ class _ProductInfoPageState extends State<ProductInfoPage> {
 
   @override
   Widget build(BuildContext context) {
-    // double price = (widget.productData['price'] as num).toDouble();
-    // double totalPrice = itemCount * price;
-
-    double price = widget.productData.harga;
+    double price = widget.produk.harga;
     double totalPrice = itemCount * price;
     
     return Scaffold(
@@ -106,11 +103,11 @@ class _ProductInfoPageState extends State<ProductInfoPage> {
         child: Column(
           children: [
             InfoProdukCard(
-              title: widget.productData.nama,
-              imageUrl: widget.productData.gambar,
-              rating: widget.productData.rating,
-              jumlahTerjual: widget.productData.jumlahPembelian,
-              likeCount: widget.productData.jumlahDisukai,
+              title: widget.produk.nama,
+              imageUrl: widget.produk.gambar,
+              rating: widget.produk.rating,
+              jumlahTerjual: widget.produk.jumlahPembelian,
+              likeCount: widget.produk.jumlahDisukai,
               price: price,
               itemCount: itemCount,
               reviews: _buildReviews([]), // Masih kurang tau apa gunanya
@@ -137,12 +134,6 @@ class _ProductInfoPageState extends State<ProductInfoPage> {
                     Stack(
                       clipBehavior: Clip.none,
                       children: [
-                        // Icon(
-                        //   Icons.shopping_bag,
-                        //   size: 30,
-                        //   color: zelow,
-                        //   // Warna Zelow
-                        // ),
                         IconButton(
                           onPressed: isAddingToCart ? null : _handleAddToCart,
                           icon:
@@ -202,13 +193,16 @@ class _ProductInfoPageState extends State<ProductInfoPage> {
                                   (context) => CheckoutPage(
                                     orders: [
                                       {
-                                        'title': widget.productData.nama,
-                                        'imageUrl': widget.productData.gambar,
-                                        'price': price,
+                                        'nama': widget.produk.nama,
+                                        'gambar': widget.produk.gambar,
+                                        'harga': price,
                                         'quantity': itemCount,
-                                        'originalPrice':
-                                            widget.productData.harga,
-                                        'address': alamatTokoProduk,
+                                        'hargaAsli': widget.produk.harga,
+                                        'alamat': alamatTokoProduk,
+                                        'idProduk': widget.produk.idProduk,
+                                        'idToko': widget.produk.idToko,
+                                        'kategori': widget.produk.kategori,
+                                        'rating': widget.produk.rating
                                       },
                                     ],
                                   ),

@@ -2,20 +2,20 @@ import 'package:flutter/material.dart';
 import 'package:zelow/components/constant.dart';
 
 class OrderItemCard extends StatelessWidget {
-  final String imageUrl;
-  final String title;
-  final double price;
-  final double originalPrice;
+  final String gambar;
+  final String nama;
+  final double harga;
+  final double hargaAsli;
   final int quantity;
   final VoidCallback onIncrease;
   final VoidCallback onDecrease;
 
   const OrderItemCard({
     super.key,
-    required this.imageUrl,
-    required this.title,
-    required this.price,
-    required this.originalPrice,
+    required this.gambar,
+    required this.nama,
+    required this.harga,
+    required this.hargaAsli,
     required this.quantity,
     required this.onIncrease,
     required this.onDecrease,
@@ -30,21 +30,21 @@ class OrderItemCard extends StatelessWidget {
         padding: const EdgeInsets.all(12.0),
         child: Row(
           children: [
-            Image.network(imageUrl, width: 60, height: 60, fit: BoxFit.cover),
+            Image.network(gambar, width: 60, height: 60, fit: BoxFit.cover),
             SizedBox(width: 12),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    title,
+                    nama,
                     style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                   ),
                   SizedBox(height: 4),
                   Row(
                     children: [
                       Text(
-                        "Rp${price.toStringAsFixed(0)}",
+                        "Rp${harga.toStringAsFixed(0)}",
                         style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
@@ -52,9 +52,9 @@ class OrderItemCard extends StatelessWidget {
                         ),
                       ),
                       SizedBox(width: 8),
-                      if (price != originalPrice) ...[
+                      if (harga != hargaAsli) ...[
                         Text(
-                          "Rp${originalPrice.toStringAsFixed(0)}",
+                          "Rp${hargaAsli.toStringAsFixed(0)}",
                           style: TextStyle(
                             fontSize: 14,
                             color: Colors.grey,

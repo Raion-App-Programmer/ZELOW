@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:zelow/components/keranjang_card.dart';
 import 'package:zelow/components/keranjang_bottomnavbar.dart';
 import 'package:zelow/models/keranjang_model.dart';
+import 'package:zelow/models/produk_model.dart';
 import 'package:zelow/pages/user/chekout_page.dart';
 import 'package:zelow/services/keranjang_service.dart';
 
@@ -13,7 +14,6 @@ class KeranjangKu extends StatefulWidget {
 }
 
 class _KeranjangKuState extends State<KeranjangKu> {
-
   // Backend Keranjang
   final KeranjangService _keranjangService = KeranjangService();
 
@@ -49,13 +49,16 @@ class _KeranjangKuState extends State<KeranjangKu> {
         .where((item) => _selectedItems.contains(item.produk.idProduk))
         .map(
           (item) => {
-            'idProduk': item.produk.idProduk, // PENTING untuk menghapus dari keranjang nanti
-            'title': item.produk.nama,
-            'imageUrl': item.produk.gambar,
-            'price': item.produk.harga.toDouble(),
-            'originalPrice': item.produk.harga.toDouble(), // Sesuaikan jika ada harga asli/diskon
+            'idProduk': item.produk.idProduk, 
+            'nama': item.produk.nama,
+            'gambar': item.produk.gambar,
+            'harga': item.produk.harga,
+            'hargaAsli': item.produk.harga, // Fitur diskon menyusul (belum jalan)
             'quantity': item.quantity,
-            'address': item.alamat,
+            'alamat': item.alamat,
+            'idToko': item.produk.idToko,
+            'kategori': item.produk.kategori,
+            'rating': item.produk.rating,
           },
         )
         .toList();
@@ -93,11 +96,6 @@ class _KeranjangKuState extends State<KeranjangKu> {
       body: StreamBuilder<List<KeranjangModel>>(
         stream: _keranjangService.getCartItems(),
         builder: (context, snapshot) {
-          // Loading
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
-          }
-
           if (!snapshot.hasData || snapshot.data!.isEmpty) {
             _cartItems = [];
             if (_selectedItems.isNotEmpty) {
@@ -144,11 +142,10 @@ class _KeranjangKuState extends State<KeranjangKu> {
                   child: const Icon(Icons.delete, color: Colors.white),
                 ),
 
-                
                 child: CardItemSample(
                   item: item,
                   isSelected: isSelected,
-                  onTap: () => _toggleSelection(item.produk.idProduk), // Panggil fungsi toggle
+                  onTap: () => _toggleSelection(item.produk.idProduk),
                 ),
               );
             },
@@ -157,7 +154,7 @@ class _KeranjangKuState extends State<KeranjangKu> {
       ),
 
       bottomNavigationBar: CartBottomNavBar(
-        totalPrice: _selectedTotalPrice, 
+        totalPrice: _selectedTotalPrice,
         itemCount: _selectedItemsCount,
         onCheckoutPressed: _handleCheckout,
       ),

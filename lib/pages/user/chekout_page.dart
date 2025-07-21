@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:zelow/components/constant.dart';
 import 'package:zelow/components/order_item_card.dart';
 import 'package:zelow/pages/user/pesanan_page.dart';
+import 'package:zelow/services/pesanan_service.dart';
 
 class CheckoutPage extends StatefulWidget {
   final List<Map<String, dynamic>> orders;
@@ -15,12 +16,13 @@ class CheckoutPage extends StatefulWidget {
 class _checkoutPageState extends State<CheckoutPage> {
   late Set<String> alamatOrders;
 
-  double serviceFee = 4900.0;
-  String _selectedPayment = "cash";
+  double biayaLayanan = 4900.0;
+  String _metodePembayaran = "cash";
 
   // Backend service checkout
   // final PesananService _pesananService = PesananService();
   // bool _isProcessing = false;
+
 
   String getMonthName(int month) {
     List<String> months = [
@@ -40,10 +42,29 @@ class _checkoutPageState extends State<CheckoutPage> {
     return months[month - 1];
   }
 
+  final PesananService _pesananService = PesananService();
+  bool _isProcessing = false;
+  Future <void> _handleCheckout() async {
+    setState(() {
+      _isProcessing = true;
+    });
+
+    try {
+      await _pesananService.addPesanan(widget.orders, _metodePembayaran);
+    } catch (e) {
+      print("Error: $e");
+    } finally {
+      setState(() {
+        _isProcessing = false;
+      });
+    }
+  }
+
   @override
   void initState() {
     super.initState();
-    alamatOrders = widget.orders.map((order) => order['address'].toString()).toSet();
+    alamatOrders =
+        widget.orders.map((order) => order['alamat'].toString()).toSet();
   }
 
   void _increaseQuantity(int index) {
@@ -60,8 +81,15 @@ class _checkoutPageState extends State<CheckoutPage> {
     }
   }
 
-  // Ini menampilkan alamat toko yang diambil dari variable alamatOrders
-  // Jika hanya ada satu alamat, tampilkan sebagai teks biasa
+  double get subtotal {
+    return widget.orders.fold(
+      0,
+      (total, item) => total + (item['harga'] * item['quantity']),
+    );
+  }
+
+  // Ini nampilin alamat toko yang diambil dari variable alamatOrders
+  // Jika hanya ada satu alamat, tampilkan sebagai teks biasa aja
   // Jika ada lebih dari satu alamat, tampilkan sebagai daftar dengan bullet points
   Widget buildAlamatToko(Set<String> alamatOrders) {
     if (alamatOrders.length == 1) {
@@ -70,7 +98,7 @@ class _checkoutPageState extends State<CheckoutPage> {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          for (final alamat in alamatOrders) 
+          for (final alamat in alamatOrders)
             Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -114,9 +142,7 @@ class _checkoutPageState extends State<CheckoutPage> {
                           },
                           style: ElevatedButton.styleFrom(
                             backgroundColor:
-                                selectedTab == "Pick Up"
-                                    ? zelow
-                                    : Colors.white,
+                                selectedTab == "Pick Up" ? zelow : Colors.white,
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(20),
                               side: BorderSide(color: zelow),
@@ -293,13 +319,6 @@ class _checkoutPageState extends State<CheckoutPage> {
     );
   }
 
-  double get subtotal {
-    return widget.orders.fold(
-      0,
-      (total, item) => total + (item['price'] * item['quantity']),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -358,10 +377,10 @@ class _checkoutPageState extends State<CheckoutPage> {
                       int index = entry.key;
                       var item = entry.value;
                       return OrderItemCard(
-                        imageUrl: item['imageUrl'],
-                        title: item['title'],
-                        price: item['price'],
-                        originalPrice: item['originalPrice'],
+                        gambar: item['gambar'],
+                        nama: item['nama'],
+                        harga: item['harga'],
+                        hargaAsli: item['hargaAsli'],
                         quantity: item['quantity'],
                         onIncrease: () => _increaseQuantity(index),
                         onDecrease: () => _decreaseQuantity(index),
@@ -388,7 +407,7 @@ class _checkoutPageState extends State<CheckoutPage> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text("Biaya Layanan", style: blackTextStyle),
-                        Text("Rp$serviceFee", style: blackTextStyle),
+                        Text("Rp$biayaLayanan", style: blackTextStyle),
                       ],
                     ),
                     Divider(),
@@ -402,7 +421,7 @@ class _checkoutPageState extends State<CheckoutPage> {
                           ),
                         ),
                         Text(
-                          "Rp${subtotal + serviceFee}",
+                          "Rp${subtotal + biayaLayanan}",
                           style: blackTextStyle.copyWith(
                             fontWeight: FontWeight.bold,
                             fontSize: 16,
@@ -437,11 +456,11 @@ class _checkoutPageState extends State<CheckoutPage> {
                   ListTile(
                     leading: Radio(
                       value: "cash",
-                      groupValue: _selectedPayment,
+                      groupValue: _metodePembayaran,
                       activeColor: zelow, // Mengubah warna saat dipilih
                       onChanged: (val) {
                         setState(() {
-                          _selectedPayment = val.toString();
+                          _metodePembayaran = val.toString();
                         });
                       },
                     ),
@@ -450,11 +469,11 @@ class _checkoutPageState extends State<CheckoutPage> {
                   ListTile(
                     leading: Radio(
                       value: "card",
-                      groupValue: _selectedPayment,
+                      groupValue: _metodePembayaran,
                       activeColor: zelow,
                       onChanged: (val) {
                         setState(() {
-                          _selectedPayment = val.toString();
+                          _metodePembayaran = val.toString();
                         });
                       },
                     ),
@@ -470,6 +489,7 @@ class _checkoutPageState extends State<CheckoutPage> {
         padding: EdgeInsets.all(16),
         child: ElevatedButton(
           onPressed: () {
+            _handleCheckout();
             Map<String, dynamic> order = {
               "orderNumber": DateTime.now().millisecondsSinceEpoch,
               "orderDate":
