@@ -22,6 +22,7 @@ class KeranjangItem {
         rating: data['rating'],
         stok: data['stok'],
         terjual: data['terjual'],
+        deskripsi: data['deskripsi']
       ),
       quantity: data['quantity'],
     );
