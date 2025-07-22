@@ -6,22 +6,6 @@ class PesananService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final String? _idUser = FirebaseAuth.instance.currentUser?.uid;
 
-  // Future<void> addPesanan(Pesanan pesanan) async {
-  //   try {
-  //     if (_idUser == null) {
-  //       print("User tidak ditemukan, tidak bisa menambahkan pesanan.");
-  //       return;
-  //     }
-
-  //     // Simpan pesanan ke Firestore
-  //     await _firestore.collection('pesanan').add(pesanan.toFirestore());
-
-  //     print("Pesanan berhasil ditambahkan: Id: ${pesanan.idDocument}");
-  //   } catch (e) {
-  //     print('Error menambahkan pesanan: $e');
-  //   }
-  // }
-
   // fungsi untuk menambahkan pesanan ke firestore
   // sebelum dikirim ke firestore, datanya akan dikelompokkan terlebih dahulu berdasarkan tokonya (ngikut desain figma)
   Future<void> addPesanan(
@@ -137,11 +121,6 @@ class PesananService {
 
   // Fungsi untuk mengupdate status pesanan
   Future<void> updateStatusPesanan(String idPesanan, String statusBaru) async {
-    if (_idUser == null) {
-      print("User tidak ditemukan, tidak bisa mengupdate status pesanan.");
-      return;
-    }
-
     try {
       await _firestore.collection('pesanan').doc(idPesanan).update({
         'status': statusBaru,

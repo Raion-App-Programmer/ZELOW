@@ -233,8 +233,7 @@ class _TokoPageUserState extends State<TokoPageUser> {
                         future: _produkList,
                         builder: (context, snapshot) {
                           // Sedang memuat data
-                          if (snapshot.connectionState ==
-                              ConnectionState.waiting) {
+                          if (snapshot.connectionState == ConnectionState.waiting) {
                             return Center(child: CircularProgressIndicator());
                           }
 

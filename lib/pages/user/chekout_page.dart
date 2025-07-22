@@ -43,7 +43,7 @@ class _checkoutPageState extends State<CheckoutPage> {
   }
 
   final PesananService _pesananService = PesananService();
-  bool _isProcessing = false;
+  bool _isProcessing = false; // nanti digunakan untuk UI loading memproses checkout
   Future <void> _handleCheckout() async {
     setState(() {
       _isProcessing = true;
@@ -63,8 +63,7 @@ class _checkoutPageState extends State<CheckoutPage> {
   @override
   void initState() {
     super.initState();
-    alamatOrders =
-        widget.orders.map((order) => order['alamat'].toString()).toSet();
+    alamatOrders = widget.orders.map((order) => order['alamat'].toString()).toSet();
   }
 
   void _increaseQuantity(int index) {
