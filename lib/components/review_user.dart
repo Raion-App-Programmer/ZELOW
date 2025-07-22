@@ -5,18 +5,18 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
 
 class UserReview extends StatefulWidget {
+  const UserReview({super.key});
+
   @override
   State<UserReview> createState() => _UserReviewState();
 }
-
 final Stream<QuerySnapshot> usersReview =
     FirebaseFirestore.instance
         .collection('produk')
         .doc('5oKV3FMZp3vP4DmLWObz')
         .collection('ulasan')
+        .orderBy('tanggal', descending: true)
         .snapshots();
-
-//FirebaseFirestore.instance.collection('produk').snapshots();
 
 class _UserReviewState extends State<UserReview> {
   @override
@@ -59,7 +59,8 @@ class _UserReviewState extends State<UserReview> {
                           SizedBox(
                             height: 40,
                             width: 40,
-                            child: Image(
+                            child: Image( 
+                              //DUMMY IMAGE PROFILE
                               image: AssetImage('assets/images/Mask_group.png'),
                             ),
                           ),
