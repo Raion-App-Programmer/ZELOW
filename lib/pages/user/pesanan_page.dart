@@ -1,31 +1,41 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:zelow/components/berlangsung_card.dart';
 import 'package:zelow/components/constant.dart';
 import 'package:zelow/components/navbar.dart';
 import 'package:zelow/components/selesai_card.dart';
 import 'package:zelow/components/batal_card.dart';
+import 'package:zelow/models/pesanan_model.dart';
+import 'package:zelow/services/pesanan_service.dart';
 
 class PesananPage extends StatefulWidget {
-  final List<Map<String, dynamic>> orders;
-
-  const PesananPage({super.key, required this.orders});
+  const PesananPage({super.key});
 
   @override
   State<PesananPage> createState() => _PesananPageState();
 }
 
 class _PesananPageState extends State<PesananPage> {
+  final PesananService _pesananService = PesananService();
+  late final List<Pesanan> _pesanan;
   int _selectedIndex = 0;
   final List<String> _buttonLabels = ["Berlangsung", "Selesai", "Dibatalkan"];
 
-  List<Map<String, dynamic>> _pesananList = [];
-  List<Map<String, dynamic>> _pesananSelesaiList = [];
-  List<Map<String, dynamic>> _pesananBatalList = [];
+  List<Pesanan> _pesananBerlangsung = [];
+  List<Pesanan> _pesananSelesai = [];
+  List<Pesanan> _pesananBatal = [];
 
   @override
   void initState() {
     super.initState();
-    _pesananList = List.from(widget.orders);
+    // _pesananBerlangsung = _pesanan.where((data) => data.status == 'berlangsung').toList();
+    // _pesananSelesai = _pesanan.where((data) => data.status == 'selesai').toList();
+    // _pesananBatal = _pesanan.where((data) => data.status == 'batal').toList();
+  }
+
+  String formatDate(Timestamp timestamp) {
+    final dateTime = timestamp.toDate();
+    return "${dateTime.day.toString().padLeft(2, '0')}-${dateTime.month.toString().padLeft(2, '0')}-${dateTime.year}";
   }
 
   @override
@@ -36,7 +46,7 @@ class _PesananPageState extends State<PesananPage> {
         elevation: 0,
         leading: IconButton(
           icon: Icon(Icons.arrow_back, color: white),
-            onPressed: () {
+          onPressed: () {
             if (Navigator.of(context).canPop()) {
               Navigator.of(context).pop();
             } else {
@@ -91,35 +101,70 @@ class _PesananPageState extends State<PesananPage> {
               );
             }),
           ),
+
           SizedBox(height: MediaQuery.of(context).size.width * 0.03),
+
           Expanded(
-            child: ListView.builder(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              itemCount:
-                  _selectedIndex == 0
-                      ? _pesananList.length
-                      : _selectedIndex == 1
-                      ? _pesananSelesaiList.length
-                      : _pesananBatalList.length,
-              itemBuilder: (context, index) {
-                if (_selectedIndex == 0) {
-                  return PesananBerlangsungCard(
-                    orderNumber: _pesananList[index]['orderNumber'],
-                    orderDate: _pesananList[index]['orderDate'],
-                  );
-                } else if (_selectedIndex == 1) {
-                  return PesananSelesaiCard(
-                    orderNumber: _pesananSelesaiList[index]['orderNumber'],
-                    orderDate: _pesananSelesaiList[index]['orderDate'],
-                  );
-                } else {
-                  return PesananBatalCard(
-                    orderNumber: _pesananBatalList[index]['orderNumber'],
-                    orderDate: _pesananBatalList[index]['orderDate'],
-                  );
+            child: StreamBuilder(
+              stream: _pesananService.getPesananUser(),
+              builder: (context, snapshot) {
+                if (!snapshot.hasData) {
+                  _pesanan = [];
                 }
+
+                _pesanan = snapshot.data!;
+
+                
+
+                return ListView.builder(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  // itemCount:
+                  // _selectedIndex == 0
+                  //     ? _pesananBerlangsung.length
+                  //     : _selectedIndex == 1
+                  //     ? _pesananSelesai.length
+                  //     : _pesananBatal.length,
+                  itemBuilder: (context, index) {
+                    // final produk = _pesanan[index];
+
+                    
+                  }
+                );
+
+
               },
             ),
+
+            // child: ListView.builder(
+            //   padding: const EdgeInsets.symmetric(horizontal: 16),
+            //   itemCount:
+            //       _selectedIndex == 0
+            //           ? _pesananBerlangsung.length
+            //           : _selectedIndex == 1
+            //           ? _pesananSelesai.length
+            //           : _pesananBatal.length,
+            //   itemBuilder: (context, index) {
+            //     if (_selectedIndex == 0) {
+            //       final order = _pesananBerlangsung[index];
+            //       return PesananBerlangsungCard(
+            //         orderNumber: order.orderNumber,
+            //         orderDate: formatDate(order.orderDate),
+            //       );
+            //     } else if (_selectedIndex == 1) {
+            //       final order = _pesananSelesai[index];
+            //       return PesananSelesaiCard(
+            //         orderNumber: order.orderNumber,
+            //         orderDate: formatDate(order.orderDate),
+            //       );
+            //     } else {
+            //       final order = _pesananBatal[index];
+            //       return PesananBatalCard(
+            //         orderNumber: order.orderNumber,
+            //         orderDate: formatDate(order.orderDate),
+            //       );
+            //     }
+            //   },
+            // ),
           ),
         ],
       ),

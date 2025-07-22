@@ -14,6 +14,7 @@ class CheckoutPage extends StatefulWidget {
 }
 
 class _checkoutPageState extends State<CheckoutPage> {
+  final PesananService _pesananService = PesananService();
   late Set<String> alamatOrders;
 
   double biayaLayanan = 4900.0;
@@ -42,21 +43,11 @@ class _checkoutPageState extends State<CheckoutPage> {
     return months[month - 1];
   }
 
-  final PesananService _pesananService = PesananService();
-  bool _isProcessing = false; // nanti digunakan untuk UI loading memproses checkout
   Future <void> _handleCheckout() async {
-    setState(() {
-      _isProcessing = true;
-    });
-
     try {
       await _pesananService.addPesanan(widget.orders, _metodePembayaran);
     } catch (e) {
       print("Error: $e");
-    } finally {
-      setState(() {
-        _isProcessing = false;
-      });
     }
   }
 
@@ -489,19 +480,10 @@ class _checkoutPageState extends State<CheckoutPage> {
         child: ElevatedButton(
           onPressed: () {
             _handleCheckout();
-            Map<String, dynamic> order = {
-              "orderNumber": DateTime.now().millisecondsSinceEpoch,
-              "orderDate":
-                  "${DateTime.now().day} ${getMonthName(DateTime.now().month)} ${DateTime.now().year}",
-              "items": List.from(widget.orders),
-            };
-
-            List<Map<String, dynamic>> newOrdersList = [order];
-
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => PesananPage(orders: newOrdersList),
+                builder: (context) => PesananPage(),
               ),
             );
           },

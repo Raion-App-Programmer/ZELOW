@@ -34,7 +34,7 @@ class MyApp extends StatelessWidget {
         '/home_page_umkm': (context) => HomePageUmkm(),
         '/login_page': (context) => LoginPage(),
         '/flashsale': (context) => FlashsalePage(),
-        '/pesanan': (context) => PesananPage(orders: []),
+        '/pesanan': (context) => PesananPage(),
         '/profile': (context) => ProfilePage(),
         '/chat': (context)=> chatPage(),
         '/laporan': (context) => incomeReport(),

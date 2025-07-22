@@ -95,7 +95,7 @@ class PesananService {
     }
   }
 
-  Stream<List<Pesanan>> getPesananByIdUser() {
+  Stream<List<Pesanan>> getPesananUser() {
     return _firestore
         .collection('pesanan')
         .where('id_user', isEqualTo: _idUser)
@@ -107,7 +107,7 @@ class PesananService {
         );
   }
 
-  Stream<List<Pesanan>> getPesananByIdToko(String idToko) {
+  Stream<List<Pesanan>> getPesananToko(String idToko) {
     return _firestore
         .collection('pesanan')
         .where('id_toko', isEqualTo: idToko)

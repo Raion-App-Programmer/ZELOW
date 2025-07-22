@@ -29,7 +29,7 @@ class _BottomNavState extends State<BottomNav> {
     } else if (index == 1) {
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => const PesananPage(orders: [])),
+        MaterialPageRoute(builder: (context) => const PesananPage()),
       );
     } else if (index == 2) {
       Navigator.push(
