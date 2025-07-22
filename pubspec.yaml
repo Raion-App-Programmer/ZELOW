@@ -47,6 +47,9 @@ dependencies:
   flutter_mailer: ^3.0.0
   mailer: ^6.4.1
   url_launcher: ^6.2.5
+  image_picker: ^1.1.0
+  dotted_border: ^2.1.0
+  supabase_flutter: ^2.5.0
 
   badges: ^3.1.2
   intl: ^0.20.2
@@ -103,6 +106,7 @@ flutter:
       - assets/images/icon_profil.svg
       - assets/images/Chat.svg
       - assets/images/Mask_group.png
+      - assets/images/dropdown_arrow.png
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see
