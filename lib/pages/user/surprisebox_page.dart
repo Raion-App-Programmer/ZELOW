@@ -4,7 +4,6 @@ import 'package:zelow/components/constant.dart';
 import 'package:zelow/components/surprisebox_card.dart';
 
 class SurpriseBoxPage extends StatelessWidget {
-
   final CollectionReference referenceProduk = FirebaseFirestore.instance
       .collection("produk");
 
@@ -19,10 +18,7 @@ class SurpriseBoxPage extends StatelessWidget {
             Navigator.pop(context);
           },
         ),
-        title: Text(
-          'Surprise Box',
-          style: TextStyle(color: Colors.white),
-        ),
+        title: Text('Surprise Box', style: TextStyle(color: Colors.white)),
       ),
       body: StreamBuilder<QuerySnapshot>(
         stream: referenceProduk.snapshots(),
@@ -35,18 +31,20 @@ class SurpriseBoxPage extends StatelessWidget {
           }
 
           final items =
-          snapshot.data!.docs
-              .map(
-                (e) => {
-              "imageUrl": e["gambar"],
-              "restaurantName": e["nama"],
-              // "description": e["deskripsi"],
-              "rating": e["rating"],
-              // "distance": e["jarak"],
-              // "estimatedTime": e["waktu"],
-            },
-          )
-              .toList();
+              snapshot.data!.docs
+                  .map(
+                    (e) => {
+                      "imageUrl": e["gambar"],
+                      "restaurantName": e["nama"],
+                      // "description": e["deskripsi"],
+                      "rating": e["rating"],
+                      // "distance": e["jarak"],
+                      // "estimatedTime": e["waktu"],
+                    },
+                  )
+                  .toList();
+
+          items.shuffle();
 
           return ListView.builder(
             itemCount: items.length,
