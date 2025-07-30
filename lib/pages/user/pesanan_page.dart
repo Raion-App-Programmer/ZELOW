@@ -17,21 +17,9 @@ class PesananPage extends StatefulWidget {
 
 class _PesananPageState extends State<PesananPage> {
   final PesananService _pesananService = PesananService();
-  late final List<Pesanan> _pesanan;
+
   int _selectedIndex = 0;
   final List<String> _buttonLabels = ["Berlangsung", "Selesai", "Dibatalkan"];
-
-  List<Pesanan> _pesananBerlangsung = [];
-  List<Pesanan> _pesananSelesai = [];
-  List<Pesanan> _pesananBatal = [];
-
-  @override
-  void initState() {
-    super.initState();
-    // _pesananBerlangsung = _pesanan.where((data) => data.status == 'berlangsung').toList();
-    // _pesananSelesai = _pesanan.where((data) => data.status == 'selesai').toList();
-    // _pesananBatal = _pesanan.where((data) => data.status == 'batal').toList();
-  }
 
   String formatDate(Timestamp timestamp) {
     final dateTime = timestamp.toDate();
@@ -105,66 +93,85 @@ class _PesananPageState extends State<PesananPage> {
           SizedBox(height: MediaQuery.of(context).size.width * 0.03),
 
           Expanded(
-            child: StreamBuilder(
+            child: StreamBuilder<List<Pesanan>>(
               stream: _pesananService.getPesananUser(),
               builder: (context, snapshot) {
-                if (!snapshot.hasData) {
-                  _pesanan = [];
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return Center(child: CircularProgressIndicator(color: zelow,),);
                 }
 
-                _pesanan = snapshot.data!;
+                if (snapshot.hasError) {
+                  print('${snapshot.error}');
+                  return Center();
+                  
+                }
 
-                
+                if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                  return Center();
+                }
+
+                final listPesanan = snapshot.data!;
+
+                // final Map<String, List<Pesanan>> grouped = {};
+
+                // for (var pesanan in listPesanan) {
+                //   String idPesanan = pesanan.idPesanan;
+
+                //   if (!grouped.containsKey(idPesanan)) {
+                //     grouped[idPesanan] = [];
+                //   }
+
+                //   grouped[idPesanan]!.add(pesanan);
+                // }
+
+                final pesananBerlangsung = listPesanan
+                        .where((data) => data.status == 'berlangsung')
+                        .toList();
+                final pesananSelesai =listPesanan
+                        .where((data) => data.status == 'selesai')
+                        .toList();
+                final pesananBatal = listPesanan
+                        .where((data) => data.status == 'batal')
+                        .toList();
 
                 return ListView.builder(
                   padding: const EdgeInsets.symmetric(horizontal: 16),
-                  // itemCount:
-                  // _selectedIndex == 0
-                  //     ? _pesananBerlangsung.length
-                  //     : _selectedIndex == 1
-                  //     ? _pesananSelesai.length
-                  //     : _pesananBatal.length,
+                  itemCount:
+                      _selectedIndex == 0
+                          ? pesananBerlangsung.length
+                          : _selectedIndex == 1
+                          ? pesananSelesai.length
+                          : pesananBatal.length,
                   itemBuilder: (context, index) {
-                    // final produk = _pesanan[index];
+                    final Pesanan item;
+                    if (_selectedIndex == 0) {
+                      item = pesananBerlangsung[index];
 
-                    
-                  }
+                      return PesananBerlangsungCard(
+                        orderNumber: item.idPesanan,
+                        orderDate: formatDate(item.waktuPesan),
+                      );
+
+                    } else if (_selectedIndex == 1) {
+                      item = pesananSelesai[index];
+
+                      return PesananSelesaiCard(
+                        orderNumber: item.idPesanan,
+                        orderDate: formatDate(item.waktuPesan),
+                      );
+
+                    } else {
+                      item = pesananBatal[index];
+
+                      return PesananBatalCard(
+                        orderNumber: item.idPesanan,
+                        orderDate: formatDate(item.waktuPesan),
+                      );
+                    }
+                  },
                 );
-
-
               },
             ),
-
-            // child: ListView.builder(
-            //   padding: const EdgeInsets.symmetric(horizontal: 16),
-            //   itemCount:
-            //       _selectedIndex == 0
-            //           ? _pesananBerlangsung.length
-            //           : _selectedIndex == 1
-            //           ? _pesananSelesai.length
-            //           : _pesananBatal.length,
-            //   itemBuilder: (context, index) {
-            //     if (_selectedIndex == 0) {
-            //       final order = _pesananBerlangsung[index];
-            //       return PesananBerlangsungCard(
-            //         orderNumber: order.orderNumber,
-            //         orderDate: formatDate(order.orderDate),
-            //       );
-            //     } else if (_selectedIndex == 1) {
-            //       final order = _pesananSelesai[index];
-            //       return PesananSelesaiCard(
-            //         orderNumber: order.orderNumber,
-            //         orderDate: formatDate(order.orderDate),
-            //       );
-            //     } else {
-            //       final order = _pesananBatal[index];
-            //       return PesananBatalCard(
-            //         orderNumber: order.orderNumber,
-            //         orderDate: formatDate(order.orderDate),
-            //       );
-            //     }
-            //   },
-            // ),
           ),
         ],
       ),

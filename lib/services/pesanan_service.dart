@@ -48,7 +48,7 @@ class PesananService {
       Tapi meskipun dikelompokkan kayak gini, di firestore datanya ga berkelompok
       Kenapa? agar mudah di fetch sekaligus dari dalam satu collection.
 
-      Yang buat berkelompok itu adalah idPesanan nya yang sama kalo dia satu toko
+      Yang buat berkelompok itu adalah idPesanan. idPesanan akan sama kalo dia satu toko
       */
     } 
 
@@ -98,13 +98,13 @@ class PesananService {
   Stream<List<Pesanan>> getPesananUser() {
     return _firestore
         .collection('pesanan')
+        // .orderBy('timestamp', descending: true)
         .where('id_user', isEqualTo: _idUser)
-        .orderBy('timestamp', descending: true)
         .snapshots()
-        .map(
-          (snapshot) =>
-              snapshot.docs.map((doc) => Pesanan.fromFirestore(doc)).toList(),
-        );
+        .map((snapshot) {
+          print('Pesanan ditemukan sebanyak ${snapshot.docs.length} dokumen.');
+          return snapshot.docs.map((doc) => Pesanan.fromFirestore(doc)).toList();
+    });
   }
 
   Stream<List<Pesanan>> getPesananToko(String idToko) {

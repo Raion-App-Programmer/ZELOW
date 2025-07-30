@@ -30,7 +30,7 @@ class Pesanan {
     return Pesanan(
       idDocument: doc.id,
       idPesanan: data['id_pesanan'],
-      harga: data['harga'],
+      harga: data['harga_satuan'],
       metodePembayaran: data['metode_pembayaran'],
       status: data['status'],
       waktuPesan: data['waktu_pesan'],

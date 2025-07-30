@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:zelow/components/constant.dart';
 
 class PesananSelesaiCard extends StatelessWidget {
-  final int orderNumber;
+  final String orderNumber;
   final String orderDate;
 
   const PesananSelesaiCard({
-    Key? key,
+    super.key,
     required this.orderNumber,
     required this.orderDate,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
