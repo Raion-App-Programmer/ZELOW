@@ -13,6 +13,8 @@ class Produk {
   final double rating;
   final int stok;
   final int terjual;
+  final Toko? toko;
+  final String deskripsi;
 
   Produk({
     required this.idProduk,
@@ -26,6 +28,8 @@ class Produk {
     required this.jumlahDisukai,
     required this.stok,
     required this.terjual,
+    required this.deskripsi,
+    this.toko,
   });
 
   factory Produk.fromFirestore(DocumentSnapshot doc) {
@@ -49,6 +53,7 @@ class Produk {
       jumlahDisukai: data['jumlah_disukai'] ?? 0,
       stok: data['stok'] ?? 0,
       terjual: data['terjual'] ?? 0,
+      deskripsi: data['deskripsi'] ?? '',
     );
   }
 
@@ -65,6 +70,8 @@ class Produk {
       jumlahDisukai: jumlahDisukai,
       stok: stok,
       terjual: terjual,
+      deskripsi: deskripsi,
+      toko: tokoBaru,
     );
   }
 }

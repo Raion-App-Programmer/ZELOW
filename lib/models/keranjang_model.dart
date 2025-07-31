@@ -27,6 +27,7 @@ class KeranjangModel {
         rating: data['rating'],
         stok: data['stok'],
         terjual: data['terjual'],
+        deskripsi: data['deskripsi']
       ),
       quantity: data['quantity'],
       alamat: data['alamat'],
