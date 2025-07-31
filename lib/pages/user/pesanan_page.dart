@@ -1,3 +1,5 @@
+import 'dart:nativewrappers/_internal/vm/lib/developer.dart';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:zelow/components/berlangsung_card.dart';
@@ -101,7 +103,7 @@ class _PesananPageState extends State<PesananPage> {
                 }
 
                 if (snapshot.hasError) {
-                  print('${snapshot.error}');
+                  log('Error: ${snapshot.error}');
                   return Center();
                   
                 }

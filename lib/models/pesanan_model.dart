@@ -11,6 +11,7 @@ class Pesanan {
   final String idToko;
   final String? idUser;
   final String idProduk;
+  final String jadwalPengambilan;
 
   Pesanan({
     this.idDocument,
@@ -23,6 +24,7 @@ class Pesanan {
     required this.idToko,
     required this.idUser,
     required this.idProduk,
+    required this.jadwalPengambilan,
   });
 
   factory Pesanan.fromFirestore(DocumentSnapshot doc) {
@@ -38,6 +40,7 @@ class Pesanan {
       idToko: data['id_toko'],
       idUser: data['id_user'],
       idProduk: data['id_produk'],
+      jadwalPengambilan: data['jadwal_pengambilan'],
     );
   }
 
@@ -51,7 +54,8 @@ class Pesanan {
       'quantity': quantity,
       'id_toko': idToko,
       'id_user': idUser,
-      'id_produk': idProduk
+      'id_produk': idProduk,
+      'jadwal_pengambilan': jadwalPengambilan,
     };
   }
 }

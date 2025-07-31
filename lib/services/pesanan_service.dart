@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:zelow/models/pesanan_model.dart';
@@ -11,6 +13,7 @@ class PesananService {
   Future<void> addPesanan(
     List<Map<String, dynamic>> listOrder, // datanya berisi list map dengan key String dan value dynamic
     String metodePembayaran, // ini tersendiri karena ini itu data baru yang dipilih user di halaman checkout
+    String jadwalPengambilan,
   ) async {
 
     // ini variabel hasil pengelompokan datanya
@@ -77,6 +80,7 @@ class PesananService {
           idToko: idToko,
           idUser: _idUser,
           idProduk: pesanan['idProduk'],
+          jadwalPengambilan: jadwalPengambilan,
         );
 
         // masukkan referensi lokasi dan objeck pesanan tadi ke batch firestore
@@ -89,9 +93,10 @@ class PesananService {
       await batch.commit(); 
 
       // abaikan aja ini, buat debugging
-      print("${pesananByToko.length} pesanan berhasil ditambahkan ");
+      log("${pesananByToko.length} pesanan berhasil ditambahkan ");
+      log("jadwalPengambilang: $jadwalPengambilan");
     } catch (e) {
-      print('Error menambahkan pesanan: $e');
+      log('Error menambahkan pesanan: $e');
     }
   }
 
@@ -102,7 +107,7 @@ class PesananService {
         .where('id_user', isEqualTo: _idUser)
         .snapshots()
         .map((snapshot) {
-          print('Pesanan ditemukan sebanyak ${snapshot.docs.length} dokumen.');
+          log('Pesanan ditemukan sebanyak ${snapshot.docs.length} dokumen.');
           return snapshot.docs.map((doc) => Pesanan.fromFirestore(doc)).toList();
     });
   }
@@ -126,9 +131,9 @@ class PesananService {
         'status': statusBaru,
       });
 
-      print("Status pesanan $idPesanan berhasil diupdate ke $statusBaru");
+      log("Status pesanan $idPesanan berhasil diupdate ke $statusBaru");
     } catch (e) {
-      print("Error mengupdate status pesanan: $e");
+      log("Error mengupdate status pesanan: $e");
     }
   }
 }
