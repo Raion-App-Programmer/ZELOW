@@ -16,6 +16,7 @@ class KeranjangModel {
     Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
     return KeranjangModel(
       produk: Produk(
+        gambar: data['gambar'],
         harga: data['harga'],
         idToko: data['id_toko'],
         jumlahDisukai: data['jumlah_disukai'],
@@ -23,7 +24,6 @@ class KeranjangModel {
         kategori: data['kategori'],
         idProduk: doc.id,
         nama: data['nama'],
-        gambar: data['gambar'],
         rating: data['rating'],
         stok: data['stok'],
         terjual: data['terjual'],

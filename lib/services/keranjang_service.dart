@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -46,12 +48,13 @@ class KeranjangService {
         });
       }
     } catch (e) {
-      print("Error menambah ke keranjang: $e");
+      log("Error menambah ke keranjang: $e");
     }
   }
 
   // buat ngambil semua item di keranjang
   Stream<List<KeranjangModel>> getCartItems() {
+    log('User id: $_userId');
     return _firestore
         .collection('user')
         .doc(_userId)
@@ -75,7 +78,7 @@ class KeranjangService {
           .doc(produkId)
           .delete();
     } catch (e) {
-      print("Error menghapus dari keranjang: $e");
+      log("Error menghapus dari keranjang: $e");
     }
   }
 }
