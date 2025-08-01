@@ -49,6 +49,7 @@ class KeranjangModel {
       'terjual': produk.terjual,
       'quantity': quantity,
       'alamat': alamat,
+      'deskripsi': produk.deskripsi,
       'timestamp': FieldValue.serverTimestamp(), // Untuk mengurutkan item di keranjang berdasarkan waktu
     };
   }

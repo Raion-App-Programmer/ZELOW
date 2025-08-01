@@ -280,7 +280,8 @@ import '../../services/toko_service.dart';
               jarak: 12,
               waktu: '10-15 menit',
               jumlahPenilaian: 400,
-              deskripsi: 'enak keknya'
+              deskripsi: 'enak keknya',
+              alamat: 'Template alamat'
           );
           await _tokoServices.tokoUMKM(tokoBaru);
           tokoID = _userId!;
@@ -302,7 +303,7 @@ import '../../services/toko_service.dart';
       } catch (e) {}
         final produkBaru =
         Produk(
-          id: '',
+          idProduk: '',
           idToko: tokoID,
           nama: _judulController.text,
           kategori: _selectedKategori ?? 'Aneka Nasi',

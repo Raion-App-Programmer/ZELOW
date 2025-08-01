@@ -13,9 +13,10 @@ import 'package:zelow/pages/user/home_page_user.dart';
 import 'package:zelow/pages/user/pesanan_page.dart';
 import 'package:zelow/pages/user/profile_page.dart';
 import 'package:zelow/pages/user/chat_page.dart';
+import 'package:intl/date_symbol_data_local.dart';
+
 const SUPABASE_URL = 'https://gegrqxsyhqestdtmqadq.supabase.co';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdlZ3JxeHN5aHFlc3RkdG1xYWRxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTMwMTE4NTMsImV4cCI6MjA2ODU4Nzg1M30.fN53ULmrrSKJGbrj_w1AqtD2nneVKThP1elhF7v3sso';
-import 'package:intl/date_symbol_data_local.dart';
 
 void main() async {
   await initializeDateFormatting('id_ID', null); 

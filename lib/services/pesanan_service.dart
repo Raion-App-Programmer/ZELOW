@@ -138,7 +138,7 @@ class PesananService {
   Stream<List<Pesanan>> getPesananUser() {
     return _firestore
         .collection('pesanan')
-        // .orderBy('timestamp', descending: true)
+        .orderBy('waktu_pesan', descending: true)
         .where('id_user', isEqualTo: _idUser)
         .snapshots()
         .map((snapshot) {

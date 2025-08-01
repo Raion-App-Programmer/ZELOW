@@ -144,7 +144,7 @@ class _cardProductState extends State<cardProduct> {
   void increaseStock() {
     setState(() {
       _currentStock++;
-      widget.produkService.updateProdukStok(widget.produk.id, widget.tokoID, _currentStock);
+      widget.produkService.updateProdukStok(widget.produk.idProduk, widget.tokoID, _currentStock);
     });
   }
 
@@ -152,7 +152,7 @@ class _cardProductState extends State<cardProduct> {
     if (_currentStock > 0) {
       setState(() {
         _currentStock--;
-        widget.produkService.updateProdukStok(widget.produk.id, widget.tokoID, _currentStock);
+        widget.produkService.updateProdukStok(widget.produk.idProduk, widget.tokoID, _currentStock);
       });
     }
   }

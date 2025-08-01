@@ -203,6 +203,7 @@ class _ProductInfoPageState extends State<ProductInfoPage> {
                                         'idToko': widget.produk.idToko,
                                         'kategori': widget.produk.kategori,
                                         'rating': widget.produk.rating,
+                                        'deskripsi': widget.produk.deskripsi,
                                       },
                                     ],
                                   ),
