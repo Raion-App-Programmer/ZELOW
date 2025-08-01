@@ -51,7 +51,9 @@ class _NavbarBottomUMKMState extends State<NavbarBottomUMKM> {
             icon: SvgPicture.asset(
               'assets/images/Home.svg',
               colorFilter: ColorFilter.mode(
-                widget.selectedItem == 0 ? Color(0xFF06C474) : Color(0x80929292),
+                widget.selectedItem == 0
+                    ? Color(0xFF06C474)
+                    : Color(0x80929292),
                 BlendMode.srcIn,
               ),
             ),
@@ -61,27 +63,36 @@ class _NavbarBottomUMKMState extends State<NavbarBottomUMKM> {
             icon: SvgPicture.asset(
               'assets/images/lets-icons_shop.svg',
               colorFilter: ColorFilter.mode(
-                widget.selectedItem == 1 ? Color(0xFF06C474): Color(0x80929292),
+                widget.selectedItem == 1
+                    ? Color(0xFF06C474)
+                    : Color(0x80929292),
                 BlendMode.srcIn,
-              ),),
+              ),
+            ),
             label: 'Toko Saya',
           ),
           BottomNavigationBarItem(
             icon: SvgPicture.asset(
               'assets/images/Chat.svg',
               colorFilter: ColorFilter.mode(
-                widget.selectedItem == 2 ? Color(0xFF06C474): Color(0x80929292),
+                widget.selectedItem == 2
+                    ? Color(0xFF06C474)
+                    : Color(0x80929292),
                 BlendMode.srcIn,
-              ),),
+              ),
+            ),
             label: 'Chat',
           ),
           BottomNavigationBarItem(
             icon: SvgPicture.asset(
               'assets/images/icon_profil.svg',
               colorFilter: ColorFilter.mode(
-                widget.selectedItem == 3 ? Color(0xFF06C474): Color(0x80929292),
+                widget.selectedItem == 3
+                    ? Color(0xFF06C474)
+                    : Color(0x80929292),
                 BlendMode.srcIn,
-              ),),
+              ),
+            ),
             label: 'Profil',
           ),
         ],

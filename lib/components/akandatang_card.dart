@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:zelow/components/constant.dart';
 import 'package:zelow/models/produk_model.dart';
 import 'package:intl/intl.dart';
+import 'package:zelow/utils/format_mata_uang.dart';
 
 class AkandatangCard extends StatelessWidget {
   final Produk produk;
@@ -48,12 +49,6 @@ class AkandatangCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final NumberFormat currencyFormat = NumberFormat.currency(
-      locale: 'id_ID',
-      symbol: 'Rp',
-      decimalDigits: 0,
-    );
-
     const Color greenHex = Color(0xFF06C474);
     const Color buttonBg = Color(0xFFE6F9F1);
 
@@ -138,7 +133,7 @@ class AkandatangCard extends StatelessWidget {
                   Row(
                     children: [
                       Text(
-                        currencyFormat.format(produk.harga),
+                        FormatMataUang.formatRupiah(produk.harga, 0),
                         style: const TextStyle(
                           fontFamily: 'Nunito',
                           fontWeight: FontWeight.w600,
@@ -148,7 +143,7 @@ class AkandatangCard extends StatelessWidget {
                       ),
                       const SizedBox(width: 6),
                       Text(
-                        currencyFormat.format(produk.harga * 1.25),
+                        FormatMataUang.formatRupiah(produk.harga * 1.25, 0),
                         style: TextStyle(
                           fontFamily: 'Nunito',
                           fontSize: 12,

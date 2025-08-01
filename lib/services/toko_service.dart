@@ -52,15 +52,12 @@ class TokoServices {
     return tokoList;
   }
   
-  Future<Toko?> getTokoById(String tokoId) async {
+  Future<Toko> getTokoById(String tokoId) async {
     DocumentSnapshot doc = await _firestore.collection(_tokoCollection)
         .doc(tokoId)
         .get();
 
-    if (doc.exists) {
-      return Toko.fromFirestore(doc);
-    }
-    return null;
+    return Toko.fromFirestore(doc);
   }
 
   Future<String?> getUserRole() async {

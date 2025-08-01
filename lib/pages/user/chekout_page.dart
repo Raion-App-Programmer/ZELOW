@@ -19,11 +19,11 @@ class _checkoutPageState extends State<CheckoutPage> {
 
   double biayaLayanan = 4900.0;
   String _metodePembayaran = "cash";
+  String jadwalPengambilan = "10:00 - 11:00";
 
   // Backend service checkout
   // final PesananService _pesananService = PesananService();
   // bool _isProcessing = false;
-
 
   String getMonthName(int month) {
     List<String> months = [
@@ -45,7 +45,7 @@ class _checkoutPageState extends State<CheckoutPage> {
 
   Future <void> _handleCheckout() async {
     try {
-      await _pesananService.addPesanan(widget.orders, _metodePembayaran);
+      await _pesananService.tambahPesanan(widget.orders, _metodePembayaran, jadwalPengambilan);
     } catch (e) {
       print("Error: $e");
     }
@@ -103,7 +103,6 @@ class _checkoutPageState extends State<CheckoutPage> {
 
   void _showOrderTypeModal(BuildContext context) {
     String selectedTab = "Pick Up"; // Default Pick Up
-    String selectedSchedule = "10:00 - 11:00"; // Default Radio Button
 
     showModalBottomSheet(
       context: context,
@@ -235,11 +234,11 @@ class _checkoutPageState extends State<CheckoutPage> {
                               ListTile(
                                 leading: Radio(
                                   value: "10:00 - 11:00",
-                                  groupValue: selectedSchedule,
+                                  groupValue: jadwalPengambilan,
                                   activeColor: zelow,
                                   onChanged: (val) {
                                     setState(() {
-                                      selectedSchedule = val.toString();
+                                      jadwalPengambilan = val.toString();
                                     });
                                   },
                                 ),
@@ -248,11 +247,11 @@ class _checkoutPageState extends State<CheckoutPage> {
                               ListTile(
                                 leading: Radio(
                                   value: "21:00 - 22:00",
-                                  groupValue: selectedSchedule,
+                                  groupValue: jadwalPengambilan,
                                   activeColor: zelow,
                                   onChanged: (val) {
                                     setState(() {
-                                      selectedSchedule = val.toString();
+                                      jadwalPengambilan = val.toString();
                                     });
                                   },
                                 ),
