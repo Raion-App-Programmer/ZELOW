@@ -45,7 +45,7 @@ class _checkoutPageState extends State<CheckoutPage> {
 
   Future <void> _handleCheckout() async {
     try {
-      await _pesananService.addPesanan(widget.orders, _metodePembayaran, jadwalPengambilan);
+      await _pesananService.tambahPesanan(widget.orders, _metodePembayaran, jadwalPengambilan);
     } catch (e) {
       print("Error: $e");
     }

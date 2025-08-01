@@ -124,6 +124,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:zelow/components/constant.dart';
+import 'package:zelow/utils/format_mata_uang.dart';
 
 class ProductTokoCard extends StatelessWidget {
   final String imageUrl;
@@ -143,11 +144,8 @@ class ProductTokoCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final formattedHarga = NumberFormat.currency(
-      locale: 'id_ID',
-      symbol: 'Rp',
-      decimalDigits: 0,
-    ).format(harga);
+
+    final formattedHarga = FormatMataUang.formatRupiah(harga, 0);
 
     return GestureDetector(
       onTap: onTap,

@@ -9,10 +9,11 @@ import 'package:zelow/pages/user/home_page_user.dart';
 import 'package:zelow/pages/user/pesanan_page.dart';
 import 'package:zelow/pages/user/profile_page.dart';
 import 'package:zelow/pages/user/chat_page.dart';
-
 import 'pages/splash_page.dart';
+import 'package:intl/date_symbol_data_local.dart';
 
 void main() async {
+  await initializeDateFormatting('id_ID', null); 
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
