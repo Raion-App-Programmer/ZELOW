@@ -20,6 +20,8 @@ import 'package:zelow/pages/user/toko_page.dart';
 import 'package:zelow/services/produk_service.dart';
 import '../../services/toko_service.dart';
 import 'package:intl/intl.dart';
+import 'package:zelow/utils/time_slot_utils.dart';
+import 'package:zelow/services/flashsale_service.dart';
 
 class HomePageUser extends StatefulWidget {
   const HomePageUser({super.key});
@@ -37,6 +39,18 @@ class _HomePageUserState extends State<HomePageUser> {
     symbol: 'Rp',
     decimalDigits: 0,
   );
+  final FlashSaleService _flashSaleService = FlashSaleService();
+
+  int getCurrentFlashSaleIndex() {
+    final now = DateTime.now();
+    final slots = getTimeSlots();
+    for (int i = 0; i < slots.length; i++) {
+      if (now.isAfter(slots[i]['start']!) && now.isBefore(slots[i]['end']!)) {
+        return i;
+      }
+    }
+    return 0;
+  }
 
   Widget _buildSectionTitle(
     BuildContext context,
@@ -147,7 +161,9 @@ class _HomePageUserState extends State<HomePageUser> {
         SizedBox(
           height: 200,
           child: FutureBuilder<List<Produk>>(
-            future: _produkService.getProdukRandom(limit: 10),
+            future: _flashSaleService.getFlashSaleProdukByTime(
+              getCurrentFlashSaleIndex(),
+            ),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return Center(child: CircularProgressIndicator(color: zelow));
@@ -180,13 +196,16 @@ class _HomePageUserState extends State<HomePageUser> {
                       stock: produk.stok,
                       sold: produk.terjual,
                       onTap: () {
+                        final flashSaleProduk = produk.copyWith(
+                          isFlashSale: true,
+                        );
                         Navigator.push(
                           context,
                           MaterialPageRoute(
                             builder:
                                 (context) => ProductInfoPage(
-                                  productData: produk,
-                                  tokoData: produk.toko!,
+                                  productData: flashSaleProduk,
+                                  tokoData: flashSaleProduk.toko!,
                                 ),
                           ),
                         );

@@ -24,13 +24,14 @@ class FilterTokoButton extends StatelessWidget {
         height: 28,
         margin: EdgeInsets.only(right: 8),
         decoration: BoxDecoration(
-          color: isSelected ? zelow.withOpacity(0.1) : Colors.transparent, // Background transparan/putih
+          color: isSelected ? zelow : Colors.transparent,
           borderRadius: BorderRadius.circular(20),
-          border: Border.all(
-            color: isSelected ? zelow : Color(0xFFB8B8B8), // Warna outline
-            width: 1.0, // Ketebalan outline
-          ),
+          border:
+              isSelected
+                  ? null
+                  : Border.all(color: const Color(0xFFB8B8B8), width: 1.0),
         ),
+
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -43,8 +44,9 @@ class FilterTokoButton extends StatelessWidget {
                   fontFamily: 'Nunito',
                   fontSize: 13,
                   fontWeight: FontWeight.w600,
-                  color: isSelected ? zelow : Color(0xFF676767), // Warna text
+                  color: isSelected ? Colors.white : const Color(0xFF676767),
                 ),
+
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
               ),

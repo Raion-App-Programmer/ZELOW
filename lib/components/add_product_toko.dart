@@ -8,6 +8,7 @@ class ProductTokoCard extends StatelessWidget {
   final String description;
   final double harga;
   final VoidCallback onTap;
+  final bool isFlashSale;
 
   const ProductTokoCard({
     super.key,
@@ -16,6 +17,7 @@ class ProductTokoCard extends StatelessWidget {
     required this.description,
     required this.harga,
     required this.onTap,
+    this.isFlashSale = false,
   });
 
   @override
@@ -118,15 +120,41 @@ class ProductTokoCard extends StatelessWidget {
                   const SizedBox(height: 14),
                   Row(
                     children: [
-                      Text(
-                        formattedHarga,
-                        style: TextStyle(
-                          fontFamily: 'Nunito',
-                          fontSize: 21,
-                          color: zelow,
-                          fontWeight: FontWeight.w800,
+                      if (isFlashSale) ...[
+                        Text(
+                          NumberFormat.currency(
+                            locale: 'id_ID',
+                            symbol: 'Rp',
+                            decimalDigits: 0,
+                          ).format(harga * 0.8),
+                          style: TextStyle(
+                            fontFamily: 'Nunito',
+                            fontSize: 21,
+                            color: zelow,
+                            fontWeight: FontWeight.w800,
+                          ),
                         ),
-                      ),
+                        const SizedBox(width: 6),
+                        Text(
+                          formattedHarga,
+                          style: const TextStyle(
+                            fontFamily: 'Nunito',
+                            fontSize: 12,
+                            color: Colors.grey,
+                            decoration: TextDecoration.lineThrough,
+                          ),
+                        ),
+                      ] else ...[
+                        Text(
+                          formattedHarga,
+                          style: TextStyle(
+                            fontFamily: 'Nunito',
+                            fontSize: 21,
+                            color: zelow,
+                            fontWeight: FontWeight.w800,
+                          ),
+                        ),
+                      ],
                       const Spacer(),
                       Container(
                         height: 36,
