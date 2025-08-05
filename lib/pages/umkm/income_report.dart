@@ -5,12 +5,12 @@ import 'package:zelow/components/income_information.dart';
 
 import '../../components/activity_box.dart';
 
-class incomeReport extends StatefulWidget {
+class IncomeReport extends StatefulWidget {
   @override
   _incomeReportState createState() => _incomeReportState();
 }
 
-class _incomeReportState extends State<incomeReport> {
+class _incomeReportState extends State<IncomeReport> {
   List <bool> _isSelect = [true, false];
   String _selectedButton = 'Pendapatan';
 

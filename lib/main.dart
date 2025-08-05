@@ -3,7 +3,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'firebase_options.dart';
 import 'package:zelow/pages/auth/login_page.dart';
-import 'package:zelow/pages/umkm/home_page_umkm.dart';
+import 'package:zelow/pages/umkm/home_umkm_page.dart';
 import 'package:zelow/pages/umkm/income_report.dart';
 import 'package:zelow/pages/user/flashsale_page.dart';
 import 'package:zelow/pages/user/home_page_user.dart';
@@ -39,7 +39,7 @@ class MyApp extends StatelessWidget {
         '/pesanan': (context) => PesananPage(orders: []),
         '/profile': (context) => ProfilePage(),
         '/chat': (context) => chatPage(),
-        '/laporan': (context) => incomeReport(),
+        '/laporan': (context) => IncomeReport(),
       },
     );
   }
