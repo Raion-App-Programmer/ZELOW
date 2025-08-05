@@ -65,6 +65,10 @@ flutter:
     - family: nunito  # Nama custom untuk font family
       fonts:
         - asset: assets/fonts/Nunito.ttf
+        - asset: assets/fonts/Nunito-Bold.ttf
+          weight: 700
+
+
 
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in

@@ -1,13 +1,16 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:zelow/pages/auth/login_page.dart';
+import 'package:zelow/pages/umkm/edit_toko_umkm.dart';
 import 'package:zelow/pages/umkm/home_page_umkm.dart';
+import 'package:zelow/pages/umkm/profil_penjual_umkm.dart';
 import 'package:zelow/pages/user/flashsale_page.dart';
 import 'package:zelow/pages/user/home_page_user.dart';
 import 'package:zelow/pages/user/infoproduk_page.dart';
 import 'package:zelow/pages/user/pesanan_page.dart';
 import 'package:zelow/pages/user/profile_page.dart';
 import 'package:zelow/pages/user/toko_page.dart';
+import 'package:zelow/pages/user/toko_saya_page.dart';
 
 import 'pages/splash_page.dart';
 
@@ -24,7 +27,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      initialRoute: '/toko',
+      initialRoute: '/tokosaya',
       debugShowCheckedModeBanner: false,
       routes: {
         '/splash': (context) => SplashPage(),
@@ -34,7 +37,10 @@ class MyApp extends StatelessWidget {
         '/flashsale': (context) => FlashsalePage(),
         '/pesanan': (context) => PesananPage(orders: [],),
         '/profile': (context)=> ProfilePage(),
-        '/toko': (context)=> TokoPageUser()
+        '/toko': (context)=> TokoPageUser(),
+        '/tokosaya': (context)=> TokoSayaPage(),
+        '/edittokosaya' : (context)=> EditTokoSayaPage(),
+        '/profilpenjualumkm' : (context) => ProfilPenjualUmkmPage()
       },
     );
   }
