@@ -15,6 +15,7 @@ class CheckoutPage extends StatefulWidget {
 }
 
 class _CheckoutPageState extends State<CheckoutPage> {
+  final PesananService _pesananService = PesananService();
   late Set<String> alamatOrders;
   late List<Map<String, dynamic>> orders;
 
@@ -28,10 +29,6 @@ class _CheckoutPageState extends State<CheckoutPage> {
   String formatRupiah(num value) {
     return "Rp${currencyFormatter.format(value)}";
   }
-
-  // Backend service checkout
-  final PesananService _pesananService = PesananService();
-  bool _isProcessing = false;
 
   String getMonthName(int month) {
     List<String> months = [
@@ -789,21 +786,13 @@ class _CheckoutPageState extends State<CheckoutPage> {
             height: 48,
             child: ElevatedButton(
               onPressed: () {
-                Map<String, dynamic> order = {
-                  "orderNumber": DateTime.now().millisecondsSinceEpoch,
-                  "orderDate":
-                      "${DateTime.now().day} ${getMonthName(DateTime.now().month)} ${DateTime.now().year}",
-                  "items": List.from(orders),
-                };
-
-                List<Map<String, dynamic>> newOrdersList = [order];
-
                 _handleCheckout();
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => PesananPage()),
                 );
               },
+
               style: ElevatedButton.styleFrom(
                 backgroundColor: zelow,
                 shape: RoundedRectangleBorder(

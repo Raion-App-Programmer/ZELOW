@@ -40,7 +40,7 @@ class PesananService {
   //     5. Perkedel     => id toko: 456
 
   //     Setelah di proses dan dimasukkan ke variabel pesananByToko, hasilnya adalah:
-  //     id toko: 123 {Es teh, Ayam Goreng, Jus Alpukat} 
+  //     id toko: 123 {Es teh, Ayam Goreng, Jus Alpukat}
   //     id toko: 456 {Sate, Perkedel}
 
   //     Meskipun di checkout bersamaan, id pesanan keduanya akan beda
@@ -99,7 +99,7 @@ class PesananService {
   // }
 
   Future<void> tambahPesanan(
-    List<Map<String, dynamic>> listOrder, 
+    List<Map<String, dynamic>> listOrder,
     String metodePembayaran,
     String jadwalPengambilan,
   ) async {
@@ -110,7 +110,7 @@ class PesananService {
 
       final Pesanan pesananBaru = Pesanan(
         idPesanan: docRef.id,
-        hargaSatuan: pesanan['harga'],
+        hargaSatuan: pesanan['price'],
         metodePembayaran: metodePembayaran,
         status: 'menunggu konfirmasi',
         waktuPesan: Timestamp.now(),
@@ -120,10 +120,10 @@ class PesananService {
         idProduk: pesanan['idProduk'],
         jadwalPengambilan: jadwalPengambilan,
         alamatToko: pesanan['alamat'],
-        namaProduk: pesanan['nama'],
-        gambarProduk: pesanan['gambar'],
+        namaProduk: pesanan['title'],
+        gambarProduk: pesanan['imageUrl'],
       );
-      
+
       batch.set(docRef, pesananBaru.toFirestore());
     }
 

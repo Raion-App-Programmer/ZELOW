@@ -135,7 +135,7 @@ class _ProductInfoPageState extends State<ProductInfoPage> {
     double originalPrice = widget.productData.harga;
     double price = isFlashSale ? originalPrice * 0.8 : originalPrice;
     double totalPrice = itemCount * price;
-    
+
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -322,6 +322,8 @@ class _ProductInfoPageState extends State<ProductInfoPage> {
                                   (context) => CheckoutPage(
                                     orders: [
                                       {
+                                        'idToko': widget.productData.idToko,
+                                        'idProduk': widget.productData.idProduk,
                                         'title': widget.productData.nama,
                                         'imageUrl': widget.productData.gambar,
                                         'price': price,
@@ -334,7 +336,8 @@ class _ProductInfoPageState extends State<ProductInfoPage> {
                                         'terjual': widget.productData.terjual,
                                         'isFlashSale':
                                             widget.productData.isFlashSale,
-                                        'deskripsi': widget.productData.deskripsi,
+                                        'deskripsi':
+                                            widget.productData.deskripsi,
                                       },
                                     ],
                                   ),

@@ -20,6 +20,7 @@ class _PesananPageState extends State<PesananPage> {
   final PesananService _pesananService = PesananService();
 
   int _selectedIndex = 0;
+  
   final List<String> _buttonLabels = ["Berlangsung", "Selesai", "Dibatalkan"];
 
   String formatDate(Timestamp timestamp) {
