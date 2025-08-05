@@ -3,20 +3,20 @@ import 'package:zelow/components/constant.dart';
 import 'package:intl/intl.dart';
 
 class OrderItemCard extends StatelessWidget {
-  final String imageUrl;
-  final String title;
-  final double price;
-  final double originalPrice;
+  final String gambar;
+  final String nama;
+  final double harga;
+  final double hargaAsli;
   final int quantity;
   final VoidCallback onIncrease;
   final VoidCallback onDecrease;
 
   const OrderItemCard({
     super.key,
-    required this.imageUrl,
-    required this.title,
-    required this.price,
-    required this.originalPrice,
+    required this.gambar,
+    required this.nama,
+    required this.harga,
+    required this.hargaAsli,
     required this.quantity,
     required this.onIncrease,
     required this.onDecrease,
@@ -43,7 +43,7 @@ class OrderItemCard extends StatelessWidget {
           ClipRRect(
             borderRadius: BorderRadius.circular(10),
             child: Image.network(
-              imageUrl,
+              gambar,
               width: 80,
               height: 80,
               fit: BoxFit.cover,
@@ -55,7 +55,7 @@ class OrderItemCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  title,
+                  nama,
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                   style: const TextStyle(
@@ -69,7 +69,7 @@ class OrderItemCard extends StatelessWidget {
                 Row(
                   children: [
                     Text(
-                      currencyFormat.format(price),
+                      currencyFormat.format(harga),
                       style: const TextStyle(
                         fontFamily: 'Nunito',
                         fontWeight: FontWeight.w700,
@@ -78,9 +78,9 @@ class OrderItemCard extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(width: 6),
-                    if (price != originalPrice)
+                    if (harga != hargaAsli)
                       Text(
-                        currencyFormat.format(originalPrice),
+                        currencyFormat.format(hargaAsli),
                         style: const TextStyle(
                           fontFamily: 'Nunito',
                           fontSize: 12,

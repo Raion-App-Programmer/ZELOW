@@ -34,7 +34,7 @@ class Toko {
       waktu: data['waktu'] ?? '',
       jumlahPenilaian: data['jpenilaian'] ?? 0,
       deskripsi: data['deskripsi'] ?? '',
-      alamat: data['alamat'] ?? ''
+      alamat: data['alamat'] ?? '',
     );
   }
 }

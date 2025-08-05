@@ -11,12 +11,14 @@ class CheckoutPage extends StatefulWidget {
   const CheckoutPage({super.key, required this.orders});
 
   @override
-  _CheckoutPageState createState() => _CheckoutPageState();
+  _checkoutPageState createState() => _checkoutPageState();
 }
 
-class _CheckoutPageState extends State<CheckoutPage> {
-  late List<Map<String, dynamic>> orders;
-  double serviceFee = 4900.0;
+class _checkoutPageState extends State<CheckoutPage> {
+  final PesananService _pesananService = PesananService();
+  late Set<String> alamatOrders;
+
+  double biayaLayanan = 4900.0;
   String _selectedPayment = "cash";
   String _selectedTab = "Pick Up";
   String _selectedSchedule = "12:00 - 13:00";
@@ -28,8 +30,8 @@ class _CheckoutPageState extends State<CheckoutPage> {
   }
 
   // Backend service checkout
-  final PesananService _pesananService = PesananService();
-  bool _isProcessing = false;
+  // final PesananService _pesananService = PesananService();
+  // bool _isProcessing = false;
 
   String getMonthName(int month) {
     List<String> months = [
@@ -49,14 +51,27 @@ class _CheckoutPageState extends State<CheckoutPage> {
     return months[month - 1];
   }
 
+  Future<void> _handleCheckout() async {
+    try {
+      await _pesananService.tambahPesanan(
+        widget.orders,
+        _selectedPayment,
+        _selectedSchedule,
+      );
+    } catch (e) {
+      print("Error: $e");
+    }
+  }
+
   @override
   void initState() {
     super.initState();
-    orders = List.from(widget.orders);
+    alamatOrders =
+        widget.orders.map((order) => order['alamat'].toString()).toSet();
   }
 
   void _increaseQuantity(int index) {
-    final order = orders[index];
+    final order = widget.orders[index];
     final int stok = order['stok'] ?? 0;
     final int terjual = order['terjual'] ?? 0;
     final bool isFlashSale = order['isFlashSale'] ?? false;
@@ -85,19 +100,52 @@ class _CheckoutPageState extends State<CheckoutPage> {
     }
 
     setState(() {
-      orders[index]['quantity'] = quantity + 1;
+      widget.orders[index]['quantity']++;
     });
   }
 
   void _decreaseQuantity(int index) {
-    if (orders[index]['quantity'] > 1) {
+    if (widget.orders[index]['quantity'] > 1) {
       setState(() {
-        orders[index]['quantity']--;
+        widget.orders[index]['quantity']--;
       });
     }
   }
 
+  double get subtotal {
+    return widget.orders.fold(
+      0,
+      (total, item) => total + (item['harga'] * item['quantity']),
+    );
+  }
+
+  // Ini nampilin alamat toko yang diambil dari variable alamatOrders
+  // Jika hanya ada satu alamat, tampilkan sebagai teks biasa aja
+  // Jika ada lebih dari satu alamat, tampilkan sebagai daftar dengan bullet points
+  Widget buildAlamatToko(Set<String> alamatOrders) {
+    if (alamatOrders.length == 1) {
+      return Text(alamatOrders.first, style: TextStyle(fontSize: 14));
+    } else {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          for (final alamat in alamatOrders)
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text("•  ", style: TextStyle(fontSize: 14)),
+                Expanded(child: Text(alamat, style: TextStyle(fontSize: 14))),
+              ],
+            ),
+        ],
+      );
+    }
+  }
+
   void _showOrderTypeModal(BuildContext context) {
+    String selectedTab = "Pick Up";
+    String jadwalPengambilan = "";
+
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -116,7 +164,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // Garis drag indikator
+                    // Drag indicator
                     Center(
                       child: Container(
                         width: 50,
@@ -128,27 +176,77 @@ class _CheckoutPageState extends State<CheckoutPage> {
                         ),
                       ),
                     ),
+
                     // Tab Switcher
                     Row(
                       children: [
-                        _buildTabButton(
-                          "Pick Up",
-                          _selectedTab,
-                          zelow,
-                          setModalState,
+                        Expanded(
+                          child: ElevatedButton(
+                            onPressed: () {
+                              setModalState(() {
+                                selectedTab = "Pick Up";
+                              });
+                            },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor:
+                                  selectedTab == "Pick Up"
+                                      ? zelow
+                                      : Colors.white,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(20),
+                                side: BorderSide(color: zelow),
+                              ),
+                            ),
+                            child: Text(
+                              "Pick Up",
+                              style: TextStyle(
+                                color:
+                                    selectedTab == "Pick Up"
+                                        ? Colors.white
+                                        : zelow,
+                                fontFamily: 'Nunito',
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
                         ),
                         SizedBox(width: 12),
-                        _buildTabButton(
-                          "Delivery",
-                          _selectedTab,
-                          zelow,
-                          setModalState,
+                        Expanded(
+                          child: ElevatedButton(
+                            onPressed: () {
+                              setModalState(() {
+                                selectedTab = "Delivery";
+                              });
+                            },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor:
+                                  selectedTab == "Delivery"
+                                      ? zelow
+                                      : Colors.white,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(20),
+                                side: BorderSide(color: zelow),
+                              ),
+                            ),
+                            child: Text(
+                              "Delivery",
+                              style: TextStyle(
+                                color:
+                                    selectedTab == "Delivery"
+                                        ? Colors.white
+                                        : zelow,
+                                fontFamily: 'Nunito',
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
                         ),
                       ],
                     ),
+
                     SizedBox(height: 24),
 
-                    if (_selectedTab == "Pick Up") ...[
+                    if (selectedTab == "Pick Up") ...[
                       Text(
                         "Ambil Langsung ke Toko",
                         style: TextStyle(
@@ -168,7 +266,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                       ),
                       SizedBox(height: 16),
 
-                      // Toko Info
+                      // Info Toko
                       Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -178,12 +276,8 @@ class _CheckoutPageState extends State<CheckoutPage> {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                // Nama Toko
                                 Text(
-                                  widget.orders.isNotEmpty &&
-                                          widget.orders[0]["nama"] != null
-                                      ? widget.orders[0]["nama"]
-                                      : "-",
+                                  "Toko",
                                   style: TextStyle(
                                     fontFamily: 'Nunito',
                                     fontWeight: FontWeight.bold,
@@ -191,20 +285,14 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                   ),
                                 ),
                                 SizedBox(height: 4),
-
-                                // Alamat Toko
                                 Text(
-                                  widget.orders.isNotEmpty &&
-                                          widget.orders[0]["alamat"] != null
-                                      ? widget.orders[0]["alamat"]
-                                      : "-",
+                                  alamatOrders.first, // Ambil alamat pertama
                                   style: TextStyle(
                                     fontFamily: 'Nunito',
                                     fontSize: 14,
                                   ),
                                 ),
                                 SizedBox(height: 4),
-
                                 Text(
                                   "Buka 07.00 - 23.00",
                                   style: TextStyle(
@@ -213,10 +301,9 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                   ),
                                 ),
                                 SizedBox(height: 8),
-
                                 GestureDetector(
                                   onTap: () {
-                                    // Navigasi ke detail toko
+                                    // Navigasi ke informasi toko
                                   },
                                   child: Text(
                                     "Informasi Toko",
@@ -233,9 +320,10 @@ class _CheckoutPageState extends State<CheckoutPage> {
                           ),
                         ],
                       ),
+
                       SizedBox(height: 16),
 
-                      // Jadwal
+                      // Jadwal Card
                       Container(
                         padding: EdgeInsets.all(16),
                         decoration: BoxDecoration(
@@ -261,9 +349,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                 fontFamily: 'Nunito',
                               ),
                             ),
-
                             Divider(height: 20),
-
                             Text(
                               "Hari Ini",
                               style: TextStyle(
@@ -284,21 +370,38 @@ class _CheckoutPageState extends State<CheckoutPage> {
                             ),
                             SizedBox(height: 4),
 
-                            Column(
-                              children: [
-                                _buildScheduleRadio(
-                                  "12:00 - 13:00",
-                                  _selectedSchedule,
-                                  zelow,
-                                  setModalState,
-                                ),
-                                _buildScheduleRadio(
-                                  "18:00 - 19:00",
-                                  _selectedSchedule,
-                                  zelow,
-                                  setModalState,
-                                ),
-                              ],
+                            // Radio Jadwal
+                            ListTile(
+                              leading: Radio<String>(
+                                value: "12:00 - 13:00",
+                                groupValue: jadwalPengambilan,
+                                activeColor: zelow,
+                                onChanged: (val) {
+                                  setModalState(() {
+                                    jadwalPengambilan = val!;
+                                  });
+                                },
+                              ),
+                              title: Text(
+                                "12:00 - 13:00",
+                                style: TextStyle(fontFamily: 'Nunito'),
+                              ),
+                            ),
+                            ListTile(
+                              leading: Radio<String>(
+                                value: "18:00 - 19:00",
+                                groupValue: jadwalPengambilan,
+                                activeColor: zelow,
+                                onChanged: (val) {
+                                  setModalState(() {
+                                    jadwalPengambilan = val!;
+                                  });
+                                },
+                              ),
+                              title: Text(
+                                "18:00 - 19:00",
+                                style: TextStyle(fontFamily: 'Nunito'),
+                              ),
                             ),
                           ],
                         ),
@@ -318,12 +421,17 @@ class _CheckoutPageState extends State<CheckoutPage> {
                       ),
                       SizedBox(height: 190),
                     ],
+
                     SizedBox(height: 36),
 
+                    // Tombol Terapkan
                     SizedBox(
                       width: double.infinity,
                       child: ElevatedButton(
-                        onPressed: () => Navigator.pop(context),
+                        onPressed: () {
+                          // Simpan selectedTab dan jadwalPengambilan jika perlu
+                          Navigator.pop(context);
+                        },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: zelow,
                           padding: EdgeInsets.symmetric(vertical: 14),
@@ -416,7 +524,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
   }
 
   double get harga {
-    return orders.fold(
+    return widget.orders.fold(
       0,
       (total, item) => total + (item['price'] * item['quantity']),
     );
@@ -435,6 +543,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
             color: Colors.white,
           ),
         ),
+        centerTitle: true,
         leading: BackButton(color: white),
         backgroundColor: zelow,
         iconTheme: IconThemeData(color: white),
@@ -464,6 +573,9 @@ class _CheckoutPageState extends State<CheckoutPage> {
                   color: Colors.grey.shade700,
                 ),
               ),
+
+              buildAlamatToko(alamatOrders),
+
               SizedBox(height: 16),
               Text(
                 "Tipe Pemesanan",
@@ -511,14 +623,14 @@ class _CheckoutPageState extends State<CheckoutPage> {
               ),
               Column(
                 children:
-                    orders.asMap().entries.map((entry) {
+                    widget.orders.asMap().entries.map((entry) {
                       int index = entry.key;
                       var item = entry.value;
                       return OrderItemCard(
-                        imageUrl: item['imageUrl'],
-                        title: item['title'],
-                        price: item['price'],
-                        originalPrice: item['originalPrice'],
+                        gambar: item['gambar'],
+                        nama: item['nama'],
+                        harga: item['harga'],
+                        hargaAsli: item['hargaAsli'],
                         quantity: item['quantity'],
                         onIncrease: () => _increaseQuantity(index),
                         onDecrease: () => _decreaseQuantity(index),
@@ -584,7 +696,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                           ),
                         ),
                         Text(
-                          formatRupiah(serviceFee),
+                          formatRupiah(biayaLayanan),
                           style: TextStyle(
                             fontFamily: "Nunito",
                             fontSize: 14,
@@ -609,7 +721,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                           ),
                         ),
                         Text(
-                          formatRupiah(harga + serviceFee),
+                          formatRupiah(harga + biayaLayanan),
                           style: TextStyle(
                             fontFamily: "Nunito",
                             fontSize: 18,
@@ -748,20 +860,11 @@ class _CheckoutPageState extends State<CheckoutPage> {
             height: 48,
             child: ElevatedButton(
               onPressed: () {
-                Map<String, dynamic> order = {
-                  "orderNumber": DateTime.now().millisecondsSinceEpoch,
-                  "orderDate":
-                      "${DateTime.now().day} ${getMonthName(DateTime.now().month)} ${DateTime.now().year}",
-                  "items": List.from(orders),
-                };
-
-                List<Map<String, dynamic>> newOrdersList = [order];
+                _handleCheckout();
 
                 Navigator.push(
                   context,
-                  MaterialPageRoute(
-                    builder: (context) => PesananPage(orders: newOrdersList),
-                  ),
+                  MaterialPageRoute(builder: (context) => PesananPage()),
                 );
               },
               style: ElevatedButton.styleFrom(

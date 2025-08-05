@@ -7,6 +7,7 @@ import 'package:zelow/models/toko_model.dart';
 import 'package:zelow/pages/user/keranjang_page.dart';
 import 'package:zelow/pages/user/chekout_page.dart';
 import 'package:zelow/services/keranjang_service.dart';
+import 'package:zelow/services/produk_service.dart';
 import 'package:intl/intl.dart';
 
 class ProductInfoPage extends StatefulWidget {
@@ -24,7 +25,21 @@ class ProductInfoPage extends StatefulWidget {
 }
 
 class _ProductInfoPageState extends State<ProductInfoPage> {
+  final ProdukService _produkService = ProdukService();
   int itemCount = 0;
+  String? alamatTokoProduk;
+
+  @override
+  void initState() {
+    super.initState();
+    _produkService.getAlamatTokoByProdukId(widget.productData.idToko).then((
+      alamat,
+    ) {
+      setState(() {
+        alamatTokoProduk = alamat;
+      });
+    });
+  }
 
   void _addItem() {
     int stokTersisa = widget.productData.stok - widget.productData.terjual;
@@ -80,6 +95,7 @@ class _ProductInfoPageState extends State<ProductInfoPage> {
     });
 
     try {
+      // manggil fungsi keranjang service
       await _keranjangService.addToCart(widget.productData, itemCount);
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -119,7 +135,7 @@ class _ProductInfoPageState extends State<ProductInfoPage> {
     double originalPrice = widget.productData.harga;
     double price = isFlashSale ? originalPrice * 0.8 : originalPrice;
     double totalPrice = itemCount * price;
-
+    
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -318,6 +334,7 @@ class _ProductInfoPageState extends State<ProductInfoPage> {
                                         'terjual': widget.productData.terjual,
                                         'isFlashSale':
                                             widget.productData.isFlashSale,
+                                        'deskripsi': widget.productData.deskripsi,
                                       },
                                     ],
                                   ),

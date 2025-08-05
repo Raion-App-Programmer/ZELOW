@@ -1,15 +1,49 @@
 import 'package:flutter/material.dart';
 import 'package:zelow/components/constant.dart';
+import 'package:zelow/models/toko_model.dart';
+import 'package:zelow/services/toko_service.dart';
+import 'package:zelow/utils/format_mata_uang.dart';
 
-class PesananBatalCard extends StatelessWidget {
-  final int orderNumber;
-  final String orderDate;
+class PesananBatalCard extends StatefulWidget {
+  final String idPesanan;
+  final String tanggalPesanan;
+  final String gambar;
+  final String namaProduk;
+  final int quantity;
+  final double hargaSatuan;
+  final String idToko;
 
   const PesananBatalCard({
-    Key? key,
-    required this.orderNumber,
-    required this.orderDate,
-  }) : super(key: key);
+    super.key,
+    required this.idPesanan,
+    required this.tanggalPesanan,
+    required this.gambar,
+    required this.namaProduk,
+    required this.quantity,
+    required this.hargaSatuan,
+    required this.idToko,
+  });
+
+  @override
+  State<PesananBatalCard> createState() => _PesananBatalCardState();
+}
+
+class _PesananBatalCardState extends State<PesananBatalCard> {
+  final _tokoService = TokoServices();
+  String _namaToko = '';
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchTokoInfo();
+  }
+
+  void _fetchTokoInfo() async {
+    final Toko toko = await _tokoService.getTokoById(widget.idToko);
+    setState(() {
+      _namaToko = toko.nama;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -37,14 +71,14 @@ class PesananBatalCard extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  '#$orderNumber',
+                  '#${widget.idPesanan}',
                   style: greenTextStyle.copyWith(
                     fontSize: 10,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
                 Text(
-                  orderDate,
+                  widget.tanggalPesanan,
                   style: greyTextStyle.copyWith(
                     fontSize: 10,
                     fontWeight: FontWeight.bold,
@@ -53,7 +87,7 @@ class PesananBatalCard extends StatelessWidget {
               ],
             ),
           ),
-          
+
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -61,24 +95,26 @@ class PesananBatalCard extends StatelessWidget {
               Column(
                 children: [
                   ClipRRect(
-                    borderRadius: const BorderRadius.only(
-                      bottomLeft: Radius.circular(10),
-                    ),
+                    borderRadius: const BorderRadius.all(Radius.circular(5)),
                     child: Image.network(
-                      'https://picsum.photos/200/200', // Placeholder image
+                      widget.gambar, // Placeholder image
                       width: 100,
                       height: 100,
                       fit: BoxFit.cover,
                     ),
                   ),
                   SizedBox(height: MediaQuery.of(context).size.width * 0.03),
-                  Text(
-                    'Pesanan Dibatalkan',
-                    style: greyTextStyle.copyWith(
-                     
-                      fontSize: 12,
-                      fontWeight: FontWeight.w600,
-                    ),
+                  Row(
+                    children: [
+                      const SizedBox(width: 10),
+                      Text(
+                        'Pesanan Dibatalkan',
+                        style: greyTextStyle.copyWith(
+                          fontSize: 12,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),
@@ -86,7 +122,12 @@ class PesananBatalCard extends StatelessWidget {
               // Food details
               Expanded(
                 child: Padding(
-                  padding: const EdgeInsets.all(8),
+                  padding: EdgeInsets.only(
+                    right: 8,
+                    left: 3,
+                    bottom: 8,
+                    top: 8
+                  ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -101,21 +142,19 @@ class PesananBatalCard extends StatelessWidget {
                           const SizedBox(width: 4),
                           Expanded(
                             child: Text(
-                              'Masakan Padang Roda Dua, Bendungan Sutami',
-                              style: blackTextStyle.copyWith(
-                                fontSize: 14,
-                              ),
+                              _namaToko,
+                              style: blackTextStyle.copyWith(fontSize: 14),
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
                             ),
                           ),
                         ],
                       ),
-                      
+
                       Padding(
                         padding: const EdgeInsets.only(top: 4, bottom: 4),
                         child: Text(
-                          'Nasi Padang Rendang + Telor',
+                          widget.namaProduk,
                           style: blackTextStyle.copyWith(
                             fontSize: 12,
                             fontWeight: FontWeight.bold,
@@ -124,51 +163,54 @@ class PesananBatalCard extends StatelessWidget {
                           overflow: TextOverflow.ellipsis,
                         ),
                       ),
-                      
+
                       Text(
-                        '1x',
+                        '${widget.quantity}x',
                         style: TextStyle(
                           color: black,
                           fontSize: 12,
                           fontWeight: FontWeight.w500,
                         ),
                       ),
-                      
+
                       const SizedBox(height: 6),
                       Row(
                         children: [
                           Text(
-                            'Rp10.000',
+                            FormatMataUang.formatRupiah(widget.hargaSatuan, 0),
                             style: greenTextStyle.copyWith(
                               fontWeight: FontWeight.bold,
                               fontSize: 14,
                             ),
                           ),
                           const SizedBox(width: 4),
-                          Text(
-                            'Rp12.500',
-                            style: const TextStyle(
-                              fontSize: 10,
-                              color: Colors.grey,
-                              decoration: TextDecoration.lineThrough,
-                              decorationThickness: 1.5,
-                            ),
-                          ),
+
+                          // Text(
+                          //   'Rp12.500',
+                          //   style: const TextStyle(
+                          //     fontSize: 10,
+                          //     color: Colors.grey,
+                          //     decoration: TextDecoration.lineThrough,
+                          //     decorationThickness: 1.5,
+                          //   ),
+                          // ),
                         ],
                       ),
-                      
+
                       const SizedBox(height: 8),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
-                        
                           SizedBox(width: 12),
                           ElevatedButton(
                             onPressed: () {},
                             style: ElevatedButton.styleFrom(
                               backgroundColor: zelow,
                               foregroundColor: Colors.white,
-                              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 10,
+                                vertical: 8,
+                              ),
                               minimumSize: const Size(100, 40),
                               elevation: 2,
                               shape: RoundedRectangleBorder(

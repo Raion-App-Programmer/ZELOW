@@ -1,15 +1,51 @@
 import 'package:flutter/material.dart';
 import 'package:zelow/components/constant.dart';
+import 'package:zelow/models/toko_model.dart';
+import 'package:zelow/services/toko_service.dart';
+import 'package:zelow/utils/format_mata_uang.dart';
 
-class PesananBerlangsungCard extends StatelessWidget {
-  final int orderNumber;
-  final String orderDate;
+class PesananBerlangsungCard extends StatefulWidget {
+  final String idPesanan;
+  final String tanggalPesanan;
+  final String namaProduk;
+  final int quantity;
+  final double hargaSatuan;
+  final String status;
+  final String idToko;
+  final String gambar;
 
   const PesananBerlangsungCard({
-    Key? key,
-    required this.orderNumber,
-    required this.orderDate,
-  }) : super(key: key);
+    super.key,
+    required this.idPesanan,
+    required this.tanggalPesanan,
+    required this.namaProduk,
+    required this.quantity,
+    required this.hargaSatuan,
+    required this.status,
+    required this.idToko,  
+    required this.gambar,
+  });
+
+  @override
+  State<PesananBerlangsungCard> createState() => _PesananBerlangsungCardState();
+}
+
+class _PesananBerlangsungCardState extends State<PesananBerlangsungCard> {
+  final _tokoService = TokoServices();
+  String _namaToko = '';
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchTokoInfo();
+  }
+
+  void _fetchTokoInfo() async {
+    final Toko toko = await _tokoService.getTokoById(widget.idToko);
+    setState(() {
+      _namaToko = toko.nama;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -38,7 +74,7 @@ class PesananBerlangsungCard extends StatelessWidget {
               children: [
                 // Order number at top left
                 Text(
-                  '#$orderNumber',
+                  '#${widget.idPesanan}',
                   style: greenTextStyle.copyWith(
                     fontSize: 10,
                     fontWeight: FontWeight.bold,
@@ -47,7 +83,7 @@ class PesananBerlangsungCard extends StatelessWidget {
                 
                 // Order date at top right
                 Text(
-                  orderDate,
+                  widget.tanggalPesanan,
                   style: greyTextStyle.copyWith(
                     fontSize: 10,
                     fontWeight: FontWeight.bold,
@@ -62,12 +98,11 @@ class PesananBerlangsungCard extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // Food image (smaller)
+              const SizedBox(width: 15),
               ClipRRect(
-                borderRadius: const BorderRadius.only(
-                  bottomLeft: Radius.circular(10),
-                ),
+                borderRadius: const BorderRadius.all(Radius.circular(5)),
                 child: Image.network(
-                  'https://picsum.photos/200/200', // Placeholder image
+                  widget.gambar, // Placeholder image
                   width: 100,
                   height: 100,
                   fit: BoxFit.cover,
@@ -91,8 +126,8 @@ class PesananBerlangsungCard extends StatelessWidget {
                           ),
                           const SizedBox(width: 4),
                           Expanded(
-                            child:  Text(
-                              'Masakan Padang Roda Dua, Bendungan Sutami',
+                            child: Text(
+                              _namaToko,
                               style: blackTextStyle.copyWith(
                                
                                 fontSize: 14,
@@ -108,7 +143,7 @@ class PesananBerlangsungCard extends StatelessWidget {
                        Padding(
                         padding: EdgeInsets.only(top: 4, bottom: 4),
                         child: Text(
-                          'Nasi Padang Rendang + Telor',
+                          widget.namaProduk,
                           style: blackTextStyle.copyWith(
                             fontSize: 12,
                             fontWeight: FontWeight.bold
@@ -120,36 +155,36 @@ class PesananBerlangsungCard extends StatelessWidget {
                       
                       // Quantity
                       Text(
-                        '1x',
+                        '${widget.quantity}x',
                         style: TextStyle(
                           color: black,
                           fontSize: 12,
                           fontWeight: FontWeight.w500,
                         ),
                       ),
-                      
                       // Prices
                       const SizedBox(height: 6),
                       Row(
                         children: [
                           Text(
-                            'Rp10.000',
+                            FormatMataUang.formatRupiah(widget.hargaSatuan, 0),
                             style: greenTextStyle.copyWith(
                               fontWeight: FontWeight.bold,
                               fontSize: 14,
-                              
                             ),
                           ),
                           const SizedBox(width: 4),
-                          Text(
-                            'Rp12.500',
-                            style: TextStyle(
-                              fontSize: 10,
-                              color: Colors.grey,
-                              decoration: TextDecoration.lineThrough,
-                              decorationThickness: 1.5,
-                            ),
-                          ),
+
+                          // Ini untuk diskon belum berfungsi
+                          // Text(
+                          //   'Rp12.500',
+                          //   style: TextStyle(
+                          //     fontSize: 10,
+                          //     color: Colors.grey,
+                          //     decoration: TextDecoration.lineThrough,
+                          //     decorationThickness: 1.5,
+                          //   ),
+                          // ),
                         ],
                       ),
                       
@@ -160,7 +195,7 @@ class PesananBerlangsungCard extends StatelessWidget {
                         child: Container(
                           padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                           child: Text(
-                            'Menunggu Konfirmasi',
+                            widget.status,
                             style: greyTextStyle.copyWith(
                               fontSize: MediaQuery.of(context).size.width * 0.03,
                               fontWeight: FontWeight.w500,

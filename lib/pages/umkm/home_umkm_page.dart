@@ -143,7 +143,7 @@ class _HomePageUmkmState extends State<HomePageUmkm> {
                         height: 23,
                         child: ElevatedButton(
                           onPressed: () {
-                            Navigator.pop(context);
+                            Navigator.pushReplacementNamed(context, '/laporan');
                           },
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Color(0xFFE6F9F1),
@@ -216,7 +216,9 @@ class _HomePageUmkmState extends State<HomePageUmkm> {
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 GestureDetector(
-                  onTap: () {},
+                  onTap: () {
+                    Navigator.pushReplacementNamed(context, '/stok');
+                  },
                   child: Stack(
                     alignment: Alignment.center,
                     children: [

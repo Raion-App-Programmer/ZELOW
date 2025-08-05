@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:zelow/pages/splash_page.dart';
 import 'package:intl/date_symbol_data_local.dart';
+import 'package:zelow/pages/umkm/stok_toko_umkm.dart';
+import 'package:zelow/pages/umkm/tambah_produk_umkm.dart';
 import 'firebase_options.dart';
 import 'package:zelow/pages/auth/login_page.dart';
 import 'package:zelow/pages/umkm/home_umkm_page.dart';
@@ -10,14 +14,24 @@ import 'package:zelow/pages/user/home_page_user.dart';
 import 'package:zelow/pages/user/pesanan_page.dart';
 import 'package:zelow/pages/user/profile_page.dart';
 import 'package:zelow/pages/user/chat_page.dart';
-import 'pages/splash_page.dart';
+import 'package:intl/date_symbol_data_local.dart';
+
+const SUPABASE_URL = 'https://gegrqxsyhqestdtmqadq.supabase.co';
+const SUPABASE_KEY =
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdlZ3JxeHN5aHFlc3RkdG1xYWRxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTMwMTE4NTMsImV4cCI6MjA2ODU4Nzg1M30.fN53ULmrrSKJGbrj_w1AqtD2nneVKThP1elhF7v3sso';
 
 void main() async {
+  await initializeDateFormatting('id_ID', null);
   WidgetsFlutterBinding.ensureInitialized();
 
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   // Tambahkan inisialisasi data lokal untuk tanggal
   await initializeDateFormatting('id_ID', null);
+  await Supabase.initialize(
+    url: SUPABASE_URL,
+    anonKey: SUPABASE_KEY,
+    debug: true,
+  );
 
   runApp(const MyApp());
 }
@@ -28,7 +42,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      initialRoute: '/home_page_user',
+      initialRoute: '/login_page',
       debugShowCheckedModeBanner: false,
       routes: {
         '/splash': (context) => SplashPage(),
@@ -36,10 +50,12 @@ class MyApp extends StatelessWidget {
         '/home_page_umkm': (context) => HomePageUmkm(),
         '/login_page': (context) => LoginPage(),
         '/flashsale': (context) => FlashsalePage(),
-        '/pesanan': (context) => PesananPage(orders: []),
+        '/pesanan': (context) => PesananPage(),
         '/profile': (context) => ProfilePage(),
         '/chat': (context) => chatPage(),
         '/laporan': (context) => IncomeReport(),
+        '/stok': (context) => StokTokoUmkm(),
+        '/tambahProduk': (context) => TambahProdukUmkm(),
       },
     );
   }

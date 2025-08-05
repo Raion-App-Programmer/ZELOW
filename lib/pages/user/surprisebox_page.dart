@@ -1,9 +1,11 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:zelow/components/constant.dart';
 import 'package:zelow/components/surprisebox_card.dart';
 
 class SurpriseBoxPage extends StatelessWidget {
-  const SurpriseBoxPage({Key? key}) : super(key: key);
+  final CollectionReference referenceProduk = FirebaseFirestore.instance
+      .collection("produk");
 
   @override
   Widget build(BuildContext context) {
@@ -16,23 +18,50 @@ class SurpriseBoxPage extends StatelessWidget {
             Navigator.pop(context);
           },
         ),
-        title: Text(
-          'Surprise Box',
-          style: TextStyle(color: Colors.white),
-        ),
+        title: Text('Surprise Box', style: TextStyle(color: Colors.white)),
       ),
-      body: ListView(
-        children: [
-          SurpirseCard(
-             imageUrl: 'assets/images/naspad.jpg',
-            restaurantName: 'Nasi Padang Roda Baru',
-            description: 'Paket komplit dengan rendang dan sambal hijau',
-            rating: 4.9,
-            distance: '1 km',
-            estimatedTime: '10 min',
-            onTap: () {},
-          ),
-        ],
+      body: StreamBuilder<QuerySnapshot>(
+        stream: referenceProduk.snapshots(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(child: CircularProgressIndicator());
+          }
+          if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+            return Center(child: Text("Tidak ada data"));
+          }
+
+          final items =
+              snapshot.data!.docs
+                  .map(
+                    (e) => {
+                      "imageUrl": e["gambar"],
+                      "restaurantName": e["nama"],
+                      // "description": e["deskripsi"],
+                      "rating": e["rating"],
+                      // "distance": e["jarak"],
+                      // "estimatedTime": e["waktu"],
+                    },
+                  )
+                  .toList();
+
+          items.shuffle();
+
+          return ListView.builder(
+            itemCount: items.length,
+            itemBuilder: (context, index) {
+              final product = items[index];
+              return SurpirseCard(
+                imageUrl: product["imageUrl"],
+                restaurantName: product["restaurantName"],
+                description: "",
+                rating: product["rating"],
+                distance: "",
+                estimatedTime: "",
+                onTap: () {},
+              );
+            },
+          );
+        },
       ),
     );
   }

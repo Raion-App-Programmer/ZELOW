@@ -4,7 +4,7 @@ import 'package:zelow/models/toko_model.dart';
 class Produk {
   final String gambar;
   final double harga;
-  final String id;
+  final String idProduk;
   final String idToko;
   final int jumlahDisukai;
   final int jumlahPembelian;
@@ -15,9 +15,10 @@ class Produk {
   final int terjual;
   final Toko? toko;
   final bool isFlashSale;
+  final String deskripsi;
 
   Produk({
-    required this.id,
+    required this.idProduk,
     required this.idToko,
     required this.kategori,
     required this.nama,
@@ -28,6 +29,7 @@ class Produk {
     required this.jumlahDisukai,
     required this.stok,
     required this.terjual,
+    required this.deskripsi,
     this.toko,
     this.isFlashSale = false,
   });
@@ -42,7 +44,7 @@ class Produk {
     }
 
     return Produk(
-      id: doc.id,
+      idProduk: doc.id,
       idToko: data['id_toko'] ?? '',
       kategori: data['kategori'] ?? '',
       nama: data['nama'] ?? '',
@@ -54,30 +56,47 @@ class Produk {
       stok: data['stok'] ?? 0,
       terjual: data['terjual'] ?? 0,
       isFlashSale: false,
+      deskripsi: data['deskripsi'] ?? '',
     );
   }
 
-  Produk copyWith({bool? isFlashSale, Toko? toko}) {
+  Produk copyWith({
+    String? idProduk,
+    String? idToko,
+    String? kategori,
+    String? nama,
+    String? gambar,
+    double? harga,
+    double? rating,
+    int? jumlahPembelian,
+    int? jumlahDisukai,
+    int? stok,
+    int? terjual,
+    String? deskripsi,
+    Toko? toko,
+    bool? isFlashSale,
+  }) {
     return Produk(
-      id: id,
-      idToko: idToko,
-      kategori: kategori,
-      nama: nama,
-      gambar: gambar,
-      harga: harga,
-      rating: rating,
-      jumlahPembelian: jumlahPembelian,
-      jumlahDisukai: jumlahDisukai,
-      stok: stok,
-      terjual: terjual,
+      idProduk: idProduk ?? this.idProduk,
+      idToko: idToko ?? this.idToko,
+      kategori: kategori ?? this.kategori,
+      nama: nama ?? this.nama,
+      gambar: gambar ?? this.gambar,
+      harga: harga ?? this.harga,
+      rating: rating ?? this.rating,
+      jumlahPembelian: jumlahPembelian ?? this.jumlahPembelian,
+      jumlahDisukai: jumlahDisukai ?? this.jumlahDisukai,
+      stok: stok ?? this.stok,
+      terjual: terjual ?? this.terjual,
+      deskripsi: deskripsi ?? this.deskripsi,
       toko: toko ?? this.toko,
       isFlashSale: isFlashSale ?? this.isFlashSale,
     );
   }
 
-  Produk copyWithToko(Toko tokoBaru, {bool? isFlashSale}) {
+  Produk copyWithToko(Toko tokoBaru) {
     return Produk(
-      id: id,
+      idProduk: idProduk,
       idToko: idToko,
       kategori: kategori,
       nama: nama,
@@ -89,7 +108,8 @@ class Produk {
       stok: stok,
       terjual: terjual,
       toko: tokoBaru,
-      isFlashSale: isFlashSale ?? this.isFlashSale,
+      isFlashSale: isFlashSale,
+      deskripsi: deskripsi,
     );
   }
 }

@@ -1,31 +1,40 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:zelow/components/berlangsung_card.dart';
 import 'package:zelow/components/constant.dart';
 import 'package:zelow/components/navbar.dart';
 import 'package:zelow/components/selesai_card.dart';
 import 'package:zelow/components/batal_card.dart';
+import 'package:zelow/models/pesanan_model.dart';
+import 'package:zelow/services/pesanan_service.dart';
 
 class PesananPage extends StatefulWidget {
-  final List<Map<String, dynamic>> orders;
-
-  const PesananPage({super.key, required this.orders});
+  const PesananPage({super.key});
 
   @override
   State<PesananPage> createState() => _PesananPageState();
 }
 
 class _PesananPageState extends State<PesananPage> {
+  final PesananService _pesananService = PesananService();
+
   int _selectedIndex = 0;
   final List<String> _buttonLabels = ["Berlangsung", "Selesai", "Dibatalkan"];
 
-  List<Map<String, dynamic>> _pesananList = [];
-  List<Map<String, dynamic>> _pesananSelesaiList = [];
-  List<Map<String, dynamic>> _pesananBatalList = [];
+  String formatDate(Timestamp timestamp) {
+    DateTime dateTime = timestamp.toDate();
+    return DateFormat('dd MMMM yyyy', 'id_ID').format(dateTime);
+  }
 
-  @override
-  void initState() {
-    super.initState();
-    _pesananList = List.from(widget.orders);
+  String formatStatus(String status) {
+    return switch (status) {
+      'menunggu konfirmasi' => 'Menunggu Konfirmasi',
+      'dibuat' => 'Pesanan Dibuat',
+      'disiapkan' => 'Pesanan Disiapkan',
+      'batal' => 'Pesanan Dibatalkan',
+      _ => 'Error',
+    };
   }
 
   @override
@@ -36,7 +45,7 @@ class _PesananPageState extends State<PesananPage> {
         elevation: 0,
         leading: IconButton(
           icon: Icon(Icons.arrow_back, color: white),
-            onPressed: () {
+          onPressed: () {
             if (Navigator.of(context).canPop()) {
               Navigator.of(context).pop();
             } else {
@@ -91,33 +100,96 @@ class _PesananPageState extends State<PesananPage> {
               );
             }),
           ),
+
           SizedBox(height: MediaQuery.of(context).size.width * 0.03),
+
           Expanded(
-            child: ListView.builder(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              itemCount:
-                  _selectedIndex == 0
-                      ? _pesananList.length
-                      : _selectedIndex == 1
-                      ? _pesananSelesaiList.length
-                      : _pesananBatalList.length,
-              itemBuilder: (context, index) {
-                if (_selectedIndex == 0) {
-                  return PesananBerlangsungCard(
-                    orderNumber: _pesananList[index]['orderNumber'],
-                    orderDate: _pesananList[index]['orderDate'],
-                  );
-                } else if (_selectedIndex == 1) {
-                  return PesananSelesaiCard(
-                    orderNumber: _pesananSelesaiList[index]['orderNumber'],
-                    orderDate: _pesananSelesaiList[index]['orderDate'],
-                  );
-                } else {
-                  return PesananBatalCard(
-                    orderNumber: _pesananBatalList[index]['orderNumber'],
-                    orderDate: _pesananBatalList[index]['orderDate'],
-                  );
+            child: StreamBuilder<List<Pesanan>>(
+              stream: _pesananService.getPesananUser(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return Center(child: CircularProgressIndicator(color: zelow));
                 }
+
+                if (snapshot.hasError) {
+                  print('Error: ${snapshot.error}');
+                  return Center();
+                }
+
+                if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                  return Center();
+                }
+
+                final listPesanan = snapshot.data!;
+
+                final pesananBerlangsung =
+                    listPesanan
+                        .where(
+                          (data) =>
+                              data.status == 'menunggu konfirmasi' ||
+                              data.status == 'dibuat' ||
+                              data.status == 'disiapkan',
+                        )
+                        .toList();
+                final pesananSelesai =
+                    listPesanan
+                        .where((data) => data.status == 'selesai')
+                        .toList();
+                final pesananBatal =
+                    listPesanan
+                        .where((data) => data.status == 'batal')
+                        .toList();
+
+                return ListView.builder(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  itemCount:
+                      _selectedIndex == 0
+                          ? pesananBerlangsung.length
+                          : _selectedIndex == 1
+                          ? pesananSelesai.length
+                          : pesananBatal.length,
+                  itemBuilder: (context, index) {
+                    final Pesanan item;
+                    if (_selectedIndex == 0) {
+                      item = pesananBerlangsung[index];
+
+                      return PesananBerlangsungCard(
+                        idPesanan: item.idPesanan,
+                        namaProduk: item.namaProduk,
+                        quantity: item.quantity,
+                        hargaSatuan: item.hargaSatuan,
+                        status: formatStatus(item.status),
+                        idToko: item.idToko,
+                        gambar: item.gambarProduk,
+                        tanggalPesanan: formatDate(item.waktuPesan),
+                      );
+                    } else if (_selectedIndex == 1) {
+                      item = pesananSelesai[index];
+
+                      return PesananSelesaiCard(
+                        idPesanan: item.idPesanan,
+                        tanggalPesanan: formatDate(item.waktuPesan),
+                        namaProduk: item.namaProduk,
+                        quantity: item.quantity,
+                        hargaSatuan: item.hargaSatuan,
+                        idToko: item.idToko,
+                        gambar: item.gambarProduk,
+                      );
+                    } else {
+                      item = pesananBatal[index];
+
+                      return PesananBatalCard(
+                        idPesanan: item.idPesanan,
+                        tanggalPesanan: formatDate(item.waktuPesan),
+                        gambar: item.gambarProduk,
+                        namaProduk: item.namaProduk,
+                        quantity: item.quantity,
+                        hargaSatuan: item.hargaSatuan,
+                        idToko: item.idToko,
+                      );
+                    }
+                  },
+                );
               },
             ),
           ),

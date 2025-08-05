@@ -11,11 +11,11 @@ class AuthService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   Future<void> signIn(
-      String email,
-      String password,
-      BuildContext context,
-      Function(String) onError,
-      Function(bool) onLoading,
+    String email,
+    String password,
+    BuildContext context,
+    Function(String) onError,
+    Function(bool) onLoading,
   ) async {
     Timer? timer;
     try {
@@ -35,7 +35,7 @@ class AuthService {
       User? user = userCredential.user;
       if (user != null) {
         DocumentSnapshot userDoc =
-        await _firestore.collection('user').doc(user.uid).get();
+            await _firestore.collection('user').doc(user.uid).get();
         if (userDoc.exists) {
           String role = userDoc.get('role');
           if (role == 'user') {
@@ -66,15 +66,15 @@ class AuthService {
   }
 
   Future<void> signUp(
-      String email,
-      String password,
-      String fullname,
-      String username,
-      String role,
-      BuildContext context,
-      Function(String) onError,
-      Function(bool) onLoading,
-      ) async {
+    String email,
+    String password,
+    String fullname,
+    String username,
+    String role,
+    BuildContext context,
+    Function(String) onError,
+    Function(bool) onLoading,
+  ) async {
     Timer? timer;
     try {
       onLoading(true);
@@ -99,7 +99,7 @@ class AuthService {
           'username': username,
           'role': role,
           'isVerified': false,
-          'userId' : user.uid
+          'userId': user.uid,
         });
 
         if (context.mounted) {
@@ -137,10 +137,10 @@ class AuthService {
   }
 
   void checkEmailVerifiedPeriodically(
-      User user,
-      Function(bool) onVerified,
-      BuildContext context,
-      ) {
+    User user,
+    Function(bool) onVerified,
+    BuildContext context,
+  ) {
     Timer.periodic(const Duration(seconds: 3), (timer) async {
       await user.reload();
       User? updatedUser = FirebaseAuth.instance.currentUser;
@@ -154,10 +154,10 @@ class AuthService {
             .update({'isVerified': true});
 
         DocumentSnapshot userDoc =
-        await FirebaseFirestore.instance
-            .collection('user')
-            .doc(updatedUser.uid)
-            .get();
+            await FirebaseFirestore.instance
+                .collection('user')
+                .doc(updatedUser.uid)
+                .get();
         if (userDoc.exists) {
           String role = userDoc.get('role');
 
@@ -180,18 +180,18 @@ class AuthService {
   }
 
   Future<void> sendPasswordResetEmail(
-      String email,
-      Function(String) onError,
-      Function(bool) onLoading,
-      ) async {
+    String email,
+    Function(String) onError,
+    Function(bool) onLoading,
+  ) async {
     try {
       onLoading(true);
 
       var userQuery =
-      await _firestore
-          .collection('user')
-          .where('email', isEqualTo: email)
-          .get();
+          await _firestore
+              .collection('user')
+              .where('email', isEqualTo: email)
+              .get();
 
       if (userQuery.docs.isEmpty) {
         onError('Email tidak ditemukan');
@@ -218,7 +218,11 @@ class AuthService {
     }
   }
 
-  Future<void> signInWithGoogle(BuildContext context, Function(String) onError, Function(bool) onLoading) async {
+  Future<void> signInWithGoogle(
+    BuildContext context,
+    Function(String) onError,
+    Function(bool) onLoading,
+  ) async {
     onLoading(true);
     try {
       final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
@@ -227,19 +231,23 @@ class AuthService {
         return; // user batal login
       }
 
-      final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
+      final GoogleSignInAuthentication googleAuth =
+          await googleUser.authentication;
 
       final credential = GoogleAuthProvider.credential(
         accessToken: googleAuth.accessToken,
         idToken: googleAuth.idToken,
       );
 
-      UserCredential userCredential = await _auth.signInWithCredential(credential);
+      UserCredential userCredential = await _auth.signInWithCredential(
+        credential,
+      );
       User? user = userCredential.user;
 
       if (user != null) {
         // Cek apakah user sudah ada di firestore
-        DocumentSnapshot userDoc = await _firestore.collection('user').doc(user.uid).get();
+        DocumentSnapshot userDoc =
+            await _firestore.collection('user').doc(user.uid).get();
 
         if (!userDoc.exists) {
           // Kalau belum ada, buat dokumen baru dengan default role user
@@ -277,7 +285,11 @@ class AuthService {
     }
   }
 
-  Future<void> signInWithFacebook(BuildContext context, Function(String) onError, Function(bool) onLoading) async {
+  Future<void> signInWithFacebook(
+    BuildContext context,
+    Function(String) onError,
+    Function(bool) onLoading,
+  ) async {
     onLoading(true);
     try {
       // Lakukan login dengan Facebook
@@ -295,15 +307,20 @@ class AuthService {
         }
 
         // Buat credential untuk Firebase
-        final OAuthCredential credential = FacebookAuthProvider.credential(accessToken.tokenString);
+        final OAuthCredential credential = FacebookAuthProvider.credential(
+          accessToken.tokenString,
+        );
 
         // Login ke Firebase dengan credential
-        UserCredential userCredential = await _auth.signInWithCredential(credential);
+        UserCredential userCredential = await _auth.signInWithCredential(
+          credential,
+        );
         User? user = userCredential.user;
 
         if (user != null) {
           // Cek apakah user sudah ada di Firestore
-          DocumentSnapshot userDoc = await _firestore.collection('user').doc(user.uid).get();
+          DocumentSnapshot userDoc =
+              await _firestore.collection('user').doc(user.uid).get();
 
           if (!userDoc.exists) {
             // Jika belum ada, buat dokumen baru dengan default role 'user'

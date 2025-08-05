@@ -10,9 +10,6 @@ import 'package:zelow/models/produk_model.dart';
 import 'package:zelow/models/toko_model.dart';
 import 'package:zelow/pages/user/display_page.dart';
 import 'package:zelow/pages/user/flashsale_page.dart';
-import 'package:zelow/pages/user/payment_option_page.dart';
-import 'package:zelow/pages/user/payment_page.dart';
-import 'package:zelow/pages/user/promotion_option_page.dart';
 import 'package:zelow/pages/user/infoproduk_page.dart';
 import 'package:zelow/pages/user/search_page.dart';
 import 'package:zelow/pages/user/surprisebox_page.dart';
@@ -268,8 +265,7 @@ class _HomePageUserState extends State<HomePageUser> {
                     child: DisplayCard(
                       imageUrl: toko.gambar,
                       restaurantName: toko.nama,
-                      description:
-                          '${toko.deskripsi ?? 'Toko enak dan terjangkau!'}',
+                      description: toko.deskripsi,
                       rating: toko.rating,
                       distance: '${toko.jarak} km',
                       estimatedTime: toko.waktu,
