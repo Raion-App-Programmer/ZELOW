@@ -15,7 +15,7 @@ class Produk {
   final int terjual;
   final Toko? toko;
   final bool isFlashSale;
-  final String deskripsi;
+  final String deskripsi; // ✅ tetap non-nullable
 
   Produk({
     required this.idProduk,
@@ -40,7 +40,7 @@ class Produk {
     double toDouble(dynamic value) {
       if (value is int) return value.toDouble();
       if (value is double) return value;
-      return 0.0; // fallback
+      return 0.0;
     }
 
     return Produk(
@@ -55,8 +55,8 @@ class Produk {
       jumlahDisukai: data['jumlah_disukai'] ?? 0,
       stok: data['stok'] ?? 0,
       terjual: data['terjual'] ?? 0,
+      deskripsi: data['deskripsi'] ?? '', // ✅ fallback ke string kosong
       isFlashSale: false,
-      deskripsi: data['deskripsi'] ?? '',
     );
   }
 
@@ -88,7 +88,8 @@ class Produk {
       jumlahDisukai: jumlahDisukai ?? this.jumlahDisukai,
       stok: stok ?? this.stok,
       terjual: terjual ?? this.terjual,
-      deskripsi: deskripsi ?? this.deskripsi,
+      deskripsi:
+          deskripsi ?? this.deskripsi, // ✅ tetap default ke existing value
       toko: toko ?? this.toko,
       isFlashSale: isFlashSale ?? this.isFlashSale,
     );
@@ -107,9 +108,9 @@ class Produk {
       jumlahDisukai: jumlahDisukai,
       stok: stok,
       terjual: terjual,
+      deskripsi: deskripsi,
       toko: tokoBaru,
       isFlashSale: isFlashSale,
-      deskripsi: deskripsi,
     );
   }
 }

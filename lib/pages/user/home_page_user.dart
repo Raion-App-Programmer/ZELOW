@@ -189,7 +189,7 @@ class _HomePageUserState extends State<HomePageUser> {
                     child: FlashCard(
                       imageUrl: produk.gambar,
                       title: produk.nama,
-                      price: currencyFormatter.format(produk.harga),
+                      price: currencyFormatter.format(produk.harga * 0.8),
                       stock: produk.stok,
                       sold: produk.terjual,
                       onTap: () {

@@ -11,14 +11,14 @@ class CheckoutPage extends StatefulWidget {
   const CheckoutPage({super.key, required this.orders});
 
   @override
-  _checkoutPageState createState() => _checkoutPageState();
+  _CheckoutPageState createState() => _CheckoutPageState();
 }
 
-class _checkoutPageState extends State<CheckoutPage> {
-  final PesananService _pesananService = PesananService();
+class _CheckoutPageState extends State<CheckoutPage> {
   late Set<String> alamatOrders;
+  late List<Map<String, dynamic>> orders;
 
-  double biayaLayanan = 4900.0;
+  double serviceFee = 4900.0;
   String _selectedPayment = "cash";
   String _selectedTab = "Pick Up";
   String _selectedSchedule = "12:00 - 13:00";
@@ -30,8 +30,8 @@ class _checkoutPageState extends State<CheckoutPage> {
   }
 
   // Backend service checkout
-  // final PesananService _pesananService = PesananService();
-  // bool _isProcessing = false;
+  final PesananService _pesananService = PesananService();
+  bool _isProcessing = false;
 
   String getMonthName(int month) {
     List<String> months = [
@@ -66,12 +66,13 @@ class _checkoutPageState extends State<CheckoutPage> {
   @override
   void initState() {
     super.initState();
+    orders = List.from(widget.orders);
     alamatOrders =
         widget.orders.map((order) => order['alamat'].toString()).toSet();
   }
 
   void _increaseQuantity(int index) {
-    final order = widget.orders[index];
+    final order = orders[index];
     final int stok = order['stok'] ?? 0;
     final int terjual = order['terjual'] ?? 0;
     final bool isFlashSale = order['isFlashSale'] ?? false;
@@ -100,23 +101,16 @@ class _checkoutPageState extends State<CheckoutPage> {
     }
 
     setState(() {
-      widget.orders[index]['quantity']++;
+      orders[index]['quantity'] = quantity + 1;
     });
   }
 
   void _decreaseQuantity(int index) {
-    if (widget.orders[index]['quantity'] > 1) {
+    if (orders[index]['quantity'] > 1) {
       setState(() {
-        widget.orders[index]['quantity']--;
+        orders[index]['quantity']--;
       });
     }
-  }
-
-  double get subtotal {
-    return widget.orders.fold(
-      0,
-      (total, item) => total + (item['harga'] * item['quantity']),
-    );
   }
 
   // Ini nampilin alamat toko yang diambil dari variable alamatOrders
@@ -143,9 +137,6 @@ class _checkoutPageState extends State<CheckoutPage> {
   }
 
   void _showOrderTypeModal(BuildContext context) {
-    String selectedTab = "Pick Up";
-    String jadwalPengambilan = "";
-
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -164,7 +155,7 @@ class _checkoutPageState extends State<CheckoutPage> {
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // Drag indicator
+                    // Garis drag indikator
                     Center(
                       child: Container(
                         width: 50,
@@ -176,77 +167,27 @@ class _checkoutPageState extends State<CheckoutPage> {
                         ),
                       ),
                     ),
-
                     // Tab Switcher
                     Row(
                       children: [
-                        Expanded(
-                          child: ElevatedButton(
-                            onPressed: () {
-                              setModalState(() {
-                                selectedTab = "Pick Up";
-                              });
-                            },
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor:
-                                  selectedTab == "Pick Up"
-                                      ? zelow
-                                      : Colors.white,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(20),
-                                side: BorderSide(color: zelow),
-                              ),
-                            ),
-                            child: Text(
-                              "Pick Up",
-                              style: TextStyle(
-                                color:
-                                    selectedTab == "Pick Up"
-                                        ? Colors.white
-                                        : zelow,
-                                fontFamily: 'Nunito',
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ),
+                        _buildTabButton(
+                          "Pick Up",
+                          _selectedTab,
+                          zelow,
+                          setModalState,
                         ),
                         SizedBox(width: 12),
-                        Expanded(
-                          child: ElevatedButton(
-                            onPressed: () {
-                              setModalState(() {
-                                selectedTab = "Delivery";
-                              });
-                            },
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor:
-                                  selectedTab == "Delivery"
-                                      ? zelow
-                                      : Colors.white,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(20),
-                                side: BorderSide(color: zelow),
-                              ),
-                            ),
-                            child: Text(
-                              "Delivery",
-                              style: TextStyle(
-                                color:
-                                    selectedTab == "Delivery"
-                                        ? Colors.white
-                                        : zelow,
-                                fontFamily: 'Nunito',
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ),
+                        _buildTabButton(
+                          "Delivery",
+                          _selectedTab,
+                          zelow,
+                          setModalState,
                         ),
                       ],
                     ),
-
                     SizedBox(height: 24),
 
-                    if (selectedTab == "Pick Up") ...[
+                    if (_selectedTab == "Pick Up") ...[
                       Text(
                         "Ambil Langsung ke Toko",
                         style: TextStyle(
@@ -266,7 +207,7 @@ class _checkoutPageState extends State<CheckoutPage> {
                       ),
                       SizedBox(height: 16),
 
-                      // Info Toko
+                      // Toko Info
                       Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -276,8 +217,12 @@ class _checkoutPageState extends State<CheckoutPage> {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
+                                // Nama Toko
                                 Text(
-                                  "Toko",
+                                  widget.orders.isNotEmpty &&
+                                          widget.orders[0]["nama"] != null
+                                      ? widget.orders[0]["nama"]
+                                      : "-",
                                   style: TextStyle(
                                     fontFamily: 'Nunito',
                                     fontWeight: FontWeight.bold,
@@ -285,14 +230,22 @@ class _checkoutPageState extends State<CheckoutPage> {
                                   ),
                                 ),
                                 SizedBox(height: 4),
+
+                                // Alamat Toko
                                 Text(
-                                  alamatOrders.first, // Ambil alamat pertama
+                                  widget.orders.isNotEmpty &&
+                                          widget.orders[0]["alamat"] != null
+                                      ? widget.orders[0]["alamat"]
+                                      : "-",
                                   style: TextStyle(
                                     fontFamily: 'Nunito',
                                     fontSize: 14,
                                   ),
                                 ),
                                 SizedBox(height: 4),
+
+                                // buildAlamatToko(alamatOrders),
+                                // SizedBox(height: 4),
                                 Text(
                                   "Buka 07.00 - 23.00",
                                   style: TextStyle(
@@ -301,9 +254,10 @@ class _checkoutPageState extends State<CheckoutPage> {
                                   ),
                                 ),
                                 SizedBox(height: 8),
+
                                 GestureDetector(
                                   onTap: () {
-                                    // Navigasi ke informasi toko
+                                    // Navigasi ke detail toko
                                   },
                                   child: Text(
                                     "Informasi Toko",
@@ -320,10 +274,9 @@ class _checkoutPageState extends State<CheckoutPage> {
                           ),
                         ],
                       ),
-
                       SizedBox(height: 16),
 
-                      // Jadwal Card
+                      // Jadwal
                       Container(
                         padding: EdgeInsets.all(16),
                         decoration: BoxDecoration(
@@ -349,7 +302,9 @@ class _checkoutPageState extends State<CheckoutPage> {
                                 fontFamily: 'Nunito',
                               ),
                             ),
+
                             Divider(height: 20),
+
                             Text(
                               "Hari Ini",
                               style: TextStyle(
@@ -370,38 +325,21 @@ class _checkoutPageState extends State<CheckoutPage> {
                             ),
                             SizedBox(height: 4),
 
-                            // Radio Jadwal
-                            ListTile(
-                              leading: Radio<String>(
-                                value: "12:00 - 13:00",
-                                groupValue: jadwalPengambilan,
-                                activeColor: zelow,
-                                onChanged: (val) {
-                                  setModalState(() {
-                                    jadwalPengambilan = val!;
-                                  });
-                                },
-                              ),
-                              title: Text(
-                                "12:00 - 13:00",
-                                style: TextStyle(fontFamily: 'Nunito'),
-                              ),
-                            ),
-                            ListTile(
-                              leading: Radio<String>(
-                                value: "18:00 - 19:00",
-                                groupValue: jadwalPengambilan,
-                                activeColor: zelow,
-                                onChanged: (val) {
-                                  setModalState(() {
-                                    jadwalPengambilan = val!;
-                                  });
-                                },
-                              ),
-                              title: Text(
-                                "18:00 - 19:00",
-                                style: TextStyle(fontFamily: 'Nunito'),
-                              ),
+                            Column(
+                              children: [
+                                _buildScheduleRadio(
+                                  "12:00 - 13:00",
+                                  _selectedSchedule,
+                                  zelow,
+                                  setModalState,
+                                ),
+                                _buildScheduleRadio(
+                                  "18:00 - 19:00",
+                                  _selectedSchedule,
+                                  zelow,
+                                  setModalState,
+                                ),
+                              ],
                             ),
                           ],
                         ),
@@ -421,17 +359,12 @@ class _checkoutPageState extends State<CheckoutPage> {
                       ),
                       SizedBox(height: 190),
                     ],
-
                     SizedBox(height: 36),
 
-                    // Tombol Terapkan
                     SizedBox(
                       width: double.infinity,
                       child: ElevatedButton(
-                        onPressed: () {
-                          // Simpan selectedTab dan jadwalPengambilan jika perlu
-                          Navigator.pop(context);
-                        },
+                        onPressed: () => Navigator.pop(context),
                         style: ElevatedButton.styleFrom(
                           backgroundColor: zelow,
                           padding: EdgeInsets.symmetric(vertical: 14),
@@ -524,7 +457,7 @@ class _checkoutPageState extends State<CheckoutPage> {
   }
 
   double get harga {
-    return widget.orders.fold(
+    return orders.fold(
       0,
       (total, item) => total + (item['price'] * item['quantity']),
     );
@@ -543,7 +476,6 @@ class _checkoutPageState extends State<CheckoutPage> {
             color: Colors.white,
           ),
         ),
-        centerTitle: true,
         leading: BackButton(color: white),
         backgroundColor: zelow,
         iconTheme: IconThemeData(color: white),
@@ -573,9 +505,6 @@ class _checkoutPageState extends State<CheckoutPage> {
                   color: Colors.grey.shade700,
                 ),
               ),
-
-              buildAlamatToko(alamatOrders),
-
               SizedBox(height: 16),
               Text(
                 "Tipe Pemesanan",
@@ -623,14 +552,14 @@ class _checkoutPageState extends State<CheckoutPage> {
               ),
               Column(
                 children:
-                    widget.orders.asMap().entries.map((entry) {
+                    orders.asMap().entries.map((entry) {
                       int index = entry.key;
                       var item = entry.value;
                       return OrderItemCard(
-                        gambar: item['gambar'],
-                        nama: item['nama'],
-                        harga: item['harga'],
-                        hargaAsli: item['hargaAsli'],
+                        gambar: item['imageUrl'],
+                        nama: item['title'],
+                        harga: item['price'],
+                        hargaAsli: item['originalPrice'],
                         quantity: item['quantity'],
                         onIncrease: () => _increaseQuantity(index),
                         onDecrease: () => _decreaseQuantity(index),
@@ -696,7 +625,7 @@ class _checkoutPageState extends State<CheckoutPage> {
                           ),
                         ),
                         Text(
-                          formatRupiah(biayaLayanan),
+                          formatRupiah(serviceFee),
                           style: TextStyle(
                             fontFamily: "Nunito",
                             fontSize: 14,
@@ -721,7 +650,7 @@ class _checkoutPageState extends State<CheckoutPage> {
                           ),
                         ),
                         Text(
-                          formatRupiah(harga + biayaLayanan),
+                          formatRupiah(harga + serviceFee),
                           style: TextStyle(
                             fontFamily: "Nunito",
                             fontSize: 18,
@@ -860,8 +789,16 @@ class _checkoutPageState extends State<CheckoutPage> {
             height: 48,
             child: ElevatedButton(
               onPressed: () {
-                _handleCheckout();
+                Map<String, dynamic> order = {
+                  "orderNumber": DateTime.now().millisecondsSinceEpoch,
+                  "orderDate":
+                      "${DateTime.now().day} ${getMonthName(DateTime.now().month)} ${DateTime.now().year}",
+                  "items": List.from(orders),
+                };
 
+                List<Map<String, dynamic>> newOrdersList = [order];
+
+                _handleCheckout();
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => PesananPage()),
