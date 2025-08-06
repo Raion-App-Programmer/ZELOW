@@ -40,7 +40,7 @@ class DisplayProfile extends StatelessWidget {
         final String username = userData['username'] ?? 'Unknown';
         final String email = userData['email'] ?? 'No email';
         final String fullname = userData['fullname'] ?? 'No name';
-
+        // Testing something
         return Scaffold(
           appBar: AppBar(
             backgroundColor: zelow,
