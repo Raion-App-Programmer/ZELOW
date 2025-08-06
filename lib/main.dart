@@ -42,7 +42,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      initialRoute: '/login_page',
+      initialRoute: '/home_page_user',
       debugShowCheckedModeBanner: false,
       routes: {
         '/splash': (context) => SplashPage(),
