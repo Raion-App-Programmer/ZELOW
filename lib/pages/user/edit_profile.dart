@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:zelow/components/constant.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:zelow/pages/user/display_profile.dart';
 
 class EditProfile extends StatefulWidget{
   const EditProfile({super.key});
@@ -109,7 +110,11 @@ class _EditProfileState extends State<EditProfile> {
                       ),
                     );
                   }
-                );
+                ).then((_) {
+                  Navigator.pushReplacement(
+                    context, 
+                    MaterialPageRoute(builder: (context) => DisplayProfile()));
+                });
               },
               child: Text(
                 'Simpan',
