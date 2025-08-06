@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:zelow/components/constant.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class EditProfile extends StatefulWidget{
   const EditProfile({super.key});
@@ -20,8 +21,20 @@ class _EditProfileState extends State<EditProfile> {
     super.initState();
     final user = FirebaseAuth.instance.currentUser;
     nameController = TextEditingController(text: user?.displayName ?? '');
-  }
+   }
 
+  @override
+  void updateUser() {
+    FirebaseFirestore db = FirebaseFirestore.instance;
+    String userID = FirebaseAuth.instance.currentUser!.uid;
+    final userRef = db.collection('user').doc(userID);
+
+    // RESUME HERE, U NEED TO GET THE VARIABLES FOR THE TEXTFIELDS 
+    // THEN USE UPDATE TO UPDATE THE FIRESTORE
+    userRef.update({
+      // 'username': AutofillHints.username  
+    });
+  }
   @override
   void dispose() {
     nameController?.dispose();
