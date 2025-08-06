@@ -29,11 +29,18 @@ class _EditProfileState extends State<EditProfile> {
     String userID = FirebaseAuth.instance.currentUser!.uid;
     final userRef = db.collection('user').doc(userID);
 
+    final name = nameController?.text ?? '';
+    final gender = selectedGender;
+    final birthDate = selectedDate;
+
     // RESUME HERE, U NEED TO GET THE VARIABLES FOR THE TEXTFIELDS 
     // THEN USE UPDATE TO UPDATE THE FIRESTORE
     userRef.update({
-      // 'username': AutofillHints.username  
-    });
+      'username': name,
+    }).then(
+      (value) => print("User updated successfully!"),
+      onError: (e) => print("Error updating user: $e"),
+    );
   }
   @override
   void dispose() {
@@ -75,12 +82,14 @@ class _EditProfileState extends State<EditProfile> {
         actions: [
           TextButton(
             onPressed: () async {
-              // TODO: Implement save logic
+              updateUser();
               print('All changes saved!');
             }, 
             child: GestureDetector(
               onTap: () {
                 // TODO: implement save function
+                updateUser();
+                print('Attempt to update username successful.');
                 showDialog(
                   context: context, 
                   builder: (BuildContext context) {
