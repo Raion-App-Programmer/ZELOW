@@ -7,6 +7,7 @@ import 'package:zelow/models/produk_model.dart';
 import 'package:zelow/models/toko_model.dart';
 import 'package:zelow/pages/user/keranjang_page.dart';
 import 'package:zelow/pages/user/chekout_page.dart';
+import 'package:zelow/pages/user/semuaulasan_page.dart';
 import 'package:zelow/services/keranjang_service.dart';
 import 'package:zelow/services/produk_service.dart';
 import 'package:intl/intl.dart';
@@ -32,8 +33,6 @@ class _ProductInfoPageState extends State<ProductInfoPage> {
   int itemCount = 0;
   String? alamatTokoProduk;
   bool isAddingToCart = false;
-
-  // Tambahan untuk review
   List<Map<String, dynamic>> _reviews = [];
   bool _isLoadingReviews = true;
 
@@ -52,8 +51,6 @@ class _ProductInfoPageState extends State<ProductInfoPage> {
   Future<void> _loadReviews() async {
     final produkId = widget.productData.idProduk;
 
-    print('📦 Memuat ulasan untuk ID produk: $produkId');
-
     try {
       final snapshot = await FirebaseFirestore.instance
           .collection('produk')
@@ -65,16 +62,13 @@ class _ProductInfoPageState extends State<ProductInfoPage> {
 
       final loadedReviews = snapshot.docs.map((doc) {
         final data = doc.data();
-        print('📝 Ulasan ditemukan: ${data['fullname']} - ${data['komentar']} - Rating: ${data['rating']}');
         return {
           'name': data['fullname'] ?? 'Anonim',
-          'imageUrl': 'https://i.imgur.com/QCNbOAo.png', // ganti kalau ada avatar
+          'imageUrl': 'https://i.imgur.com/QCNbOAo.png',
           'komentar': data['komentar'] ?? '',
           'rating': (data['rating'] ?? 5).toDouble(),
         };
       }).toList();
-
-      print('✅ Total ulasan ditemukan: ${loadedReviews.length}');
 
       setState(() {
         _reviews = loadedReviews;
@@ -87,7 +81,6 @@ class _ProductInfoPageState extends State<ProductInfoPage> {
       });
     }
   }
-
 
   void _addItem() {
     int stokTersisa = widget.productData.stok - widget.productData.terjual;
@@ -105,7 +98,7 @@ class _ProductInfoPageState extends State<ProductInfoPage> {
                     : 'Pembelian mencapai batas maksimum stok',
               ),
               backgroundColor: zelow,
-              duration: Duration(seconds: 1),
+              duration: const Duration(seconds: 1),
             ),
           );
       }
@@ -128,7 +121,7 @@ class _ProductInfoPageState extends State<ProductInfoPage> {
   Future<void> _handleAddToCart() async {
     if (itemCount <= 0) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
+        const SnackBar(
           content: Text('Tentukan jumlah barang terlebih dahulu'),
           backgroundColor: Colors.orange,
         ),
@@ -229,7 +222,17 @@ class _ProductInfoPageState extends State<ProductInfoPage> {
                     ),
                   ),
                   TextButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => SemuaUlasanPage(
+                            idProduk: widget.productData.idProduk,
+                            productName: widget.productData.nama, // Pass product name
+                          ),
+                        ),
+                      );
+                    },
                     style: TextButton.styleFrom(
                       backgroundColor: const Color(0xFFE6F9F1),
                       padding: const EdgeInsets.symmetric(horizontal: 14),
@@ -262,7 +265,7 @@ class _ProductInfoPageState extends State<ProductInfoPage> {
       bottomNavigationBar: itemCount > 0
           ? Container(
         height: 120,
-        padding: EdgeInsets.only(bottom: 24, left: 18, right: 18),
+        padding: const EdgeInsets.only(bottom: 24, left: 18, right: 18),
         decoration: BoxDecoration(
           color: Colors.white,
           border: Border(
@@ -295,18 +298,18 @@ class _ProductInfoPageState extends State<ProductInfoPage> {
                     right: -6,
                     top: -6,
                     child: Container(
-                      padding: EdgeInsets.all(4),
+                      padding: const EdgeInsets.all(4),
                       decoration: BoxDecoration(
                         color: zelow,
                         shape: BoxShape.circle,
                       ),
-                      constraints: BoxConstraints(
+                      constraints: const BoxConstraints(
                         minWidth: 18,
                         minHeight: 18,
                       ),
                       child: Text(
                         '$itemCount',
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontFamily: 'Nunito',
                           color: Colors.white,
                           fontSize: 12,
@@ -318,7 +321,7 @@ class _ProductInfoPageState extends State<ProductInfoPage> {
                   ),
               ],
             ),
-            SizedBox(width: 12),
+            const SizedBox(width: 12),
             Expanded(
               child: Align(
                 alignment: Alignment.centerRight,
@@ -337,7 +340,7 @@ class _ProductInfoPageState extends State<ProductInfoPage> {
                 ),
               ),
             ),
-            SizedBox(width: 12),
+            const SizedBox(width: 12),
             ElevatedButton(
               onPressed: () {
                 if (itemCount > 0) {
@@ -372,12 +375,12 @@ class _ProductInfoPageState extends State<ProductInfoPage> {
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(24),
                 ),
-                padding: EdgeInsets.symmetric(
+                padding: const EdgeInsets.symmetric(
                   horizontal: 40,
                   vertical: 10,
                 ),
               ),
-              child: Text(
+              child: const Text(
                 "Checkout",
                 style: TextStyle(
                   fontFamily: 'Nunito',
@@ -421,7 +424,7 @@ class _ProductInfoPageState extends State<ProductInfoPage> {
         itemBuilder: (context, index) {
           final review = reviewsData[index];
           return Padding(
-            padding: EdgeInsets.only(right: 4),
+            padding: const EdgeInsets.only(right: 4),
             child: ReviewItem(
               reviewerName: review['name'],
               reviewerImageUrl: review['imageUrl'],
