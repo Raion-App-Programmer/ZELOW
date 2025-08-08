@@ -11,6 +11,7 @@ import 'package:zelow/models/toko_model.dart';
 import 'package:zelow/pages/user/display_page.dart';
 import 'package:zelow/pages/user/flashsale_page.dart';
 import 'package:zelow/pages/user/infoproduk_page.dart';
+import 'package:zelow/pages/user/rekomendasi_page.dart';
 import 'package:zelow/pages/user/search_page.dart';
 import 'package:zelow/pages/user/surprisebox_page.dart';
 import 'package:zelow/pages/user/toko_page.dart';
@@ -371,10 +372,7 @@ class _HomePageUserState extends State<HomePageUser> {
                                 context,
                                 MaterialPageRoute(
                                   builder:
-                                      (context) => DisplayPage(
-                                        pageTitle: "Semua Rekomendasi",
-                                        fetchType: "rekomendasi_full",
-                                      ),
+                                      (context) => RekomendasiPage(),
                                 ),
                               );
                             },
