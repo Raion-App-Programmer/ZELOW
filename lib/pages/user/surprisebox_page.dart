@@ -86,16 +86,6 @@ class SurpriseBoxPage extends StatelessWidget {
                     distance: tokoData["distance"].toString() + " km" ?? "-",
                     estimatedTime: tokoData["estimatedTime"] + " menit" ?? "-",
                     onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder:
-                              (context) => ProductInfoPage(
-                            productData: flashSaleProduk,
-                            tokoData: flashSaleProduk.toko!,
-                          ),
-                        ),
-                      );
                     },
                   );
                 },
