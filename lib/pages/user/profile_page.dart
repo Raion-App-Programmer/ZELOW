@@ -15,11 +15,18 @@ class ProfilePage extends StatelessWidget {
   Widget build(BuildContext context) {
     final currentUser = FirebaseAuth.instance.currentUser;
     
-    if (currentUser == null) {
-      return const Scaffold(
-        body: Center(child: Text("User not logged in.")),
-      );
-    }
+  if (currentUser == null) {
+  Future.microtask(() {
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => LoginPage()),
+    );
+  });
+  return const Scaffold(
+    body: Center(child: Text("User not logged in... redirecting")),
+  );
+}
+
     return StreamBuilder(
       stream: FirebaseFirestore.instance
         .collection('user')

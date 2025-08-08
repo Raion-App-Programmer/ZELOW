@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:zelow/components/constant.dart';
 import 'package:zelow/pages/user/edit_profile.dart';
+import 'package:zelow/pages/auth/login_page.dart';
+
 
 class DisplayProfile extends StatelessWidget {
   const DisplayProfile({super.key});
@@ -12,10 +14,16 @@ class DisplayProfile extends StatelessWidget {
     final currentUser = FirebaseAuth.instance.currentUser;
 
     if (currentUser == null) {
-      return const Scaffold(
-        body: Center(child: Text("User not logged in.")),
-      );
-    }
+  Future.microtask(() {
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => LoginPage()),
+    );
+  });
+  return const Scaffold(
+    body: Center(child: Text("User not logged in... redirecting")),
+  );
+}
 
     return StreamBuilder<DocumentSnapshot>(
       stream: FirebaseFirestore.instance
