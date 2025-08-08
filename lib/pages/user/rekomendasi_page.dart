@@ -2,6 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:zelow/components/constant.dart';
 import 'package:zelow/components/product_card_horizontal.dart';
+import 'package:zelow/pages/user/toko_page.dart';
+import 'package:zelow/models/toko_model.dart';
 
 class RekomendasiPage extends StatelessWidget {
   final CollectionReference referenceToko = FirebaseFirestore.instance
@@ -29,34 +31,31 @@ class RekomendasiPage extends StatelessWidget {
           if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
             return Center(child: Text("Tidak ada data"));
           }
-          final items =
-              snapshot.data!.docs
-                  .map(
-                    (e) => {
-                      "imageUrl": e["gambar"],
-                      "restaurantName": e["nama"],
-                      "description": e["deskripsi"],
-                      "rating": e["rating"],
-                      "distance": e["jarak"],
-                      "estimatedTime": e["waktu"],
-                    },
-                  )
-                  .toList();
+          final items = snapshot.data!.docs
+              .map((doc) => Toko.fromFirestore(doc))
+              .toList();
 
           items.shuffle();
 
           return ListView.builder(
             itemCount: items.length,
             itemBuilder: (context, index) {
-              final product = items[index];
+              final Toko product = items[index];
               return DisplayCard(
-                imageUrl: product["imageUrl"],
-                restaurantName: product["restaurantName"],
-                description: product["description"],
-                rating: product["rating"],
-                distance: product["distance"].toString(),
-                estimatedTime: product["estimatedTime"],
-                onTap: () {},
+                imageUrl: product.gambar,
+                restaurantName: product.nama,
+                description: product.deskripsi,
+                rating: product.rating,
+                distance: product.jarak.toString(),
+                estimatedTime: product.waktu,
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => TokoPageUser(tokoData: product),
+                    ),
+                  );
+                },
               );
             },
           );
@@ -65,4 +64,3 @@ class RekomendasiPage extends StatelessWidget {
     );
   }
 }
- 
