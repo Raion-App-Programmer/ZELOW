@@ -10,6 +10,7 @@ class chatPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: white,
       appBar: AppBar(
         backgroundColor: zelow,
         leading: IconButton(
@@ -31,8 +32,10 @@ class chatPage extends StatelessWidget {
       body: StreamBuilder<QuerySnapshot>(
         stream: FirebaseFirestore.instance.collection('toko').snapshots(),
         builder: (context, snapshot) {
-          if (snapshot.hasError) return Center(child: Text('Error: ${snapshot.error}'));
-          if (!snapshot.hasData) return Center(child: CircularProgressIndicator());
+          if (snapshot.hasError)
+            return Center(child: Text('Error: ${snapshot.error}'));
+          if (!snapshot.hasData)
+            return Center(child: CircularProgressIndicator());
 
           final tokoList = snapshot.data!.docs;
 
@@ -41,15 +44,23 @@ class chatPage extends StatelessWidget {
             itemCount: tokoList.length,
             itemBuilder: (context, index) {
               final toko = tokoList[index];
-              final nama = toko['nama'] ?? 'Tanpa Nama';
-              final nomor = toko['nomor'] ?? '';
-              final gambar = 'assets/images/picture-profile-toko.jpg';
 
-              return chatList(
-                imageUrl: gambar,
-                name: nama,
-                nomor: nomor,
-              );
+              final nama =
+                  toko.data().toString().contains('nama')
+                      ? toko['nama']
+                      : 'Tanpa Nama';
+
+              final nomor =
+                  toko.data().toString().contains('nomor')
+                      ? toko['nomor']
+                      : '081234567890';
+
+              final gambar =
+                  toko.data().toString().contains('gambar')
+                      ? toko['gambar']
+                      : 'https://i.imgur.com/5R1d1XK.jpeg';
+
+              return chatList(imageUrl: gambar, name: nama, nomor: nomor);
             },
           );
         },

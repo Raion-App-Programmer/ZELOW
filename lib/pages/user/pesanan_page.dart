@@ -20,7 +20,7 @@ class _PesananPageState extends State<PesananPage> {
   final PesananService _pesananService = PesananService();
 
   int _selectedIndex = 0;
-  
+
   final List<String> _buttonLabels = ["Berlangsung", "Selesai", "Dibatalkan"];
 
   String formatDate(Timestamp timestamp) {
@@ -63,138 +63,157 @@ class _PesananPageState extends State<PesananPage> {
         ),
         centerTitle: true,
       ),
-      body: Column(
-        children: [
-          const SizedBox(height: 16),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: List.generate(_buttonLabels.length, (index) {
-              bool isSelected = _selectedIndex == index;
-              return Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 4),
-                child: ElevatedButton(
-                  onPressed: () {
-                    setState(() {
-                      _selectedIndex = index;
-                    });
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: isSelected ? zelow : white,
-                    foregroundColor: isSelected ? white : zelow,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20),
-                      side: BorderSide(color: zelow),
-                    ),
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 20,
-                      vertical: 10,
-                    ),
+      backgroundColor: white,
+      body: StreamBuilder<List<Pesanan>>(
+        stream: _pesananService.getPesananUser(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(child: CircularProgressIndicator(color: zelow));
+          }
+
+          if (snapshot.hasError) {
+            return const Center(child: Text('Terjadi kesalahan'));
+          }
+
+          final listPesanan = snapshot.data ?? [];
+
+          final pesananBerlangsung =
+              listPesanan
+                  .where(
+                    (data) =>
+                        data.status == 'menunggu konfirmasi' ||
+                        data.status == 'dibuat' ||
+                        data.status == 'disiapkan',
+                  )
+                  .toList();
+
+          final pesananSelesai =
+              listPesanan.where((data) => data.status == 'selesai').toList();
+
+          final pesananBatal =
+              listPesanan.where((data) => data.status == 'batal').toList();
+
+          List<Widget> currentList;
+
+          switch (_selectedIndex) {
+            case 0:
+              currentList =
+                  pesananBerlangsung
+                      .map(
+                        (item) => Padding(
+                          padding: const EdgeInsets.only(bottom: 4),
+                          child: PesananBerlangsungCard(
+                            idPesanan: item.idPesanan,
+                            namaProduk: item.namaProduk,
+                            quantity: item.quantity,
+                            hargaSatuan: item.hargaSatuan,
+                            status: formatStatus(item.status),
+                            idToko: item.idToko,
+                            gambar: item.gambarProduk,
+                            tanggalPesanan: formatDate(item.waktuPesan),
+                          ),
+                        ),
+                      )
+                      .toList();
+              break;
+            case 1:
+              currentList =
+                  pesananSelesai
+                      .map(
+                        (item) => Padding(
+                          padding: const EdgeInsets.only(bottom: 4),
+                          child: PesananSelesaiCard(
+                            idPesanan: item.idPesanan,
+                            tanggalPesanan: formatDate(item.waktuPesan),
+                            namaProduk: item.namaProduk,
+                            quantity: item.quantity,
+                            hargaSatuan: item.hargaSatuan,
+                            idToko: item.idToko,
+                            gambar: item.gambarProduk,
+                          ),
+                        ),
+                      )
+                      .toList();
+              break;
+            case 2:
+              currentList =
+                  pesananBatal
+                      .map(
+                        (item) => Padding(
+                          padding: const EdgeInsets.only(bottom: 4),
+                          child: PesananBatalCard(
+                            idPesanan: item.idPesanan,
+                            tanggalPesanan: formatDate(item.waktuPesan),
+                            gambar: item.gambarProduk,
+                            namaProduk: item.namaProduk,
+                            quantity: item.quantity,
+                            hargaSatuan: item.hargaSatuan,
+                            idToko: item.idToko,
+                          ),
+                        ),
+                      )
+                      .toList();
+              break;
+            default:
+              currentList = [];
+          }
+
+          return SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: List.generate(_buttonLabels.length, (index) {
+                      bool isSelected = _selectedIndex == index;
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 4),
+                        child: ElevatedButton(
+                          onPressed: () {
+                            setState(() {
+                              _selectedIndex = index;
+                            });
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: isSelected ? zelow : white,
+                            foregroundColor: isSelected ? white : zelow,
+                            elevation: 0,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(20),
+                              side: BorderSide(color: zelow, width: 1.5),
+                            ),
+                            padding: const EdgeInsets.symmetric(horizontal: 24),
+                          ),
+                          child: Text(
+                            _buttonLabels[index],
+                            style: normal.copyWith(
+                              fontSize: 15,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      );
+                    }),
                   ),
-                  child: Text(
-                    _buttonLabels[index],
-                    style: normal.copyWith(
-                      fontSize: MediaQuery.of(context).size.width * 0.03,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-              );
-            }),
-          ),
+                  const SizedBox(height: 12),
 
-          SizedBox(height: MediaQuery.of(context).size.width * 0.03),
-
-          Expanded(
-            child: StreamBuilder<List<Pesanan>>(
-              stream: _pesananService.getPesananUser(),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return Center(child: CircularProgressIndicator(color: zelow));
-                }
-
-                if (snapshot.hasError) {
-                  print('Error: ${snapshot.error}');
-                  return Center();
-                }
-
-                if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                  return Center();
-                }
-
-                final listPesanan = snapshot.data!;
-
-                final pesananBerlangsung =
-                    listPesanan
-                        .where(
-                          (data) =>
-                              data.status == 'menunggu konfirmasi' ||
-                              data.status == 'dibuat' ||
-                              data.status == 'disiapkan',
-                        )
-                        .toList();
-                final pesananSelesai =
-                    listPesanan
-                        .where((data) => data.status == 'selesai')
-                        .toList();
-                final pesananBatal =
-                    listPesanan
-                        .where((data) => data.status == 'batal')
-                        .toList();
-
-                return ListView.builder(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  itemCount:
-                      _selectedIndex == 0
-                          ? pesananBerlangsung.length
-                          : _selectedIndex == 1
-                          ? pesananSelesai.length
-                          : pesananBatal.length,
-                  itemBuilder: (context, index) {
-                    final Pesanan item;
-                    if (_selectedIndex == 0) {
-                      item = pesananBerlangsung[index];
-
-                      return PesananBerlangsungCard(
-                        idPesanan: item.idPesanan,
-                        namaProduk: item.namaProduk,
-                        quantity: item.quantity,
-                        hargaSatuan: item.hargaSatuan,
-                        status: formatStatus(item.status),
-                        idToko: item.idToko,
-                        gambar: item.gambarProduk,
-                        tanggalPesanan: formatDate(item.waktuPesan),
-                      );
-                    } else if (_selectedIndex == 1) {
-                      item = pesananSelesai[index];
-
-                      return PesananSelesaiCard(
-                        idPesanan: item.idPesanan,
-                        tanggalPesanan: formatDate(item.waktuPesan),
-                        namaProduk: item.namaProduk,
-                        quantity: item.quantity,
-                        hargaSatuan: item.hargaSatuan,
-                        idToko: item.idToko,
-                        gambar: item.gambarProduk,
-                      );
-                    } else {
-                      item = pesananBatal[index];
-
-                      return PesananBatalCard(
-                        idPesanan: item.idPesanan,
-                        tanggalPesanan: formatDate(item.waktuPesan),
-                        gambar: item.gambarProduk,
-                        namaProduk: item.namaProduk,
-                        quantity: item.quantity,
-                        hargaSatuan: item.hargaSatuan,
-                        idToko: item.idToko,
-                      );
-                    }
-                  },
-                );
-              },
+                  currentList.isEmpty
+                      ? Container(
+                        height: MediaQuery.of(context).size.height * 0.7,
+                        alignment: Alignment.center,
+                        child: const Text(
+                          'Belum ada pesanan untuk kategori ini',
+                          style: TextStyle(fontSize: 16, color: Colors.grey),
+                        ),
+                      )
+                      : Column(children: currentList),
+                ],
+              ),
             ),
-          ),
-        ],
+          );
+        },
       ),
       bottomNavigationBar: const BottomNav(selectedItem: 1),
     );

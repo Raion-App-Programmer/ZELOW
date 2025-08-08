@@ -135,7 +135,7 @@ class _TokoPageUserState extends State<TokoPageUser> {
 
   Widget buildCategoryTitle(String title) {
     return Padding(
-      padding: const EdgeInsets.only(left: 16, right: 16, top: 12, bottom: 4),
+      padding: const EdgeInsets.only(left: 16, right: 16, top: 8, bottom: 4),
       child: Text(
         title,
         style: blackTextStyle.copyWith(

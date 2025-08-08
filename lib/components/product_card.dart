@@ -71,14 +71,13 @@ class ProductCard extends StatelessWidget {
                       );
                     },
                     errorBuilder: (context, error, stackTrace) {
-                      return Container(
-                        height: 130,
-                        width: double.infinity,
-                        color: Colors.grey[300],
-                        child: Icon(
-                          Icons.broken_image_outlined,
-                          color: Colors.grey[600],
-                          size: 40,
+                      return ClipRRect(
+                        borderRadius: BorderRadius.circular(8),
+                        child: Image.network(
+                          'https://i.imgur.com/5R1d1XK.jpeg',
+                          height: 130,
+                          width: double.infinity,
+                          fit: BoxFit.cover,
                         ),
                       );
                     },

@@ -166,9 +166,7 @@ class _HomePageUserState extends State<HomePageUser> {
                 return Center(child: CircularProgressIndicator(color: zelow));
               }
               if (snapshot.hasError) {
-                print(
-                  'Zeflash error: ${snapshot.error}',
-                ); // 👈 bisa bantu debug juga
+                print('Zeflash error: ${snapshot.error}');
                 return Center(child: Text('Gagal memuat produk.'));
               }
               if (!snapshot.hasData || snapshot.data!.isEmpty) {
@@ -292,101 +290,64 @@ class _HomePageUserState extends State<HomePageUser> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: white,
-      body: Stack(
-        children: [
-          Column(
+      body: SafeArea(
+        top: false,
+        child: SingleChildScrollView(
+          child: Column(
             children: [
               SizedBox(
                 height: MediaQuery.of(context).size.height * 0.3,
                 child: SliderWidget(),
               ),
-              Expanded(
-                child: SingleChildScrollView(
-                  child: Column(
-                    children: [
-                      SizedBox(
-                        height: MediaQuery.of(context).size.height * 0.04,
+
+              Transform.translate(
+                offset: const Offset(0, -25),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                  child: Container(
+                    height: MediaQuery.of(context).size.height * 0.05,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(25),
+                      border: Border.all(color: zelow, width: 1),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.grey.withOpacity(0.2),
+                          spreadRadius: 2,
+                          blurRadius: 5,
+                        ),
+                      ],
+                    ),
+                    child: TextField(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => SearchPage()),
+                        );
+                      },
+                      decoration: InputDecoration(
+                        hintText: "Lagi pengen makan apa?",
+                        prefixIcon: Icon(Icons.search, color: zelow),
+                        border: InputBorder.none,
+                        contentPadding: const EdgeInsets.symmetric(
+                          vertical: 8,
+                          horizontal: 20,
+                        ),
                       ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          BoxButton(
-                            icon: Icons.location_on,
-                            text: "Terdekat",
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder:
-                                      (context) => DisplayPage(
-                                        pageTitle: "Terdekat",
-                                        fetchType: "terdekat_full",
-                                      ),
-                                ),
-                              );
-                            },
-                          ),
-                          SizedBox(
-                            width: MediaQuery.of(context).size.width * 0.03,
-                          ),
-                          BoxButton(
-                            icon: Icons.shopping_bag_rounded,
-                            text: "Surprise Bag",
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => SurpriseBoxPage(),
-                                ),
-                              );
-                            },
-                          ),
-                          SizedBox(
-                            width: MediaQuery.of(context).size.width * 0.03,
-                          ),
-                          BoxButton(
-                            icon: Icons.star,
-                            text: "Paling Laris",
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder:
-                                      (context) => DisplayPage(
-                                        pageTitle: "Paling Laris",
-                                        fetchType: "paling_laris_full",
-                                      ),
-                                ),
-                              );
-                            },
-                          ),
-                          SizedBox(
-                            width: MediaQuery.of(context).size.width * 0.03,
-                          ),
-                          BoxButton(
-                            icon: Icons.food_bank_outlined,
-                            text: "Rekomendasi",
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder:
-                                      (context) => DisplayPage(
-                                        pageTitle: "Semua Rekomendasi",
-                                        fetchType: "rekomendasi_full",
-                                      ),
-                                ),
-                              );
-                            },
-                          ),
-                        ],
-                      ),
-                      SizedBox(
-                        height: MediaQuery.of(context).size.height * 0.02,
-                      ),
-                      _buildZeflashSection(),
-                      SizedBox(height: 4),
-                      _buildSectionTitle(context, 'Terdekat', () {
+                    ),
+                  ),
+                ),
+              ),
+
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    BoxButton(
+                      icon: Icons.location_on,
+                      text: "Terdekat",
+                      onTap: () {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -397,56 +358,84 @@ class _HomePageUserState extends State<HomePageUser> {
                                 ),
                           ),
                         );
-                      }),
-                      _buildTokoHorizontal(
-                        _tokoService.getAllTokoTerdekat(),
-                        "terdekat",
-                      ),
-                      _buildRekomendasiSection(),
-                    ],
-                  ),
+                      },
+                    ),
+                    SizedBox(width: MediaQuery.of(context).size.width * 0.03),
+                    BoxButton(
+                      icon: Icons.shopping_bag_rounded,
+                      text: "Surprise Bag",
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => SurpriseBoxPage(),
+                          ),
+                        );
+                      },
+                    ),
+                    SizedBox(width: MediaQuery.of(context).size.width * 0.03),
+                    BoxButton(
+                      icon: Icons.star,
+                      text: "Paling Laris",
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder:
+                                (context) => DisplayPage(
+                                  pageTitle: "Paling Laris",
+                                  fetchType: "paling_laris_full",
+                                ),
+                          ),
+                        );
+                      },
+                    ),
+                    SizedBox(width: MediaQuery.of(context).size.width * 0.03),
+                    BoxButton(
+                      icon: Icons.food_bank_outlined,
+                      text: "Rekomendasi",
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder:
+                                (context) => DisplayPage(
+                                  pageTitle: "Semua Rekomendasi",
+                                  fetchType: "rekomendasi_full",
+                                ),
+                          ),
+                        );
+                      },
+                    ),
+                  ],
                 ),
               ),
+              const SizedBox(height: 10),
+
+              _buildZeflashSection(),
+              const SizedBox(height: 4),
+
+              _buildSectionTitle(context, 'Terdekat', () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder:
+                        (context) => DisplayPage(
+                          pageTitle: "Terdekat",
+                          fetchType: "terdekat_full",
+                        ),
+                  ),
+                );
+              }),
+              _buildTokoHorizontal(
+                _tokoService.getAllTokoTerdekat(),
+                "terdekat",
+              ),
+
+              _buildRekomendasiSection(),
             ],
           ),
-          Positioned(
-            top: MediaQuery.of(context).size.height * 0.27,
-            left: 20,
-            right: 20,
-            child: Container(
-              height: MediaQuery.of(context).size.height * 0.05,
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(25),
-                border: Border.all(color: zelow, width: 1),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.grey.withOpacity(0.2),
-                    spreadRadius: 2,
-                    blurRadius: 5,
-                  ),
-                ],
-              ),
-              child: TextField(
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => SearchPage()),
-                  );
-                },
-                decoration: InputDecoration(
-                  hintText: "Lagi pengen makan apa?",
-                  prefixIcon: Icon(Icons.search, color: zelow),
-                  border: InputBorder.none,
-                  contentPadding: const EdgeInsets.symmetric(
-                    vertical: 8,
-                    horizontal: 20,
-                  ),
-                ),
-              ),
-            ),
-          ),
-        ],
+        ),
       ),
       bottomNavigationBar: const BottomNav(selectedItem: 0),
     );

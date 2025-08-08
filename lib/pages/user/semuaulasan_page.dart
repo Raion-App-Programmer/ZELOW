@@ -23,7 +23,7 @@ class SemuaUlasanPage extends StatelessWidget {
             fontFamily: 'Nunito',
             fontWeight: FontWeight.bold,
             color: Colors.white,
-            fontSize: 18,
+            fontSize: 22,
           ),
         ),
         centerTitle: true,

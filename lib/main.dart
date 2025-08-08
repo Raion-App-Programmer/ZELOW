@@ -44,6 +44,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       initialRoute: '/home_page_user',
       debugShowCheckedModeBanner: false,
+      theme: ThemeData(fontFamily: 'Nunito'),
       routes: {
         '/splash': (context) => SplashPage(),
         '/home_page_user': (context) => HomePageUser(),

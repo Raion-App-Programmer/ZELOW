@@ -51,28 +51,50 @@ class _BottomNavState extends State<BottomNav> {
 
   @override
   Widget build(BuildContext context) {
-    return BottomNavigationBar(
-      
-      type: BottomNavigationBarType.fixed,
-      showUnselectedLabels: true,
-      backgroundColor: white,
-      items: const <BottomNavigationBarItem>[
-        BottomNavigationBarItem(
-          icon: Icon(Icons.home_filled),
-          label: 'Beranda',
+    return Container(
+      height: 80,
+      decoration: BoxDecoration(
+        color: white,
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.1),
+            spreadRadius: 0,
+            blurRadius: 5,
+            offset: const Offset(0, -2),
+          ),
+        ],
+      ),
+      child: BottomNavigationBar(
+        type: BottomNavigationBarType.fixed,
+        showUnselectedLabels: true,
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        items: const <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home_filled),
+            label: 'Beranda',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.receipt),
+            label: 'Pesanan Saya',
+          ),
+          BottomNavigationBarItem(icon: Icon(Icons.bolt), label: 'Flash Sale'),
+          BottomNavigationBarItem(icon: Icon(Icons.chat), label: 'Chat'),
+          BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profil'),
+        ],
+        selectedItemColor: zelow,
+        unselectedItemColor: Colors.black26,
+        currentIndex: widget.selectedItem,
+        onTap: changeSelectedNavBar,
+        selectedLabelStyle: const TextStyle(
+          fontFamily: 'Nunito',
+          fontWeight: FontWeight.bold,
         ),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.receipt),
-          label: 'Pesanan Saya',
+        unselectedLabelStyle: const TextStyle(
+          fontFamily: 'Nunito',
+          fontWeight: FontWeight.normal,
         ),
-        BottomNavigationBarItem(icon: Icon(Icons.bolt), label: 'Flash Sale'),
-        BottomNavigationBarItem(icon: Icon(Icons.chat), label: 'Chat'),
-        BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile'),
-      ],
-      selectedItemColor: zelow,
-      unselectedItemColor: Colors.black26,
-      currentIndex: widget.selectedItem,
-      onTap: changeSelectedNavBar,
+      ),
     );
   }
 }

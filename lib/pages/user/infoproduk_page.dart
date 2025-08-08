@@ -39,7 +39,9 @@ class _ProductInfoPageState extends State<ProductInfoPage> {
   @override
   void initState() {
     super.initState();
-    _produkService.getAlamatTokoByProdukId(widget.productData.idToko).then((alamat) {
+    _produkService.getAlamatTokoByProdukId(widget.productData.idToko).then((
+      alamat,
+    ) {
       setState(() {
         alamatTokoProduk = alamat;
       });
@@ -52,30 +54,32 @@ class _ProductInfoPageState extends State<ProductInfoPage> {
     final produkId = widget.productData.idProduk;
 
     try {
-      final snapshot = await FirebaseFirestore.instance
-          .collection('produk')
-          .doc(produkId)
-          .collection('ulasan')
-          .orderBy('tanggal', descending: true)
-          .limit(5)
-          .get();
+      final snapshot =
+          await FirebaseFirestore.instance
+              .collection('produk')
+              .doc(produkId)
+              .collection('ulasan')
+              .orderBy('tanggal', descending: true)
+              .limit(5)
+              .get();
 
-      final loadedReviews = snapshot.docs.map((doc) {
-        final data = doc.data();
-        return {
-          'name': data['fullname'] ?? 'Anonim',
-          'imageUrl': 'https://i.imgur.com/QCNbOAo.png',
-          'komentar': data['komentar'] ?? '',
-          'rating': (data['rating'] ?? 5).toDouble(),
-        };
-      }).toList();
+      final loadedReviews =
+          snapshot.docs.map((doc) {
+            final data = doc.data();
+            return {
+              'name': data['fullname'] ?? 'Anonim',
+              'imageUrl': 'https://i.imgur.com/QCNbOAo.png',
+              'komentar': data['komentar'] ?? '',
+              'rating': (data['rating'] ?? 5).toDouble(),
+            };
+          }).toList();
 
       setState(() {
         _reviews = loadedReviews;
         _isLoadingReviews = false;
       });
     } catch (e) {
-      print('❌ Gagal memuat ulasan untuk produk $produkId: $e');
+      print('Gagal memuat ulasan untuk produk $produkId: $e');
       setState(() {
         _isLoadingReviews = false;
       });
@@ -136,7 +140,9 @@ class _ProductInfoPageState extends State<ProductInfoPage> {
       await _keranjangService.addToCart(widget.productData, itemCount);
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('$itemCount ${widget.productData.nama} ditambahkan ke keranjang!'),
+          content: Text(
+            '$itemCount ${widget.productData.nama} ditambahkan ke keranjang!',
+          ),
           backgroundColor: zelow,
           action: SnackBarAction(
             label: 'LIHAT',
@@ -226,10 +232,14 @@ class _ProductInfoPageState extends State<ProductInfoPage> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (_) => SemuaUlasanPage(
-                            idProduk: widget.productData.idProduk,
-                            productName: widget.productData.nama, // Pass product name
-                          ),
+                          builder:
+                              (_) => SemuaUlasanPage(
+                                idProduk: widget.productData.idProduk,
+                                productName:
+                                    widget
+                                        .productData
+                                        .nama, // Pass product name
+                              ),
                         ),
                       );
                     },
@@ -254,146 +264,153 @@ class _ProductInfoPageState extends State<ProductInfoPage> {
             const SizedBox(height: 8),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 0),
-              child: _isLoadingReviews
-                  ? const Center(child: CircularProgressIndicator())
-                  : _buildReviews(_reviews),
+              child:
+                  _isLoadingReviews
+                      ? const Center(child: CircularProgressIndicator())
+                      : _buildReviews(_reviews),
             ),
             const SizedBox(height: 24),
           ],
         ),
       ),
-      bottomNavigationBar: itemCount > 0
-          ? Container(
-        height: 120,
-        padding: const EdgeInsets.only(bottom: 24, left: 18, right: 18),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          border: Border(
-            top: BorderSide(color: Colors.grey.shade300, width: 1),
-          ),
-        ),
-        child: Row(
-          children: [
-            Stack(
-              clipBehavior: Clip.none,
-              children: [
-                IconButton(
-                  onPressed: isAddingToCart ? null : _handleAddToCart,
-                  icon: isAddingToCart
-                      ? SizedBox(
-                    width: 24,
-                    height: 24,
-                    child: CircularProgressIndicator(
-                      color: zelow,
-                      strokeWidth: 3,
-                    ),
-                  )
-                      : Image.asset(
-                    'assets/images/keranjangKu-icon.png',
-                    width: 28,
+      bottomNavigationBar:
+          itemCount > 0
+              ? Container(
+                height: 110,
+                padding: const EdgeInsets.only(bottom: 24, left: 20, right: 20),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  border: Border(
+                    top: BorderSide(color: Colors.grey.shade300, width: 1),
                   ),
                 ),
-                if (itemCount > 0)
-                  Positioned(
-                    right: -6,
-                    top: -6,
-                    child: Container(
-                      padding: const EdgeInsets.all(4),
-                      decoration: BoxDecoration(
-                        color: zelow,
-                        shape: BoxShape.circle,
+                child: Row(
+                  children: [
+                    Stack(
+                      clipBehavior: Clip.none,
+                      children: [
+                        IconButton(
+                          onPressed: isAddingToCart ? null : _handleAddToCart,
+                          icon:
+                              isAddingToCart
+                                  ? SizedBox(
+                                    width: 24,
+                                    height: 24,
+                                    child: CircularProgressIndicator(
+                                      color: zelow,
+                                      strokeWidth: 3,
+                                    ),
+                                  )
+                                  : Image.asset(
+                                    'assets/images/keranjangKu-icon.png',
+                                    width: 28,
+                                  ),
+                        ),
+                        if (itemCount > 0)
+                          Positioned(
+                            right: -6,
+                            top: -6,
+                            child: Container(
+                              padding: const EdgeInsets.all(4),
+                              decoration: BoxDecoration(
+                                color: zelow,
+                                shape: BoxShape.circle,
+                              ),
+                              constraints: const BoxConstraints(
+                                minWidth: 18,
+                                minHeight: 18,
+                              ),
+                              child: Text(
+                                '$itemCount',
+                                style: const TextStyle(
+                                  fontFamily: 'Nunito',
+                                  color: Colors.white,
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
+                          ),
+                      ],
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: Align(
+                        alignment: Alignment.centerRight,
+                        child: Text(
+                          NumberFormat.currency(
+                            locale: 'id_ID',
+                            symbol: 'Rp',
+                            decimalDigits: 0,
+                          ).format(totalPrice),
+                          style: TextStyle(
+                            fontFamily: 'Nunito',
+                            color: zelow,
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
                       ),
-                      constraints: const BoxConstraints(
-                        minWidth: 18,
-                        minHeight: 18,
+                    ),
+                    const SizedBox(width: 12),
+                    ElevatedButton(
+                      onPressed: () {
+                        if (itemCount > 0) {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder:
+                                  (context) => CheckoutPage(
+                                    orders: [
+                                      {
+                                        'idToko': widget.productData.idToko,
+                                        'idProduk': widget.productData.idProduk,
+                                        'title': widget.productData.nama,
+                                        'imageUrl': widget.productData.gambar,
+                                        'price': price,
+                                        'quantity': itemCount,
+                                        'originalPrice':
+                                            widget.productData.harga,
+                                        'nama': widget.tokoData.nama,
+                                        'alamat': widget.tokoData.alamat,
+                                        'stok': widget.productData.stok,
+                                        'terjual': widget.productData.terjual,
+                                        'isFlashSale':
+                                            widget.productData.isFlashSale,
+                                        'deskripsi':
+                                            widget.productData.deskripsi,
+                                      },
+                                    ],
+                                  ),
+                            ),
+                          );
+                        }
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: zelow,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(24),
+                        ),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 40,
+                          vertical: 10,
+                        ),
                       ),
-                      child: Text(
-                        '$itemCount',
-                        style: const TextStyle(
+                      child: const Text(
+                        "Checkout",
+                        style: TextStyle(
                           fontFamily: 'Nunito',
                           color: Colors.white,
-                          fontSize: 12,
+                          fontSize: 18,
                           fontWeight: FontWeight.bold,
                         ),
-                        textAlign: TextAlign.center,
                       ),
                     ),
-                  ),
-              ],
-            ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: Align(
-                alignment: Alignment.centerRight,
-                child: Text(
-                  NumberFormat.currency(
-                    locale: 'id_ID',
-                    symbol: 'Rp',
-                    decimalDigits: 0,
-                  ).format(totalPrice),
-                  style: TextStyle(
-                    fontFamily: 'Nunito',
-                    color: zelow,
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                  ),
+                  ],
                 ),
-              ),
-            ),
-            const SizedBox(width: 12),
-            ElevatedButton(
-              onPressed: () {
-                if (itemCount > 0) {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => CheckoutPage(
-                        orders: [
-                          {
-                            'idToko': widget.productData.idToko,
-                            'idProduk': widget.productData.idProduk,
-                            'title': widget.productData.nama,
-                            'imageUrl': widget.productData.gambar,
-                            'price': price,
-                            'quantity': itemCount,
-                            'originalPrice': widget.productData.harga,
-                            'nama': widget.tokoData.nama,
-                            'alamat': widget.tokoData.alamat,
-                            'stok': widget.productData.stok,
-                            'terjual': widget.productData.terjual,
-                            'isFlashSale': widget.productData.isFlashSale,
-                            'deskripsi': widget.productData.deskripsi,
-                          },
-                        ],
-                      ),
-                    ),
-                  );
-                }
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: zelow,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(24),
-                ),
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 40,
-                  vertical: 10,
-                ),
-              ),
-              child: const Text(
-                "Checkout",
-                style: TextStyle(
-                  fontFamily: 'Nunito',
-                  color: Colors.white,
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
-          ],
-        ),
-      )
-          : null,
+              )
+              : null,
     );
   }
 
@@ -415,24 +432,22 @@ class _ProductInfoPageState extends State<ProductInfoPage> {
       );
     }
 
-    return SizedBox(
-      height: 120,
-      child: ListView.builder(
-        scrollDirection: Axis.horizontal,
-        itemCount: reviewsData.length,
-        padding: const EdgeInsets.only(left: 16),
-        itemBuilder: (context, index) {
-          final review = reviewsData[index];
-          return Padding(
-            padding: const EdgeInsets.only(right: 4),
-            child: ReviewItem(
-              reviewerName: review['name'],
-              reviewerImageUrl: review['imageUrl'],
-              komentar: review['komentar'],
-              rating: review['rating'],
-            ),
-          );
-        },
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      padding: const EdgeInsets.only(left: 16),
+      child: Row(
+        children:
+            reviewsData.map((review) {
+              return Padding(
+                padding: const EdgeInsets.only(right: 4),
+                child: ReviewItem(
+                  reviewerName: review['name'],
+                  reviewerImageUrl: review['imageUrl'],
+                  komentar: review['komentar'],
+                  rating: review['rating'],
+                ),
+              );
+            }).toList(),
       ),
     );
   }

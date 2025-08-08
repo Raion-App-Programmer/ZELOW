@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:zelow/components/constant.dart';
 
 class ReviewItem extends StatelessWidget {
   final String reviewerName;
@@ -23,7 +24,7 @@ class ReviewItem extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Colors.grey.shade300), // mirip AkandatangCard
+        border: Border.all(color: Colors.grey.shade300),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -33,8 +34,17 @@ class ReviewItem extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               CircleAvatar(
-                backgroundImage: NetworkImage(reviewerImageUrl),
-                radius: 20,
+                radius: 16,
+                backgroundColor: zelow.withOpacity(0.1),
+                child: Text(
+                  reviewerName.isNotEmpty ? reviewerName[0].toUpperCase() : 'A',
+                  style: TextStyle(
+                    fontFamily: 'Nunito',
+                    fontWeight: FontWeight.bold,
+                    color: zelow,
+                    fontSize: 14,
+                  ),
+                ),
               ),
               const SizedBox(width: 12),
               Expanded(
@@ -53,16 +63,25 @@ class ReviewItem extends StatelessWidget {
           const SizedBox(height: 8),
 
           // Komentar
-          Text(
-            komentar,
-            style: const TextStyle(
-              fontFamily: 'Nunito',
-              fontSize: 14,
-              fontWeight: FontWeight.w400,
-              color: Colors.black87,
+          SizedBox(
+            height: 36,
+            child: Align(
+              alignment: Alignment.centerLeft,
+              child: Text(
+                komentar,
+                style: const TextStyle(
+                  fontFamily: 'Nunito',
+                  fontSize: 14,
+                  fontWeight: FontWeight.w400,
+                  color: Colors.black87,
+                ),
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+                softWrap: true,
+              ),
             ),
           ),
-          const SizedBox(height: 8),
+          const SizedBox(height: 4),
 
           // Nama reviewer
           Text(
@@ -71,7 +90,6 @@ class ReviewItem extends StatelessWidget {
               fontFamily: 'Nunito',
               fontSize: 14,
               fontWeight: FontWeight.bold,
-              color: Colors.black,
             ),
           ),
         ],

@@ -18,8 +18,16 @@ class SurpriseBoxPage extends StatelessWidget {
             Navigator.pop(context);
           },
         ),
-        title: Text('Surprise Box', style: TextStyle(color: Colors.white)),
+        title: Text(
+          'Surprise Box',
+          style: const TextStyle(
+            color: Colors.white,
+            fontFamily: 'Nunito',
+            fontWeight: FontWeight.bold,
+          ),
+        ),
       ),
+      backgroundColor: white,
       body: StreamBuilder<QuerySnapshot>(
         stream: referenceProduk.snapshots(),
         builder: (context, snapshot) {

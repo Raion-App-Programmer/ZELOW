@@ -1,7 +1,7 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:zelow/components/constant.dart';
 import 'package:zelow/models/keranjang_model.dart';
+import 'package:intl/intl.dart';
 
 class CardItemSample extends StatelessWidget {
   // final Product product;
@@ -25,15 +25,16 @@ class CardItemSample extends StatelessWidget {
 
         decoration: BoxDecoration(
           color: Colors.white,
-          borderRadius: BorderRadius.circular(24),
+          borderRadius: BorderRadius.circular(16),
           border: Border.all(
             color: isSelected ? zelow : Colors.transparent,
-            width: 2
+            width: 2,
           ),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.05),
-              blurRadius: 4,
+              color: Colors.black.withOpacity(0.08),
+              spreadRadius: 1,
+              blurRadius: 5,
               offset: const Offset(0, 2),
             ),
           ],
@@ -45,18 +46,20 @@ class CardItemSample extends StatelessWidget {
             Row(
               children: [
                 Image.asset('assets/images/lets-icons_shop.png', width: 17.0),
-                const SizedBox(width: 4),
+                const SizedBox(width: 6),
                 Expanded(
                   child: Text(
                     item.alamat,
-                    style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w400),
+                    style: const TextStyle(
+                      fontSize: 13,
+                      fontWeight: FontWeight.w400,
+                    ),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),
                 ),
               ],
             ),
-
             const SizedBox(height: 12),
 
             Row(
@@ -77,9 +80,8 @@ class CardItemSample extends StatelessWidget {
                     },
                   ),
                 ),
-
                 const SizedBox(width: 17),
-                
+
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -87,12 +89,12 @@ class CardItemSample extends StatelessWidget {
                       Text(
                         item.produk.nama,
                         style: const TextStyle(
-                          fontSize: 12,
-                          fontWeight: FontWeight.w700,
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
                           color: Colors.black,
                         ),
                       ),
-                      const SizedBox(height: 20),
+                      const SizedBox(height: 16),
                       Text(
                         "${item.quantity}x",
                         style: const TextStyle(
@@ -105,7 +107,11 @@ class CardItemSample extends StatelessWidget {
                       Row(
                         children: [
                           Text(
-                            "Rp${item.produk.harga.toInt()}",
+                            NumberFormat.currency(
+                              locale: 'id_ID',
+                              symbol: 'Rp',
+                              decimalDigits: 0,
+                            ).format(item.produk.harga),
                             style: const TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.w700,
@@ -115,7 +121,7 @@ class CardItemSample extends StatelessWidget {
                           const SizedBox(width: 4),
 
                           // Jika ada harga diskon, tampilkan harga lama yang dicoret
-                          
+
                           // Text(
                           //   "Rp${item.produk.harga.toInt()}",
                           //   style: const TextStyle(

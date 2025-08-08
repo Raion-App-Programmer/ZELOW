@@ -3,7 +3,6 @@ import 'package:zelow/components/constant.dart';
 import 'package:zelow/pages/user/home_page_user.dart';
 import 'package:zelow/pages/user/keranjang_page.dart';
 
-
 class SliderWidget extends StatefulWidget {
   const SliderWidget({super.key});
 
@@ -28,15 +27,10 @@ class _SliderWidgetState extends State<SliderWidget> {
         // Slider Gambar
         Container(
           decoration: BoxDecoration(
-            border: Border(
-              bottom: BorderSide(color: zelow, width: 3),
-            ),
+            border: Border(bottom: BorderSide(color: zelow, width: 3)),
           ),
           child: SizedBox(
-            height: MediaQuery
-                .of(context)
-                .size
-                .height * 0.3, // Tinggi slider
+            height: MediaQuery.of(context).size.height * 0.3, // Tinggi slider
             child: PageView.builder(
               itemCount: imgList.length,
               onPageChanged: (index) {
@@ -67,16 +61,16 @@ class _SliderWidgetState extends State<SliderWidget> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: List<Widget>.generate(
                 imgList.length,
-                    (index) =>
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 4),
-                      child: CircleAvatar(
-                        radius: 4,
-                        backgroundColor: _currentIndex == index
+                (index) => Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 4),
+                  child: CircleAvatar(
+                    radius: 4,
+                    backgroundColor:
+                        _currentIndex == index
                             ? Colors.white
                             : Colors.white.withOpacity(0.5),
-                      ),
-                    ),
+                  ),
+                ),
               ),
             ),
           ),
@@ -88,20 +82,25 @@ class _SliderWidgetState extends State<SliderWidget> {
           right: 10,
           child: Row(
             children: [
-              _buildIconButton(Icons.notifications, onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => HomePageUser()
-                  ),
-                );
-              }),
+              _buildIconButton(
+                Icons.notifications,
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => HomePageUser()),
+                  );
+                },
+              ),
               const SizedBox(width: 10),
-              _buildIconButton(Icons.shopping_bag_rounded, onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => KeranjangKu()),
-                );
-              }),
+              _buildIconButton(
+                Icons.shopping_bag_rounded,
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => KeranjangKu()),
+                  );
+                },
+              ),
             ],
           ),
         ),
@@ -118,20 +117,21 @@ class _SliderWidgetState extends State<SliderWidget> {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Icon(Icons.location_on, color: Colors.white), // Ikon lokasi
-                const SizedBox(width: 8),
+                const SizedBox(width: 4),
                 Text(
                   "Jl. Cibaduyut No. 10", // Alamat dummy
-                  style: TextStyle(color: Colors.white, fontSize: MediaQuery
-                      .of(context)
-                      .size
-                      .width * 0.035),
+                  style: TextStyle(
+                    fontFamily: 'Nunito',
+                    color: Colors.white,
+                    fontSize: 15,
+                  ),
                 ),
               ],
             ),
           ),
         ),
-        // Search Bar Mengambang di Bawah Slider
 
+        // Search Bar Mengambang di Bawah Slider
       ],
     );
   }
@@ -152,4 +152,3 @@ class _SliderWidgetState extends State<SliderWidget> {
     );
   }
 }
-

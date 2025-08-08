@@ -23,24 +23,30 @@ class _HeaderTokoState extends State<HeaderToko> {
             widget.imageUrl,
             fit: BoxFit.cover,
             errorBuilder: (context, error, stackTrace) {
-              return Image.asset(
-                'assets/images/toko_header_dummy.png',
+              return Image.network(
+                'https://i.imgur.com/5R1d1XK.jpeg',
                 fit: BoxFit.cover,
               );
             },
 
-            loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent? loadingProgress) {
+            loadingBuilder: (
+              BuildContext context,
+              Widget child,
+              ImageChunkEvent? loadingProgress,
+            ) {
               if (loadingProgress == null) return child;
               return Center(
                 child: CircularProgressIndicator(
-                  value: loadingProgress.expectedTotalBytes != null
-                      ? loadingProgress.cumulativeBytesLoaded / loadingProgress.expectedTotalBytes!
-                      : null,
+                  value:
+                      loadingProgress.expectedTotalBytes != null
+                          ? loadingProgress.cumulativeBytesLoaded /
+                              loadingProgress.expectedTotalBytes!
+                          : null,
                   color: zelow,
                 ),
               );
             },
-          )
+          ),
         ),
 
         //mainAxisAlignment: MainAxisAlignment.center,
@@ -67,12 +73,15 @@ class _HeaderTokoState extends State<HeaderToko> {
                   ),
                   child: Icon(
                     isFavorite ? Icons.favorite : Icons.favorite_border,
-                    color: isFavorite ? Colors.red : zelow, // Merah jika favorit, hijau jika tidak
+                    color:
+                        isFavorite
+                            ? Colors.red
+                            : zelow, // Merah jika favorit, hijau jika tidak
                   ),
                 ),
               ),
               const SizedBox(width: 10),
-              _buildIconButton(Icons.share_outlined)
+              _buildIconButton(Icons.share_outlined),
             ],
           ),
         ),
@@ -88,13 +97,16 @@ class _HeaderTokoState extends State<HeaderToko> {
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Icon(Icons.arrow_back, color: Colors.white, size: 35), // Ikon lokasi
+                  Icon(
+                    Icons.arrow_back,
+                    color: Colors.white,
+                    size: 35,
+                  ), // Ikon lokasi
                   const SizedBox(width: 8),
                 ],
               ),
             ),
           ),
-
         ),
       ],
     );

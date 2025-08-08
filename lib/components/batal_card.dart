@@ -51,20 +51,20 @@ class _PesananBatalCardState extends State<PesananBatalCard> {
       margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(10),
+        borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withOpacity(0.08),
             spreadRadius: 1,
-            blurRadius: 3,
-            offset: const Offset(0, 1),
+            blurRadius: 5,
+            offset: const Offset(0, 2),
           ),
         ],
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          // Header row with order number and date
+          // Header
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
             child: Row(
@@ -73,14 +73,15 @@ class _PesananBatalCardState extends State<PesananBatalCard> {
                 Text(
                   '#${widget.idPesanan}',
                   style: greenTextStyle.copyWith(
-                    fontSize: 10,
+                    fontSize: 12,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
                 Text(
                   widget.tanggalPesanan,
                   style: greyTextStyle.copyWith(
-                    fontSize: 10,
+                    color: Colors.grey,
+                    fontSize: 13,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
@@ -88,120 +89,91 @@ class _PesananBatalCardState extends State<PesananBatalCard> {
             ),
           ),
 
+          // Konten
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Image and "Pesanan Dibatalkan" text
-              Column(
-                children: [
-                  ClipRRect(
-                    borderRadius: const BorderRadius.all(Radius.circular(5)),
-                    child: Image.network(
-                      widget.gambar, // Placeholder image
-                      width: 100,
-                      height: 100,
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                  SizedBox(height: MediaQuery.of(context).size.width * 0.03),
-                  Row(
-                    children: [
-                      const SizedBox(width: 10),
-                      Text(
-                        'Pesanan Dibatalkan',
-                        style: greyTextStyle.copyWith(
-                          fontSize: 12,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
+              const SizedBox(width: 12),
+              ClipRRect(
+                borderRadius: const BorderRadius.all(Radius.circular(8)),
+                child: Image.network(
+                  widget.gambar,
+                  width: 95,
+                  height: 95,
+                  fit: BoxFit.cover,
+                ),
               ),
-
-              // Food details
+              const SizedBox(width: 6),
               Expanded(
                 child: Padding(
-                  padding: EdgeInsets.only(
-                    right: 8,
-                    left: 3,
-                    bottom: 8,
-                    top: 8
-                  ),
+                  padding: const EdgeInsets.all(8),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      // Restaurant name
                       Row(
                         children: [
                           Icon(
                             Icons.storefront_rounded,
-                            size: 14,
+                            size: 16,
                             color: zelow,
                           ),
                           const SizedBox(width: 4),
                           Expanded(
                             child: Text(
                               _namaToko,
-                              style: blackTextStyle.copyWith(fontSize: 14),
+                              style: blackTextStyle.copyWith(
+                                fontSize: 14,
+                                fontWeight: FontWeight.bold,
+                              ),
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
                             ),
                           ),
                         ],
                       ),
-
                       Padding(
                         padding: const EdgeInsets.only(top: 4, bottom: 4),
                         child: Text(
                           widget.namaProduk,
                           style: blackTextStyle.copyWith(
-                            fontSize: 12,
+                            fontSize: 14,
                             fontWeight: FontWeight.bold,
                           ),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                         ),
                       ),
-
+                      const SizedBox(height: 4),
                       Text(
                         '${widget.quantity}x',
-                        style: TextStyle(
-                          color: black,
-                          fontSize: 12,
-                          fontWeight: FontWeight.w500,
+                        style: const TextStyle(
+                          color: Colors.grey,
+                          fontSize: 14,
+                          fontWeight: FontWeight.bold,
                         ),
                       ),
-
-                      const SizedBox(height: 6),
                       Row(
                         children: [
                           Text(
                             FormatMataUang.formatRupiah(widget.hargaSatuan, 0),
                             style: greenTextStyle.copyWith(
                               fontWeight: FontWeight.bold,
-                              fontSize: 14,
+                              fontSize: 15,
                             ),
                           ),
-                          const SizedBox(width: 4),
-
-                          // Text(
-                          //   'Rp12.500',
-                          //   style: const TextStyle(
-                          //     fontSize: 10,
-                          //     color: Colors.grey,
-                          //     decoration: TextDecoration.lineThrough,
-                          //     decorationThickness: 1.5,
-                          //   ),
-                          // ),
                         ],
                       ),
-
-                      const SizedBox(height: 8),
+                      const SizedBox(height: 4),
                       Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          SizedBox(width: 12),
+                          Text(
+                            'Pesanan Dibatalkan',
+                            style: greyTextStyle.copyWith(
+                              fontSize: 13,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
                           ElevatedButton(
                             onPressed: () {},
                             style: ElevatedButton.styleFrom(
@@ -209,9 +181,8 @@ class _PesananBatalCardState extends State<PesananBatalCard> {
                               foregroundColor: Colors.white,
                               padding: const EdgeInsets.symmetric(
                                 horizontal: 10,
-                                vertical: 8,
+                                vertical: 6,
                               ),
-                              minimumSize: const Size(100, 40),
                               elevation: 2,
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(24),

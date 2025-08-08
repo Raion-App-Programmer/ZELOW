@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:zelow/components/constant.dart';
 import 'package:zelow/models/produk_model.dart';
 import 'package:intl/intl.dart';
-import 'package:zelow/utils/format_mata_uang.dart';
 
 class AkandatangCard extends StatelessWidget {
   final Produk produk;

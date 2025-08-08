@@ -22,7 +22,7 @@ class PesananBerlangsungCard extends StatefulWidget {
     required this.quantity,
     required this.hargaSatuan,
     required this.status,
-    required this.idToko,  
+    required this.idToko,
     required this.gambar,
   });
 
@@ -53,13 +53,13 @@ class _PesananBerlangsungCardState extends State<PesananBerlangsungCard> {
       margin: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(10),
+        borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withOpacity(0.08),
             spreadRadius: 1,
-            blurRadius: 3,
-            offset: const Offset(0, 1),
+            blurRadius: 5,
+            offset: const Offset(0, 2),
           ),
         ],
       ),
@@ -76,38 +76,40 @@ class _PesananBerlangsungCardState extends State<PesananBerlangsungCard> {
                 Text(
                   '#${widget.idPesanan}',
                   style: greenTextStyle.copyWith(
-                    fontSize: 10,
+                    fontSize: 12,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                
+
                 // Order date at top right
                 Text(
                   widget.tanggalPesanan,
                   style: greyTextStyle.copyWith(
-                    fontSize: 10,
+                    color: Colors.grey,
+                    fontSize: 13,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
               ],
             ),
           ),
-          
+
           // Card content
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // Food image (smaller)
-              const SizedBox(width: 15),
+              const SizedBox(width: 12),
               ClipRRect(
-                borderRadius: const BorderRadius.all(Radius.circular(5)),
+                borderRadius: const BorderRadius.all(Radius.circular(8)),
                 child: Image.network(
                   widget.gambar, // Placeholder image
-                  width: 100,
-                  height: 100,
+                  width: 95,
+                  height: 95,
                   fit: BoxFit.cover,
                 ),
               ),
+              const SizedBox(width: 6),
 
               // Food details
               Expanded(
@@ -119,9 +121,9 @@ class _PesananBerlangsungCardState extends State<PesananBerlangsungCard> {
                       // Restaurant name with store icon
                       Row(
                         children: [
-                           Icon(
+                          Icon(
                             Icons.storefront_rounded,
-                            size: 14,
+                            size: 16,
                             color: zelow,
                           ),
                           const SizedBox(width: 4),
@@ -129,8 +131,8 @@ class _PesananBerlangsungCardState extends State<PesananBerlangsungCard> {
                             child: Text(
                               _namaToko,
                               style: blackTextStyle.copyWith(
-                               
                                 fontSize: 14,
+                                fontWeight: FontWeight.bold,
                               ),
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
@@ -138,39 +140,39 @@ class _PesananBerlangsungCardState extends State<PesananBerlangsungCard> {
                           ),
                         ],
                       ),
-                      
+
                       // Food item name
-                       Padding(
+                      Padding(
                         padding: EdgeInsets.only(top: 4, bottom: 4),
                         child: Text(
                           widget.namaProduk,
                           style: blackTextStyle.copyWith(
-                            fontSize: 12,
-                            fontWeight: FontWeight.bold
+                            fontSize: 14,
+                            fontWeight: FontWeight.bold,
                           ),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                         ),
                       ),
-                      
+
+                      const SizedBox(height: 4),
                       // Quantity
                       Text(
                         '${widget.quantity}x',
                         style: TextStyle(
-                          color: black,
-                          fontSize: 12,
-                          fontWeight: FontWeight.w500,
+                          color: Colors.grey,
+                          fontSize: 14,
+                          fontWeight: FontWeight.bold,
                         ),
                       ),
                       // Prices
-                      const SizedBox(height: 6),
                       Row(
                         children: [
                           Text(
                             FormatMataUang.formatRupiah(widget.hargaSatuan, 0),
                             style: greenTextStyle.copyWith(
                               fontWeight: FontWeight.bold,
-                              fontSize: 14,
+                              fontSize: 15,
                             ),
                           ),
                           const SizedBox(width: 4),
@@ -187,17 +189,20 @@ class _PesananBerlangsungCardState extends State<PesananBerlangsungCard> {
                           // ),
                         ],
                       ),
-                      
+
                       // Status - moved to a separate row below prices
                       const SizedBox(height: 4),
                       Align(
                         alignment: Alignment.bottomRight,
                         child: Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 6,
+                            vertical: 2,
+                          ),
                           child: Text(
                             widget.status,
                             style: greyTextStyle.copyWith(
-                              fontSize: MediaQuery.of(context).size.width * 0.03,
+                              fontSize: 13,
                               fontWeight: FontWeight.w500,
                             ),
                           ),

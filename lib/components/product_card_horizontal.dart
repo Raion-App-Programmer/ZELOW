@@ -71,14 +71,13 @@ class DisplayCard extends StatelessWidget {
                   );
                 },
                 errorBuilder: (context, error, stackTrace) {
-                  return Container(
-                    height: 100,
-                    width: 100,
-                    color: Colors.grey[300],
-                    child: Icon(
-                      Icons.broken_image_outlined,
-                      color: Colors.grey[600],
-                      size: 30,
+                  return ClipRRect(
+                    borderRadius: BorderRadius.circular(8),
+                    child: Image.network(
+                      'https://i.imgur.com/5R1d1XK.jpeg',
+                      height: 100,
+                      width: 100,
+                      fit: BoxFit.cover,
                     ),
                   );
                 },

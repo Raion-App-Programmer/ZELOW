@@ -28,16 +28,13 @@ class FlashSaleBoxButton extends StatelessWidget {
         width: width,
         height: 90,
         margin: const EdgeInsets.only(right: 8),
-        padding: const EdgeInsets.symmetric(
-          vertical: 4,
-        ),
+        padding: const EdgeInsets.symmetric(vertical: 4),
         decoration: BoxDecoration(
           color: selectedBg,
           borderRadius: BorderRadius.circular(12),
         ),
         child: Column(
-          mainAxisAlignment:
-              MainAxisAlignment.spaceEvenly,
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             Icon(icon, color: iconColor, size: 32),
             SizedBox(
@@ -45,12 +42,13 @@ class FlashSaleBoxButton extends StatelessWidget {
               child: Text(
                 text,
                 textAlign: TextAlign.center,
-                style: const TextStyle(
+                style: TextStyle(
                   fontFamily: 'Nunito',
                   fontSize: 12,
-                  fontWeight: FontWeight.w600,
-                  color: Colors.black,
+                  fontWeight: FontWeight.bold,
+                  color: iconColor,
                 ),
+
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
               ),

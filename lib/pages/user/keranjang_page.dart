@@ -75,18 +75,19 @@ class _KeranjangKuState extends State<KeranjangKu> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: Color(0xff06C474),
-        toolbarHeight: 80,
+        toolbarHeight: 60,
         elevation: 0,
         leading: IconButton(
           icon: Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () => Navigator.pop(context),
         ),
         title: Text(
-          "KeranjangKu",
+          "Keranjangku",
           style: TextStyle(
-            fontSize: MediaQuery.of(context).size.width * 0.05,
+            fontSize: 20,
             fontWeight: FontWeight.bold,
             color: Colors.white,
           ),
@@ -113,6 +114,7 @@ class _KeranjangKuState extends State<KeranjangKu> {
 
           // Menampilkan data keranjang
           return ListView.builder(
+            padding: const EdgeInsets.only(top: 12),
             itemCount: _cartItems.length,
             itemBuilder: (context, index) {
               final item = _cartItems[index];

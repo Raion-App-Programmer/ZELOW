@@ -15,6 +15,7 @@ class ProfilePage extends StatelessWidget {
     String username = user?.displayName ?? 'Lalalili';
     String email = user?.email ?? 'lalalili@gmail.com';
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: zelow,
         leading: IconButton(

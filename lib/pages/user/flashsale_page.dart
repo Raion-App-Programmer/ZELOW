@@ -165,123 +165,112 @@ class _FlashsalePageState extends State<FlashsalePage> {
         ],
       ),
       backgroundColor: white,
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Container(
-              decoration: BoxDecoration(
-                color: white,
-                borderRadius: BorderRadius.circular(25),
-                border: Border.all(color: zelow),
-              ),
-              child: TextField(
-                onTap:
-                    () => Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (_) => SearchPage()),
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.only(bottom: 10),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: white,
+                    borderRadius: BorderRadius.circular(25),
+                    border: Border.all(color: zelow),
+                  ),
+                  child: TextField(
+                    onTap:
+                        () => Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (_) => SearchPage()),
+                        ),
+                    decoration: InputDecoration(
+                      hintText: 'Lagi pengen makan apa?',
+                      hintStyle: greyTextStyle,
+                      prefixIcon: Icon(Icons.search, color: zelow),
+                      border: InputBorder.none,
+                      contentPadding: const EdgeInsets.symmetric(vertical: 12),
                     ),
-                decoration: InputDecoration(
-                  hintText: 'Lagi pengen makan apa?',
-                  hintStyle: greyTextStyle,
-                  prefixIcon: Icon(Icons.search, color: zelow),
-                  border: InputBorder.none,
-                  contentPadding: const EdgeInsets.symmetric(vertical: 11),
+                  ),
                 ),
               ),
-            ),
-          ),
-          FlashSaleTabs(onTabSelected: _onTabSelected),
-          const SizedBox(height: 4),
-          SizedBox(
-            height: 80,
-            child: ListView.builder(
-              scrollDirection: Axis.horizontal,
-              padding: const EdgeInsets.only(left: 16, right: 8),
-              itemCount: _categories.length,
-              itemBuilder: (context, index) {
-                final category = _categories[index];
-                return FlashSaleBoxButton(
-                  icon: category["icon"],
-                  text: category["text"],
-                  isSelected: _selectedCategory == index,
-                  onPressed: () {
-                    setState(() {
-                      _selectedCategory = index;
-                    });
-                  },
-                );
-              },
-            ),
-          ),
-          const SizedBox(height: 8),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            child: Row(
-              children: [
-                Text(
-                  "BERAKHIR DALAM ",
-                  style: blackTextStyle.copyWith(
-                    fontSize: 14,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                Text(
-                  _formatDuration(_remainingTime),
-                  style: blackTextStyle.copyWith(
-                    fontSize: 14,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ],
-            ),
-          ),
-          Expanded(
-            child: FutureBuilder<List<Produk>>(
-              future: _flashSaleProdukList,
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Center(child: CircularProgressIndicator());
-                }
-
-                if (snapshot.hasError) {
-                  return Center(
-                    child: Text('Gagal memuat data: ${snapshot.error}'),
-                  );
-                }
-
-                final produkList = snapshot.data ?? [];
-                final isOngoing =
-                    rotatedToOriginalIndex[_selectedTab] ==
-                    getCurrentFlashSaleIndex();
-
-                return ListView.builder(
-                  padding: const EdgeInsets.only(bottom: 5),
-                  itemCount: produkList.length,
+              FlashSaleTabs(onTabSelected: _onTabSelected),
+              const SizedBox(height: 4),
+              SizedBox(
+                height: 80,
+                child: ListView.builder(
+                  scrollDirection: Axis.horizontal,
+                  padding: const EdgeInsets.only(left: 16, right: 8),
+                  itemCount: _categories.length,
                   itemBuilder: (context, index) {
-                    final produk = produkList[index];
-                    return isOngoing
-                        ? (produk.toko != null
-                            ? GestureDetector(
-                              onTap: () {
-                                final flashSaleProduk = produk.copyWith(
-                                  isFlashSale: true,
-                                );
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder:
-                                        (_) => ProductInfoPage(
-                                          productData: flashSaleProduk,
-                                          tokoData: flashSaleProduk.toko!,
-                                        ),
-                                  ),
-                                );
-                              },
-                              child: FoodSaleCard(
-                                produk: produk.copyWith(isFlashSale: true),
-                                onBuyPressed: () {
+                    final category = _categories[index];
+                    return FlashSaleBoxButton(
+                      icon: category["icon"],
+                      text: category["text"],
+                      isSelected: _selectedCategory == index,
+                      onPressed: () {
+                        setState(() {
+                          _selectedCategory = index;
+                        });
+                      },
+                    );
+                  },
+                ),
+              ),
+              const SizedBox(height: 8),
+              Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 8,
+                ),
+                child: Row(
+                  children: [
+                    Text(
+                      "BERAKHIR DALAM ",
+                      style: blackTextStyle.copyWith(
+                        fontSize: 14,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    Text(
+                      _formatDuration(_remainingTime),
+                      style: blackTextStyle.copyWith(
+                        fontSize: 14,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              FutureBuilder<List<Produk>>(
+                future: _flashSaleProdukList,
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Center(child: CircularProgressIndicator());
+                  }
+
+                  if (snapshot.hasError) {
+                    return Center(
+                      child: Text('Gagal memuat data: ${snapshot.error}'),
+                    );
+                  }
+
+                  final produkList = snapshot.data ?? [];
+                  final isOngoing =
+                      rotatedToOriginalIndex[_selectedTab] ==
+                      getCurrentFlashSaleIndex();
+
+                  return ListView.builder(
+                    physics: const NeverScrollableScrollPhysics(),
+                    shrinkWrap: true,
+                    itemCount: produkList.length,
+                    itemBuilder: (context, index) {
+                      final produk = produkList[index];
+                      return isOngoing
+                          ? (produk.toko != null
+                              ? GestureDetector(
+                                onTap: () {
                                   final flashSaleProduk = produk.copyWith(
                                     isFlashSale: true,
                                   );
@@ -296,16 +285,34 @@ class _FlashsalePageState extends State<FlashsalePage> {
                                     ),
                                   );
                                 },
-                              ),
-                            )
-                            : const SizedBox.shrink())
-                        : AkandatangCard(produk: produk);
-                  },
-                );
-              },
-            ),
+                                child: FoodSaleCard(
+                                  produk: produk.copyWith(isFlashSale: true),
+                                  onBuyPressed: () {
+                                    final flashSaleProduk = produk.copyWith(
+                                      isFlashSale: true,
+                                    );
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder:
+                                            (_) => ProductInfoPage(
+                                              productData: flashSaleProduk,
+                                              tokoData: flashSaleProduk.toko!,
+                                            ),
+                                      ),
+                                    );
+                                  },
+                                ),
+                              )
+                              : const SizedBox.shrink())
+                          : AkandatangCard(produk: produk);
+                    },
+                  );
+                },
+              ),
+            ],
           ),
-        ],
+        ),
       ),
       bottomNavigationBar: const BottomNav(selectedItem: 2),
     );

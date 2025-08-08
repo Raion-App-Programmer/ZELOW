@@ -4,7 +4,7 @@ class FormatMataUang {
   static String formatRupiah(dynamic angka, int digitDesimal) {
     NumberFormat currencyFormatter = NumberFormat.currency(
       locale: 'id_ID',
-      symbol: 'Rp ',
+      symbol: 'Rp',
       decimalDigits: digitDesimal,
     );
     return currencyFormatter.format(angka);
