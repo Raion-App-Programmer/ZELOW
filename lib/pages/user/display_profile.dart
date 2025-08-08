@@ -7,7 +7,13 @@ import 'package:zelow/pages/auth/login_page.dart';
 
 
 class DisplayProfile extends StatelessWidget {
-  const DisplayProfile({super.key});
+  final String? gender, birthDate;
+  const DisplayProfile({
+    super.key,
+    this.gender,
+    this.birthDate
+    });
+  
 
   @override
   Widget build(BuildContext context) {
@@ -117,12 +123,7 @@ class DisplayProfile extends StatelessWidget {
                                 const SizedBox(height: 8),
                                 GestureDetector(
                                   onTap: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              const DisplayProfile()),
-                                    );
+                                    
                                   },
                                   child: Row(
                                     children: [
@@ -185,8 +186,8 @@ class DisplayProfile extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           buildLabelRow('Nama', fullname),
-                          buildLabelRow('Jenis Kelamin', 'Perempuan'),
-                          buildLabelRow('Tanggal Lahir', '22 Februari 2002'),
+                          buildLabelRow('Jenis Kelamin', gender),
+                          buildLabelRow('Tanggal Lahir', birthDate),
                         ],
                       ),
                     ),
@@ -204,11 +205,7 @@ class DisplayProfile extends StatelessWidget {
                       const SizedBox(width: 8),
                       GestureDetector(
                         onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => const DisplayProfile()),
-                          );
+                          
                         },
                         child: Image.asset('assets/images/pen.png'),
                       ),
@@ -287,7 +284,7 @@ class DisplayProfile extends StatelessWidget {
   }
 }
 
-Widget buildLabelRow(String label, String value) {
+Widget buildLabelRow(String label, String? value) {
   return Row(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
@@ -304,7 +301,7 @@ Widget buildLabelRow(String label, String value) {
       const Text(': ', style: TextStyle(fontSize: 12)),
       Expanded(
         child: Text(
-          value,
+          value ?? "",
           style: blackTextStyle.copyWith(
             fontSize: 12,
             fontWeight: FontWeight.w400,

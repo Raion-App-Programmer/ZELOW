@@ -113,7 +113,10 @@ class _EditProfileState extends State<EditProfile> {
                 ).then((_) {
                   Navigator.pushReplacement(
                     context, 
-                    MaterialPageRoute(builder: (context) => DisplayProfile()));
+                    MaterialPageRoute(builder: (context) => DisplayProfile(
+                      gender: selectedGender,
+                      birthDate: selectedDate,
+                    )));
                 });
               },
               child: Text(
