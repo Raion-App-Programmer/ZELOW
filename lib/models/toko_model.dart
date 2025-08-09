@@ -37,4 +37,32 @@ class Toko {
       alamat: data['alamat'] ?? '',
     );
   }
+
+  factory Toko.fromMap(Map<String, dynamic> map) {
+    return Toko(
+      id: map['id'] ?? '',
+      nama: map['nama'] ?? '',
+      gambar: map['gambar'] ?? '',
+      rating: (map['rating'] ?? 0).toDouble(),
+      jarak: map['jarak'] ?? 0,
+      waktu: map['waktu'] ?? '',
+      jumlahPenilaian: map['jumlahPenilaian'] ?? 0,
+      deskripsi: map['deskripsi'] ?? '',
+      alamat: map['alamat'] ?? '',
+    );
+  }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'nama': nama,
+      'gambar': gambar,
+      'rating': rating,
+      'jarak': jarak,
+      'waktu': waktu,
+      'jumlahPenilaian': jumlahPenilaian,
+      'deskripsi': deskripsi,
+      'alamat': alamat,
+    };
+  }
 }

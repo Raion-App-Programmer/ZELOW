@@ -89,7 +89,7 @@ class ReviewItem extends StatelessWidget {
             style: const TextStyle(
               fontFamily: 'Nunito',
               fontSize: 14,
-              fontWeight: FontWeight.bold,
+              fontWeight: FontWeight.w600,
             ),
           ),
         ],

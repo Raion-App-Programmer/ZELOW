@@ -50,16 +50,19 @@ class _KeranjangKuState extends State<KeranjangKu> {
             .where((item) => _selectedItems.contains(item.produk.idProduk))
             .map(
               (item) => {
-                'idProduk': item.produk.idProduk,
-                'nama': item.produk.nama,
-                'gambar': item.produk.gambar,
-                'harga': item.produk.harga,
-                'hargaAsli': item.produk.harga, // Fitur diskon menyusul (belum jalan)
-                'quantity': item.quantity,
-                'alamat': item.alamat,
                 'idToko': item.produk.idToko,
-                'kategori': item.produk.kategori,
-                'rating': item.produk.rating,
+                'idProduk': item.produk.idProduk,
+                'title': item.produk.nama,
+                'imageUrl': item.produk.gambar,
+                'price': item.produk.harga,
+                'quantity': item.quantity,
+                'originalPrice': item.produk.harga,
+                'nama': item.toko?.nama ?? '',
+                'alamat': item.toko?.alamat ?? '',
+                'stok': item.produk.stok,
+                'terjual': item.produk.terjual,
+                'isFlashSale': item.produk.isFlashSale,
+                'deskripsi': item.produk.deskripsi,
               },
             )
             .toList();
@@ -107,7 +110,18 @@ class _KeranjangKuState extends State<KeranjangKu> {
                 });
               });
             }
-            return const Center();
+            return Container(
+              height: MediaQuery.of(context).size.height * 0.8,
+              alignment: Alignment.center,
+              child: const Text(
+                'Keranjang belanjamu masih kosong',
+                style: TextStyle(
+                  fontSize: 16,
+                  color: Colors.grey,
+                  fontFamily: 'Nunito',
+                ),
+              ),
+            );
           }
 
           _cartItems = snapshot.data!;

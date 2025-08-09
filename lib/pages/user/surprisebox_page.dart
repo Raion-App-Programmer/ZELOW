@@ -1,5 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:zelow/models/produk_model.dart';
+import 'package:zelow/models/toko_model.dart';
 import 'package:zelow/components/constant.dart';
 import 'package:zelow/components/surprisebox_card.dart';
 import 'package:zelow/pages/user/infoproduk_page.dart';
@@ -11,15 +13,30 @@ class SurpriseBoxPage extends StatelessWidget {
   final CollectionReference referenceToko = FirebaseFirestore.instance
       .collection("toko");
 
-  Future<Map<String, dynamic>> fetchTokoData(String tokoId) async {
+  Future<Toko?> fetchTokoData(String tokoId) async {
+    if (tokoId.isEmpty) return null;
+
     final tokoSnapshot = await referenceToko.doc(tokoId).get();
     if (tokoSnapshot.exists) {
-      return {
-        "distance": tokoSnapshot["jarak"],
-        "estimatedTime": tokoSnapshot["waktu"],
-      };
+      return Toko.fromFirestore(tokoSnapshot);
     }
-    return {"distance": "", "estimatedTime": ""};
+    return null;
+  }
+
+  Future<List<Map<String, dynamic>>> fetchProdukDanToko() async {
+    final produkSnapshot = await referenceProduk.limit(10).get();
+    final List<Produk> produkList =
+        produkSnapshot.docs.map((doc) => Produk.fromFirestore(doc)).toList();
+
+    List<Map<String, dynamic>> result = [];
+    for (var produk in produkList) {
+      final toko = await fetchTokoData(produk.idToko);
+      if (toko != null) {
+        result.add({'produk': produk, 'toko': toko});
+      }
+    }
+    result.shuffle();
+    return result;
   }
 
   @override
@@ -33,9 +50,9 @@ class SurpriseBoxPage extends StatelessWidget {
             Navigator.pop(context);
           },
         ),
-        title: Text(
+        title: const Text(
           'Surprise Box',
-          style: const TextStyle(
+          style: TextStyle(
             color: Colors.white,
             fontFamily: 'Nunito',
             fontWeight: FontWeight.bold,
@@ -43,58 +60,38 @@ class SurpriseBoxPage extends StatelessWidget {
         ),
       ),
       backgroundColor: white,
-      body: StreamBuilder<QuerySnapshot>(
-        stream: referenceProduk.snapshots(),
+      body: FutureBuilder<List<Map<String, dynamic>>>(
+        future: fetchProdukDanToko(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
+            return const Center(child: CircularProgressIndicator());
           }
-          if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-            return Center(child: Text("Tidak ada data"));
+          if (!snapshot.hasData || snapshot.data!.isEmpty) {
+            return const Center(child: Text("Tidak ada data"));
           }
 
-          final items =
-              snapshot.data!.docs
-                  .map(
-                    (e) => {
-                      "imageUrl": e["gambar"],
-                      "restaurantName": e["nama"],
-                      // "description": e["deskripsi"],
-                      "rating": e["rating"],
-                      "tokoId": e["id_toko"],
-                      // "distance": e["jarak"],
-                      // "estimatedTime": e["waktu"],
-                    },
-                  )
-                  .toList();
-
-          items.shuffle();
+          final items = snapshot.data!;
 
           return ListView.builder(
+            padding: const EdgeInsets.only(top: 12, bottom: 24),
             itemCount: items.length,
             itemBuilder: (context, index) {
-              final product = items[index];
-              final tokoId = product["tokoId"] ?? ""; // Pastikan field tokoId ada di koleksi produk
+              final product = items[index]['produk'] as Produk;
+              final toko = items[index]['toko'] as Toko;
 
-              return FutureBuilder<Map<String, dynamic>>(
-                future: fetchTokoData(tokoId),
-                builder: (context, tokoSnapshot) {
-                  if (tokoSnapshot.connectionState == ConnectionState.waiting) {
-                    return Center(child: CircularProgressIndicator());
-                  }
-
-
-                  final tokoData = tokoSnapshot.data ?? {"distance": "", "estimatedTime": ""};
-
-                  return SurpirseCard(
-                    imageUrl: product["imageUrl"],
-                    restaurantName: product["restaurantName"],
-                    description: "",
-                    rating: product["rating"],
-                    distance: tokoData["distance"].toString() + " km" ?? "-",
-                    estimatedTime: tokoData["estimatedTime"] + " menit" ?? "-",
-                    onTap: () {
-                    },
+              return SurpriseCard(
+                productData: product,
+                tokoData: toko,
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder:
+                          (context) => ProductInfoPage(
+                            productData: product,
+                            tokoData: toko,
+                          ),
+                    ),
                   );
                 },
               );

@@ -364,7 +364,7 @@ class _HomePageUserState extends State<HomePageUser> {
                     SizedBox(width: MediaQuery.of(context).size.width * 0.03),
                     BoxButton(
                       icon: Icons.shopping_bag_rounded,
-                      text: "Surprise Bag",
+                      text: "Surprise Box",
                       onTap: () {
                         Navigator.push(
                           context,

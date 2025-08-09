@@ -50,13 +50,14 @@ class _PesananBerlangsungCardState extends State<PesananBerlangsungCard> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+      padding: EdgeInsets.all(2),
+      margin: EdgeInsets.symmetric(horizontal: 8, vertical: 6),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.08),
+            color: Colors.black.withOpacity(0.1),
             spreadRadius: 1,
             blurRadius: 5,
             offset: const Offset(0, 2),
@@ -66,13 +67,11 @@ class _PesananBerlangsungCardState extends State<PesananBerlangsungCard> {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          // Header row with order number and date
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                // Order number at top left
                 Text(
                   '#${widget.idPesanan}',
                   style: greenTextStyle.copyWith(
@@ -80,8 +79,6 @@ class _PesananBerlangsungCardState extends State<PesananBerlangsungCard> {
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-
-                // Order date at top right
                 Text(
                   widget.tanggalPesanan,
                   style: greyTextStyle.copyWith(
@@ -94,31 +91,26 @@ class _PesananBerlangsungCardState extends State<PesananBerlangsungCard> {
             ),
           ),
 
-          // Card content
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Food image (smaller)
               const SizedBox(width: 12),
               ClipRRect(
                 borderRadius: const BorderRadius.all(Radius.circular(8)),
                 child: Image.network(
-                  widget.gambar, // Placeholder image
+                  widget.gambar,
                   width: 95,
                   height: 95,
                   fit: BoxFit.cover,
                 ),
               ),
               const SizedBox(width: 6),
-
-              // Food details
               Expanded(
                 child: Padding(
-                  padding: const EdgeInsets.all(8),
+                  padding: const EdgeInsets.fromLTRB(8, 0, 8, 12),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      // Restaurant name with store icon
                       Row(
                         children: [
                           Icon(
@@ -131,8 +123,9 @@ class _PesananBerlangsungCardState extends State<PesananBerlangsungCard> {
                             child: Text(
                               _namaToko,
                               style: blackTextStyle.copyWith(
+                                fontFamily: 'Nunito',
                                 fontSize: 14,
-                                fontWeight: FontWeight.bold,
+                                fontWeight: FontWeight.w600,
                               ),
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
@@ -140,8 +133,6 @@ class _PesananBerlangsungCardState extends State<PesananBerlangsungCard> {
                           ),
                         ],
                       ),
-
-                      // Food item name
                       Padding(
                         padding: EdgeInsets.only(top: 4, bottom: 4),
                         child: Text(
@@ -154,9 +145,7 @@ class _PesananBerlangsungCardState extends State<PesananBerlangsungCard> {
                           overflow: TextOverflow.ellipsis,
                         ),
                       ),
-
                       const SizedBox(height: 4),
-                      // Quantity
                       Text(
                         '${widget.quantity}x',
                         style: TextStyle(
@@ -165,7 +154,6 @@ class _PesananBerlangsungCardState extends State<PesananBerlangsungCard> {
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                      // Prices
                       Row(
                         children: [
                           Text(
@@ -175,23 +163,10 @@ class _PesananBerlangsungCardState extends State<PesananBerlangsungCard> {
                               fontSize: 15,
                             ),
                           ),
-                          const SizedBox(width: 4),
-
-                          // Ini untuk diskon belum berfungsi
-                          // Text(
-                          //   'Rp12.500',
-                          //   style: TextStyle(
-                          //     fontSize: 10,
-                          //     color: Colors.grey,
-                          //     decoration: TextDecoration.lineThrough,
-                          //     decorationThickness: 1.5,
-                          //   ),
-                          // ),
                         ],
                       ),
 
-                      // Status - moved to a separate row below prices
-                      const SizedBox(height: 4),
+                      const SizedBox(height: 6),
                       Align(
                         alignment: Alignment.bottomRight,
                         child: Container(
@@ -203,7 +178,8 @@ class _PesananBerlangsungCardState extends State<PesananBerlangsungCard> {
                             widget.status,
                             style: greyTextStyle.copyWith(
                               fontSize: 13,
-                              fontWeight: FontWeight.w500,
+                              fontFamily: 'Nunito',
+                              fontWeight: FontWeight.w600,
                             ),
                           ),
                         ),

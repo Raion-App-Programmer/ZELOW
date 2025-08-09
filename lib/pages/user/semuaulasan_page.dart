@@ -36,12 +36,13 @@ class SemuaUlasanPage extends StatelessWidget {
         ),
       ),
       body: StreamBuilder<QuerySnapshot>(
-        stream: FirebaseFirestore.instance
-            .collection('produk')
-            .doc(idProduk)
-            .collection('ulasan')
-            .orderBy('tanggal', descending: true)
-            .snapshots(),
+        stream:
+            FirebaseFirestore.instance
+                .collection('produk')
+                .doc(idProduk)
+                .collection('ulasan')
+                .orderBy('tanggal', descending: true)
+                .snapshots(),
         builder: (context, snapshot) {
           if (snapshot.hasError) {
             return const Center(
@@ -57,11 +58,7 @@ class SemuaUlasanPage extends StatelessWidget {
           }
 
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(
-              child: CircularProgressIndicator(
-                color: zelow,
-              ),
-            );
+            return Center(child: CircularProgressIndicator(color: zelow));
           }
 
           final ulasanDocs = snapshot.data!.docs;
@@ -80,9 +77,8 @@ class SemuaUlasanPage extends StatelessWidget {
             );
           }
 
-          return Column(
+          return ListView(
             children: [
-              // Rating Overview Section
               Container(
                 width: double.infinity,
                 color: Colors.white,
@@ -90,28 +86,22 @@ class SemuaUlasanPage extends StatelessWidget {
                 child: _buildRatingOverview(ulasanDocs),
               ),
 
-              // Divider
-              Container(
-                height: 8,
-                color: Colors.grey[100],
-              ),
-
-              // Reviews List
-              Expanded(
-                child: ListView.builder(
-                  padding: const EdgeInsets.symmetric(vertical: 8),
-                  itemCount: ulasanDocs.length,
-                  itemBuilder: (context, index) {
-                    final data = ulasanDocs[index].data() as Map<String, dynamic>;
-                    return _buildReviewItem(
-                      reviewerName: data['fullname'] ?? 'Anonim',
-                      komentar: data['komentar'] ?? '',
-                      rating: (data['rating'] is num)
-                          ? (data['rating'] as num).toDouble()
-                          : 5.0,
-                      tanggal: data['tanggal'],
-                    );
-                  },
+              Padding(
+                padding: const EdgeInsets.only(top: 8, bottom: 16),
+                child: Column(
+                  children:
+                      ulasanDocs.map((doc) {
+                        final data = doc.data() as Map<String, dynamic>;
+                        return _buildReviewItem(
+                          reviewerName: data['fullname'] ?? 'Anonim',
+                          komentar: data['komentar'] ?? '',
+                          rating:
+                              (data['rating'] is num)
+                                  ? (data['rating'] as num).toDouble()
+                                  : 5.0,
+                          tanggal: data['tanggal'],
+                        );
+                      }).toList(),
                 ),
               ),
             ],
@@ -122,14 +112,14 @@ class SemuaUlasanPage extends StatelessWidget {
   }
 
   Widget _buildRatingOverview(List<QueryDocumentSnapshot> ulasanDocs) {
-    // Calculate rating statistics
     Map<int, int> ratingCount = {5: 0, 4: 0, 3: 0, 2: 0, 1: 0};
     double totalRating = 0;
     int totalReviews = ulasanDocs.length;
 
     for (var doc in ulasanDocs) {
       final data = doc.data() as Map<String, dynamic>;
-      double rating = (data['rating'] is num) ? (data['rating'] as num).toDouble() : 5.0;
+      double rating =
+          (data['rating'] is num) ? (data['rating'] as num).toDouble() : 5.0;
       int roundedRating = rating.round();
       ratingCount[roundedRating] = (ratingCount[roundedRating] ?? 0) + 1;
       totalRating += rating;
@@ -140,7 +130,6 @@ class SemuaUlasanPage extends StatelessWidget {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // Left side - Average rating
         Expanded(
           flex: 2,
           child: Column(
@@ -160,7 +149,8 @@ class SemuaUlasanPage extends StatelessWidget {
                 children: List.generate(5, (index) {
                   return Icon(
                     Icons.star,
-                    color: index < averageRating ? Colors.amber : Colors.grey[300],
+                    color:
+                        index < averageRating ? Colors.amberAccent : Colors.grey[300],
                     size: 20,
                   );
                 }),
@@ -170,18 +160,14 @@ class SemuaUlasanPage extends StatelessWidget {
                 '($totalReviews Penilaian)',
                 style: TextStyle(
                   fontFamily: 'Nunito',
-                  fontSize: 12,
-                  color: Colors.grey[600],
-                  fontWeight: FontWeight.w400,
+                  fontSize: 13,
+                  fontWeight: FontWeight.w500,
                 ),
               ),
             ],
           ),
         ),
-
         const SizedBox(width: 20),
-
-        // Right side - Rating bars
         Expanded(
           flex: 3,
           child: Column(
@@ -199,7 +185,7 @@ class SemuaUlasanPage extends StatelessWidget {
                       style: const TextStyle(
                         fontFamily: 'Nunito',
                         fontSize: 12,
-                        fontWeight: FontWeight.w500,
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
                     const SizedBox(width: 8),
@@ -238,8 +224,7 @@ class SemuaUlasanPage extends StatelessWidget {
     required double rating,
     required dynamic tanggal,
   }) {
-    // Calculate time ago
-    String timeAgo = '2 hari lalu'; // Default fallback
+    String timeAgo = '2 hari lalu';
     if (tanggal != null) {
       DateTime reviewDate;
       if (tanggal is Timestamp) {
@@ -261,11 +246,11 @@ class SemuaUlasanPage extends StatelessWidget {
     }
 
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(8),
+        borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.05),
@@ -277,12 +262,10 @@ class SemuaUlasanPage extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Header with name, stars and time
           Row(
             children: [
-              // Profile image
               CircleAvatar(
-                radius: 16,
+                radius: 20,
                 backgroundColor: zelow.withOpacity(0.1),
                 child: Text(
                   reviewerName.isNotEmpty ? reviewerName[0].toUpperCase() : 'A',
@@ -294,10 +277,7 @@ class SemuaUlasanPage extends StatelessWidget {
                   ),
                 ),
               ),
-
               const SizedBox(width: 12),
-
-              // Name and stars
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -307,19 +287,21 @@ class SemuaUlasanPage extends StatelessWidget {
                       style: const TextStyle(
                         fontFamily: 'Nunito',
                         fontWeight: FontWeight.w600,
-                        fontSize: 14,
-                        color: Colors.black87,
+                        fontSize: 15,
                       ),
                     ),
-                    const SizedBox(height: 2),
+                    const SizedBox(height: 4),
                     Row(
                       children: [
                         Row(
                           children: List.generate(5, (index) {
                             return Icon(
                               Icons.star,
-                              color: index < rating ? Colors.amber : Colors.grey[300],
-                              size: 14,
+                              color:
+                                  index < rating
+                                      ? Colors.amberAccent
+                                      : Colors.grey[300],
+                              size: 16,
                             );
                           }),
                         ),
@@ -328,8 +310,8 @@ class SemuaUlasanPage extends StatelessWidget {
                           timeAgo,
                           style: TextStyle(
                             fontFamily: 'Nunito',
-                            fontSize: 11,
-                            color: Colors.grey[500],
+                            fontSize: 13,
+                            color: Colors.grey[600],
                           ),
                         ),
                       ],
@@ -339,15 +321,12 @@ class SemuaUlasanPage extends StatelessWidget {
               ),
             ],
           ),
-
           const SizedBox(height: 12),
-
-          // Review comment
           Text(
             komentar,
             style: const TextStyle(
               fontFamily: 'Nunito',
-              fontSize: 13,
+              fontSize: 14,
               color: Colors.black87,
               fontWeight: FontWeight.w400,
               height: 1.4,

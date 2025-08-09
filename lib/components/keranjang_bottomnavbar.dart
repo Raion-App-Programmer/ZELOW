@@ -37,7 +37,7 @@ class CartBottomNavBar extends StatelessWidget {
             clipBehavior: Clip.none,
             children: [
               IconButton(
-                onPressed: () {}, // opsional: bisa dibuat nonaktif jika perlu
+                onPressed: null,
                 icon: Image.asset(
                   'assets/images/keranjangKu-icon.png',
                   width: 28,

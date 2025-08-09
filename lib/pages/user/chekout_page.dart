@@ -4,6 +4,7 @@ import 'package:zelow/components/constant.dart';
 import 'package:zelow/components/order_item_card.dart';
 import 'package:zelow/pages/user/pesanan_page.dart';
 import 'package:zelow/services/pesanan_service.dart';
+import 'package:zelow/services/keranjang_service.dart';
 
 class CheckoutPage extends StatefulWidget {
   final List<Map<String, dynamic>> orders;
@@ -50,11 +51,21 @@ class _CheckoutPageState extends State<CheckoutPage> {
 
   Future<void> _handleCheckout() async {
     try {
+      // tambahkan pesanan
       await _pesananService.tambahPesanan(
         widget.orders,
         _selectedPayment,
         _selectedSchedule,
       );
+
+      // hapus produk dari keranjang
+      final keranjangService = KeranjangService();
+      for (var order in widget.orders) {
+        final produkId = order['idProduk'];
+        if (produkId != null) {
+          await keranjangService.removeFromCart(produkId);
+        }
+      }
     } catch (e) {
       print("Error: $e");
     }

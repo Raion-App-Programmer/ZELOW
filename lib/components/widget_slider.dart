@@ -79,7 +79,7 @@ class _SliderWidgetState extends State<SliderWidget> {
         // Tombol Notifikasi & Keranjang di Pojok Kanan Atas
         Positioned(
           top: 40,
-          right: 10,
+          right: 16,
           child: Row(
             children: [
               _buildIconButton(
@@ -106,7 +106,7 @@ class _SliderWidgetState extends State<SliderWidget> {
         ),
         Positioned(
           top: 40,
-          left: 10,
+          left: 16,
           child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
             decoration: BoxDecoration(

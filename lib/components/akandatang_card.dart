@@ -11,7 +11,7 @@ class AkandatangCard extends StatelessWidget {
   void _showReminderDialog(BuildContext context) {
     showDialog(
       context: context,
-      barrierColor: black.withOpacity(0.3),
+      barrierColor: black.withOpacity(0.5),
       builder: (context) {
         Future.delayed(const Duration(seconds: 2), () {
           Navigator.pop(context);
@@ -25,7 +25,7 @@ class AkandatangCard extends StatelessWidget {
           child: Container(
             padding: const EdgeInsets.all(20),
             decoration: BoxDecoration(
-              color: black.withOpacity(0.3),
+              color: black.withOpacity(0.5),
               borderRadius: BorderRadius.circular(16),
             ),
             child: Column(
@@ -34,7 +34,7 @@ class AkandatangCard extends StatelessWidget {
                 Icon(Icons.notifications_active, color: white, size: 20),
                 const SizedBox(height: 8),
                 Text(
-                  'Pengingat akan dikirimkan Anda 5 menit sebelum Flash Sale dimulai.',
+                  'Pengingat akan dikirimkan 5 menit sebelum Flash Sale dimulai',
                   textAlign: TextAlign.center,
                   style: whiteTextStyle.copyWith(fontSize: 14),
                 ),

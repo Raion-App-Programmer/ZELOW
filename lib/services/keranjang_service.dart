@@ -1,9 +1,9 @@
 import 'dart:developer';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:zelow/models/keranjang_model.dart';
 import 'package:zelow/models/produk_model.dart';
+import 'package:zelow/models/toko_model.dart'; // pastikan import model Toko
 
 class KeranjangService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -12,10 +12,15 @@ class KeranjangService {
   // nambah atau update item di keranjang
   Future<void> addToCart(Produk produk, int quantity) async {
     try {
-      // ambil alamat dari collection toko produk berdasarkan id toko produk bersangkutan
-      final alamatTokoProduk =
-          (await _firestore.collection('toko').doc(produk.idToko).get())
-              .data()?['alamat'];
+      final tokoDoc =
+          await _firestore.collection('toko').doc(produk.idToko).get();
+
+      if (!tokoDoc.exists || tokoDoc.data() == null) {
+        log("Toko dengan id ${produk.idToko} tidak ditemukan");
+        return;
+      }
+
+      final toko = Toko.fromMap({'id': tokoDoc.id, ...tokoDoc.data()!});
 
       final docRef = _firestore
           .collection('user')
@@ -23,24 +28,20 @@ class KeranjangService {
           .collection('keranjang')
           .doc(produk.idProduk);
 
-      // buat item keranjang baru
       final keranjangItem = KeranjangModel(
         produk: produk,
         quantity: quantity,
-        alamat: alamatTokoProduk,
+        toko: toko,
       );
 
-      // jika dokumen sudah ada, update quantity saja dengan menambah jumlahnya dengan quantity baru tapi jika belum ada, buat dokumen baru
       final docSnapshot = await docRef.get();
       if (docSnapshot.exists) {
-        // Jika sudah ada, update quantity (tambah dengan quantity baru)
         final currentQuantity = docSnapshot.data()?['quantity'] ?? 0;
         await docRef.update({
           'quantity': currentQuantity + quantity,
           'timestamp': FieldValue.serverTimestamp(),
         });
       } else {
-        // Jika belum ada, buat dokumen baru
         await docRef.set({
           ...keranjangItem.toFirestore(),
           'timestamp': FieldValue.serverTimestamp(),
@@ -53,17 +54,34 @@ class KeranjangService {
 
   // buat ngambil semua item di keranjang
   Stream<List<KeranjangModel>> getCartItems() {
-    log('User id: $_userId');
     return _firestore
         .collection('user')
         .doc(_userId)
         .collection('keranjang')
-        .orderBy('timestamp', descending: true) // urutkan berdasarkan waktu
+        .orderBy('timestamp', descending: true)
         .snapshots()
-        .map((snapshot) {
-          return snapshot.docs
-              .map((doc) => KeranjangModel.fromFirestore(doc))
-              .toList();
+        .asyncMap((snapshot) async {
+          final items = <KeranjangModel>[];
+          for (var doc in snapshot.docs) {
+            var keranjang = KeranjangModel.fromFirestore(doc);
+
+            // ambil detail toko
+            final tokoDoc =
+                await _firestore
+                    .collection('toko')
+                    .doc(keranjang.produk.idToko)
+                    .get();
+            if (tokoDoc.exists) {
+              keranjang = KeranjangModel(
+                produk: keranjang.produk,
+                quantity: keranjang.quantity,
+                toko: Toko.fromMap({'id': tokoDoc.id, ...tokoDoc.data()!}),
+              );
+            }
+
+            items.add(keranjang);
+          }
+          return items;
         });
   }
 

@@ -15,7 +15,7 @@ class Produk {
   final int terjual;
   final Toko? toko;
   final bool isFlashSale;
-  final String deskripsi; // ✅ tetap non-nullable
+  final String deskripsi;
 
   Produk({
     required this.idProduk,
@@ -55,7 +55,7 @@ class Produk {
       jumlahDisukai: data['jumlah_disukai'] ?? 0,
       stok: data['stok'] ?? 0,
       terjual: data['terjual'] ?? 0,
-      deskripsi: data['deskripsi'] ?? '', // ✅ fallback ke string kosong
+      deskripsi: data['deskripsi'] ?? '',
       isFlashSale: false,
     );
   }
@@ -88,8 +88,7 @@ class Produk {
       jumlahDisukai: jumlahDisukai ?? this.jumlahDisukai,
       stok: stok ?? this.stok,
       terjual: terjual ?? this.terjual,
-      deskripsi:
-          deskripsi ?? this.deskripsi, // ✅ tetap default ke existing value
+      deskripsi: deskripsi ?? this.deskripsi,
       toko: toko ?? this.toko,
       isFlashSale: isFlashSale ?? this.isFlashSale,
     );

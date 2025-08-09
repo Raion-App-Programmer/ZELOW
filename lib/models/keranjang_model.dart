@@ -1,19 +1,17 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:zelow/models/produk_model.dart';
+import 'package:zelow/models/toko_model.dart';
 
 class KeranjangModel {
   final Produk produk;
   final int quantity;
-  final String alamat;
+  final Toko? toko;
 
-  KeranjangModel({
-    required this.produk,
-    required this.quantity,
-    required this.alamat,
-  });
+  KeranjangModel({required this.produk, required this.quantity, this.toko});
 
   factory KeranjangModel.fromFirestore(DocumentSnapshot doc) {
     Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
+
     return KeranjangModel(
       produk: Produk(
         gambar: data['gambar'],
@@ -27,16 +25,16 @@ class KeranjangModel {
         rating: data['rating'],
         stok: data['stok'],
         terjual: data['terjual'],
-        deskripsi: data['deskripsi']
+        deskripsi: data['deskripsi'],
       ),
       quantity: data['quantity'],
-      alamat: data['alamat'],
+      toko: null,
     );
   }
 
   Map<String, dynamic> toFirestore() {
     return {
-      'id': produk.idProduk,
+      'id_produk': produk.idProduk,
       'id_toko': produk.idToko,
       'kategori': produk.kategori,
       'nama': produk.nama,
@@ -48,9 +46,8 @@ class KeranjangModel {
       'stok': produk.stok,
       'terjual': produk.terjual,
       'quantity': quantity,
-      'alamat': alamat,
       'deskripsi': produk.deskripsi,
-      'timestamp': FieldValue.serverTimestamp(), // Untuk mengurutkan item di keranjang berdasarkan waktu
+      'timestamp': FieldValue.serverTimestamp(),
     };
   }
 }

@@ -48,13 +48,14 @@ class _PesananSelesaiCardState extends State<PesananSelesaiCard> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+      padding: EdgeInsets.all(2),
+      margin: EdgeInsets.symmetric(horizontal: 8, vertical: 6),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.08),
+            color: Colors.black.withOpacity(0.1),
             spreadRadius: 1,
             blurRadius: 5,
             offset: const Offset(0, 2),
@@ -66,7 +67,7 @@ class _PesananSelesaiCardState extends State<PesananSelesaiCard> {
         children: [
           // Header
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -106,7 +107,7 @@ class _PesananSelesaiCardState extends State<PesananSelesaiCard> {
               const SizedBox(width: 6),
               Expanded(
                 child: Padding(
-                  padding: const EdgeInsets.all(8),
+                  padding: const EdgeInsets.fromLTRB(8, 0, 8, 12),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -122,8 +123,9 @@ class _PesananSelesaiCardState extends State<PesananSelesaiCard> {
                             child: Text(
                               _namaToko,
                               style: blackTextStyle.copyWith(
+                                fontFamily: 'Nunito',
                                 fontSize: 14,
-                                fontWeight: FontWeight.bold,
+                                fontWeight: FontWeight.w600,
                               ),
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
@@ -163,52 +165,55 @@ class _PesananSelesaiCardState extends State<PesananSelesaiCard> {
                           ),
                         ],
                       ),
-                      const SizedBox(height: 4),
+                      const SizedBox(height: 10),
+
                       Row(
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
-                          OutlinedButton(
-                            onPressed: () {},
-                            style: OutlinedButton.styleFrom(
-                              side: BorderSide(color: zelow),
-                              backgroundColor: Colors.white,
-                              padding: EdgeInsets.symmetric(
-                                horizontal: 10,
-                                vertical: 6,
+                          GestureDetector(
+                            onTap: () {},
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 32,
+                                vertical: 5,
                               ),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(24),
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(20),
+                                border: Border.all(color: zelow, width: 1),
                               ),
-                            ),
-                            child: Text(
-                              'Nilai',
-                              style: TextStyle(
-                                color: zelow,
-                                fontSize: 14,
-                                fontWeight: FontWeight.w600,
+                              child: Text(
+                                'Nilai',
+                                style: TextStyle(
+                                  fontFamily: 'Nunito',
+                                  color: zelow,
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.bold,
+                                ),
                               ),
                             ),
                           ),
-                          SizedBox(width: 8),
-                          ElevatedButton(
-                            onPressed: () {},
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: zelow,
-                              foregroundColor: Colors.white,
-                              padding: EdgeInsets.symmetric(
-                                horizontal: 10,
+                          const SizedBox(width: 8),
+
+                          GestureDetector(
+                            onTap: () {},
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 24,
                                 vertical: 6,
                               ),
-                              elevation: 2,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(24),
+                              decoration: BoxDecoration(
+                                color: zelow,
+                                borderRadius: BorderRadius.circular(20),
                               ),
-                            ),
-                            child: Text(
-                              'Beli Lagi',
-                              style: TextStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.w600,
+                              child: const Text(
+                                'Beli Lagi',
+                                style: TextStyle(
+                                  fontFamily: 'Nunito',
+                                  color: Colors.white,
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.bold,
+                                ),
                               ),
                             ),
                           ),

@@ -48,13 +48,14 @@ class _PesananBatalCardState extends State<PesananBatalCard> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+      padding: EdgeInsets.all(2),
+      margin: EdgeInsets.symmetric(horizontal: 8, vertical: 6),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.08),
+            color: Colors.black.withOpacity(0.1),
             spreadRadius: 1,
             blurRadius: 5,
             offset: const Offset(0, 2),
@@ -64,9 +65,8 @@ class _PesananBatalCardState extends State<PesananBatalCard> {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          // Header
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -89,7 +89,6 @@ class _PesananBatalCardState extends State<PesananBatalCard> {
             ),
           ),
 
-          // Konten
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -106,7 +105,7 @@ class _PesananBatalCardState extends State<PesananBatalCard> {
               const SizedBox(width: 6),
               Expanded(
                 child: Padding(
-                  padding: const EdgeInsets.all(8),
+                  padding: const EdgeInsets.fromLTRB(8, 0, 8, 12),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -122,8 +121,9 @@ class _PesananBatalCardState extends State<PesananBatalCard> {
                             child: Text(
                               _namaToko,
                               style: blackTextStyle.copyWith(
+                                fontFamily: 'Nunito',
                                 fontSize: 14,
-                                fontWeight: FontWeight.bold,
+                                fontWeight: FontWeight.w600,
                               ),
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
@@ -132,7 +132,7 @@ class _PesananBatalCardState extends State<PesananBatalCard> {
                         ],
                       ),
                       Padding(
-                        padding: const EdgeInsets.only(top: 4, bottom: 4),
+                        padding: EdgeInsets.only(top: 4, bottom: 4),
                         child: Text(
                           widget.namaProduk,
                           style: blackTextStyle.copyWith(
@@ -146,7 +146,7 @@ class _PesananBatalCardState extends State<PesananBatalCard> {
                       const SizedBox(height: 4),
                       Text(
                         '${widget.quantity}x',
-                        style: const TextStyle(
+                        style: TextStyle(
                           color: Colors.grey,
                           fontSize: 14,
                           fontWeight: FontWeight.bold,
@@ -163,36 +163,49 @@ class _PesananBatalCardState extends State<PesananBatalCard> {
                           ),
                         ],
                       ),
-                      const SizedBox(height: 4),
+                      const SizedBox(height: 10),
+
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          Text(
-                            'Pesanan Dibatalkan',
-                            style: greyTextStyle.copyWith(
-                              fontSize: 13,
-                              fontWeight: FontWeight.w500,
+                          Align(
+                            alignment: Alignment.bottomRight,
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 6,
+                                vertical: 2,
+                              ),
+                              child: Text(
+                                "Pesanan Dibatalkan",
+                                style: greyTextStyle.copyWith(
+                                  fontSize: 13,
+                                  fontFamily: 'Nunito',
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
                             ),
                           ),
-                          ElevatedButton(
-                            onPressed: () {},
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: zelow,
-                              foregroundColor: Colors.white,
+
+                          GestureDetector(
+                            onTap: () {},
+                            child: Container(
                               padding: const EdgeInsets.symmetric(
-                                horizontal: 10,
+                                horizontal: 24,
                                 vertical: 6,
                               ),
-                              elevation: 2,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(24),
+                              decoration: BoxDecoration(
+                                color: zelow,
+                                borderRadius: BorderRadius.circular(20),
                               ),
-                            ),
-                            child: const Text(
-                              'Beli Lagi',
-                              style: TextStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.w600,
+                              child: const Text(
+                                'Beli Lagi',
+                                style: TextStyle(
+                                  fontFamily: 'Nunito',
+                                  color: Colors.white,
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.bold,
+                                ),
                               ),
                             ),
                           ),

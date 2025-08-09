@@ -52,8 +52,8 @@ class _HeaderTokoState extends State<HeaderToko> {
         //mainAxisAlignment: MainAxisAlignment.center,
         // Tombol Search, Favorite dan Share pojok atas
         Positioned(
-          top: 20,
-          right: 10,
+          top: 32,
+          right: 16,
           child: Row(
             children: [
               _buildIconButton(Icons.search),
@@ -86,8 +86,8 @@ class _HeaderTokoState extends State<HeaderToko> {
           ),
         ),
         Positioned(
-          top: 20,
-          left: 10,
+          top: 32,
+          left: 16,
           child: GestureDetector(
             onTap: () {
               Navigator.pop(context);
