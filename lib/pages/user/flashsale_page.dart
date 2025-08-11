@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:zelow/components/akandatang_card.dart';
 import 'dart:async';
 import 'package:zelow/components/constant.dart';
@@ -139,7 +140,7 @@ class _FlashsalePageState extends State<FlashsalePage> {
           icon: Icon(Icons.arrow_back, color: white),
           onPressed: () => Navigator.pop(context),
         ),
-        title: Image.asset('assets/images/Zeflash.png', height: 30),
+        title: SvgPicture.asset("assets/images/Zeflash.svg", height: 24),
         actions: [
           CircleAvatar(
             backgroundColor: white,

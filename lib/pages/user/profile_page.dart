@@ -55,8 +55,8 @@ class ProfilePage extends StatelessWidget {
             title: Text(
               'Profil',
               style: whiteTextStyle.copyWith(
-                fontSize: 20,
-                fontWeight: FontWeight.w700,
+                fontSize: 22,
+                fontWeight: FontWeight.bold,
               ),
             ),
             centerTitle: true,

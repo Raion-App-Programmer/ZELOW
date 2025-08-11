@@ -9,7 +9,6 @@ import 'package:zelow/models/produk_model.dart';
 import '../../models/toko_model.dart';
 import '../../services/produk_service.dart';
 import 'package:zelow/services/flashsale_service.dart';
-import 'package:zelow/models/produk_model.dart';
 import 'package:zelow/utils/time_slot_utils.dart';
 
 class TokoPageUser extends StatefulWidget {

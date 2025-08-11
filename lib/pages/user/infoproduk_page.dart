@@ -144,6 +144,7 @@ class _ProductInfoPageState extends State<ProductInfoPage> {
             '$itemCount ${widget.productData.nama} ditambahkan ke keranjang!',
           ),
           backgroundColor: zelow,
+          duration: const Duration(seconds: 2),
           action: SnackBarAction(
             label: 'LIHAT',
             textColor: Colors.white,

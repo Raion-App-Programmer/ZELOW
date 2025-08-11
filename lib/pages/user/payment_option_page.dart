@@ -1,23 +1,33 @@
 import 'package:flutter/material.dart';
+import 'package:zelow/components/constant.dart';
+import 'package:zelow/components/constant.dart';
 import 'package:zelow/pages/user/payment_page.dart';
 
 class PaymentOptionPage extends StatefulWidget {
-  const PaymentOptionPage({super.key});
+  final List<Map<String, dynamic>> orders;
+  final double subtotal;
+  final String selectedPayment;
+  final String selectedSchedule;
+
+  const PaymentOptionPage({
+    Key? key,
+    required this.orders,
+    required this.subtotal,
+    required this.selectedPayment,
+    required this.selectedSchedule,
+  }) : super(key: key);
 
   @override
   State<PaymentOptionPage> createState() => _PaymentOptionPageState();
 }
 
 class _PaymentOptionPageState extends State<PaymentOptionPage> {
-  int selectedIndex = 0;
+  int? selectedIndex;
+  String? _selectedBankName;
 
   final List<Map<String, dynamic>> paymentMethods = [
     {
-      "image": Image(image: AssetImage("assets/images/mandiri.png")), // ganti dengan AssetImage jika pakai logo Mandiri
-      "label": "Bank Mandiri",
-    },
-    {
-      "image": Image(image: AssetImage("assets/images/bca.jpg")),
+      "image": Image(image: AssetImage("assets/images/bca.png")),
       "label": "Bank BCA",
     },
     {
@@ -25,71 +35,114 @@ class _PaymentOptionPageState extends State<PaymentOptionPage> {
       "label": "Bank BNI",
     },
     {
-      "image": Image(image: AssetImage("assets/images/visa.png")),
-      "label": "VISA",
+      "image": Image(image: AssetImage("assets/images/bri.png")),
+      "label": "Bank BRI",
     },
+    {
+      "image": Image(image: AssetImage("assets/images/bsi.png")),
+      "label": "Bank BSI",
+    },
+    {
+      "image": Image(image: AssetImage("assets/images/mandiri.png")),
+      "label": "Bank Mandiri",
+    },
+    // {
+    //   "image": Image(image: AssetImage("assets/images/visa.png")),
+    //   "label": "VISA",
+    // },
   ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
-        toolbarHeight: MediaQuery.of(context).size.height * 0.1,
-        leading: BackButton(color: Colors.white),
-        centerTitle: true,
-        title: Text("Payment Method", style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600, color: Colors.white)),
-        flexibleSpace: Container(
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.only(
-              bottomLeft: Radius.circular(20),
-              bottomRight: Radius.circular(20)
-            ),
-            gradient: LinearGradient(
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-              colors: [
-                Color(0xff06C474),
-                Color(0xff035E38)
-              ]
-            )
+        title: const Text(
+          'Pilih Metode Transfer',
+          style: TextStyle(
+            fontFamily: 'Nunito',
+            fontWeight: FontWeight.bold,
+            color: Colors.white,
+          ),
+        ),
+        backgroundColor: zelow,
+        iconTheme: const IconThemeData(color: Colors.white),
+        elevation: 0,
+      ),
+      body: SafeArea(
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              for (int index = 0; index < paymentMethods.length; index++)
+                _buildPaymentOption(index),
+            ],
           ),
         ),
       ),
-      body: SafeArea(
-        child: Center(
-          child: Padding(padding: EdgeInsets.only(bottom: 48),
-          child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            SizedBox(height: 44),
-            for (int index = 0; index < paymentMethods.length; index++)
-              _buildPaymentOption(index),
-              Spacer(),
-              SizedBox(
-              height: 44,
-              width: 353,
-                child: ElevatedButton(
-                  onPressed: (){
-                    Navigator.push(context, 
-                    MaterialPageRoute(builder: (context) => PaymentPage())
-                    );
-                  },
-                  style: ElevatedButton.styleFrom(
-                  backgroundColor: Color(0xff06C474),
-                  shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(24)
-                )
-              ),
-               child: Text("Submit", style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700, color: Colors.white),))
-              )
-          ]
+      bottomNavigationBar: Container(
+        height: 100,
+        padding: const EdgeInsets.only(bottom: 24, left: 18, right: 18),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          border: Border(
+            top: BorderSide(color: Colors.grey.shade300, width: 1),
+          ),
         ),
-        )
+        child: Center(
+          child: SizedBox(
+            width: double.infinity,
+            height: 48,
+            child: ElevatedButton(
+              onPressed: () {
+                if (_selectedBankName != null) {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder:
+                          (context) => PaymentPage(
+                            orders: widget.orders,
+                            subtotal: widget.subtotal,
+                            selectedPayment: widget.selectedPayment,
+                            selectedSchedule: widget.selectedSchedule,
+                            selectedBankName: _selectedBankName!,
+                          ),
+                    ),
+                  );
+                } else {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text("Silakan pilih bank terlebih dahulu"),
+                      backgroundColor: zelow,
+                      duration: const Duration(seconds: 1),
+                    ),
+                  );
+                }
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: zelow,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(24),
+                ),
+                padding: EdgeInsets.zero,
+              ),
+              child: const Text(
+                "Pilih",
+                style: TextStyle(
+                  fontFamily: "Nunito",
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                ),
+              ),
+            ),
+          ),
         ),
       ),
     );
   }
+
   Widget _buildPaymentOption(int index) {
     final isSelected = selectedIndex == index;
 
@@ -97,47 +150,46 @@ class _PaymentOptionPageState extends State<PaymentOptionPage> {
       onTap: () {
         setState(() {
           selectedIndex = index;
+          _selectedBankName = paymentMethods[index]['label'];
         });
       },
       child: Container(
-        width: 321,
-        height: 92,
-        margin: const EdgeInsets.symmetric(vertical: 10),
-        padding: const EdgeInsets.all(12),
+        height: 90,
+        margin: const EdgeInsets.all(10),
+        padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: Colors.white,
           border: Border.all(
-            color: isSelected ? const Color(0xFFA1C45A) : Colors.grey.shade300,
+            color: isSelected ? zelow : Colors.grey.shade300,
             width: 2,
           ),
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(16),
         ),
         child: Row(
           children: [
             SizedBox(
-              width: 60,
+              width: 64,
               height: 48,
-              child: paymentMethods[index]['image']),
+              child: paymentMethods[index]['image'],
+            ),
             const SizedBox(width: 12),
             Expanded(
               child: Text(
                 paymentMethods[index]['label'],
-                style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+                style: const TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
             Container(
-              width: 24,
-              height: 24,
+              width: 28,
+              height: 28,
               decoration: BoxDecoration(
-                color: isSelected ? const Color(0xFFA1C45A) : Colors.grey,
-                shape: BoxShape.circle
+                color: isSelected ? zelow : white,
+                shape: BoxShape.circle,
               ),
-              child: Icon(
-                Icons.check,
-                size: 16,
-                color: Colors.white,
-              )
-            )
+              child: const Icon(Icons.check, size: 20, color: Colors.white),
+            ),
           ],
         ),
       ),

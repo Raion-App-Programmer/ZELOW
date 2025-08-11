@@ -91,7 +91,7 @@ class InfoProdukCard extends StatelessWidget {
                 style: const TextStyle(
                   fontFamily: 'Nunito',
                   fontWeight: FontWeight.w600,
-                  fontSize: 14,
+                  fontSize: 15,
                   color: Colors.grey,
                 ),
               ),

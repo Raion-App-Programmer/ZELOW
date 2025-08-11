@@ -26,7 +26,6 @@ class SemuaUlasanPage extends StatelessWidget {
             fontSize: 22,
           ),
         ),
-        centerTitle: true,
         backgroundColor: zelow,
         iconTheme: const IconThemeData(color: Colors.white),
         elevation: 0,

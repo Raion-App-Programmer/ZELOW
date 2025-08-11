@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:zelow/components/constant.dart';
 import 'package:zelow/models/toko_model.dart';
 import 'package:zelow/services/toko_service.dart';
+import 'package:zelow/services/produk_service.dart';
+import 'package:zelow/pages/user/infoproduk_page.dart';
 import 'package:zelow/utils/format_mata_uang.dart';
 
 class PesananSelesaiCard extends StatefulWidget {
@@ -196,7 +198,24 @@ class _PesananSelesaiCardState extends State<PesananSelesaiCard> {
                           const SizedBox(width: 8),
 
                           GestureDetector(
-                            onTap: () {},
+                            onTap: () async {
+                              final produkService = ProdukService();
+                              final produk = await produkService
+                                  .getProdukByNama(widget.namaProduk);
+
+                              if (produk != null && produk.toko != null) {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder:
+                                        (context) => ProductInfoPage(
+                                          productData: produk,
+                                          tokoData: produk.toko!,
+                                        ),
+                                  ),
+                                );
+                              }
+                            },
                             child: Container(
                               padding: const EdgeInsets.symmetric(
                                 horizontal: 24,

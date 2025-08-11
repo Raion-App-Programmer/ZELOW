@@ -4,6 +4,8 @@ import '../models/produk_model.dart';
 
 class ProdukService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final CollectionReference _produkCollection = FirebaseFirestore.instance
+      .collection('produk');
   final TokoServices _tokoService = TokoServices();
 
   Future<List<Produk>> getProdukByToko(String tokoId) async {
@@ -45,6 +47,24 @@ class ProdukService {
             .data()?['alamat'];
 
     return alamatTokoProduk;
+  }
+
+  Future<Produk?> getProdukByNama(String nama) async {
+    try {
+      final snapshot =
+          await _produkCollection.where('nama', isEqualTo: nama).limit(1).get();
+
+      if (snapshot.docs.isNotEmpty) {
+        final produk = Produk.fromFirestore(snapshot.docs.first);
+
+        final toko = await _tokoService.getTokoById(produk.idToko);
+        return toko != null ? produk.copyWithToko(toko) : produk;
+      }
+      return null;
+    } catch (e) {
+      print("Error saat mengambil produk berdasarkan nama: $e");
+      return null;
+    }
   }
 
   Future<List<Produk>> getProdukRandom({int limit = 10}) async {

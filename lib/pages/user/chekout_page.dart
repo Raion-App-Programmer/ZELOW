@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:zelow/components/constant.dart';
 import 'package:zelow/components/order_item_card.dart';
-import 'package:zelow/pages/user/pesanan_page.dart';
-import 'package:zelow/services/pesanan_service.dart';
-import 'package:zelow/services/keranjang_service.dart';
+import 'package:zelow/pages/user/toko_page.dart';
+import 'package:zelow/pages/user/payment_option_page.dart';
+import 'package:zelow/services/toko_service.dart';
 
 class CheckoutPage extends StatefulWidget {
   final List<Map<String, dynamic>> orders;
@@ -16,14 +16,18 @@ class CheckoutPage extends StatefulWidget {
 }
 
 class _CheckoutPageState extends State<CheckoutPage> {
-  final PesananService _pesananService = PesananService();
+  final TokoServices _tokoService = TokoServices();
+
   late Set<String> alamatOrders;
   late List<Map<String, dynamic>> orders;
 
   double serviceFee = 4900.0;
-  String _selectedPayment = "cash";
+  String _selectedPayment = "transfer";
   String _selectedTab = "Pick Up";
-  String _selectedSchedule = "12:00 - 13:00";
+  bool _isOrderTypeSelected = false;
+
+  late String _selectedSchedule;
+  late List<String> schedules;
 
   final currencyFormatter = NumberFormat("#,##0", "id_ID");
 
@@ -49,31 +53,97 @@ class _CheckoutPageState extends State<CheckoutPage> {
     return months[month - 1];
   }
 
-  Future<void> _handleCheckout() async {
-    try {
-      // tambahkan pesanan
-      await _pesananService.tambahPesanan(
-        widget.orders,
-        _selectedPayment,
-        _selectedSchedule,
-      );
+  List<String> getScheduleSlots() {
+    final openHour = 8;
+    final closeHour = 21;
 
-      // hapus produk dari keranjang
-      final keranjangService = KeranjangService();
-      for (var order in widget.orders) {
-        final produkId = order['idProduk'];
-        if (produkId != null) {
-          await keranjangService.removeFromCart(produkId);
-        }
-      }
-    } catch (e) {
-      print("Error: $e");
+    DateTime now = DateTime.now();
+    int hour = now.hour;
+    int minute = now.minute;
+
+    List<String> slots = [];
+
+    if (hour >= closeHour) {
+      slots.add(
+        "${openHour.toString().padLeft(2, '0')}:00 - ${(openHour + 1).toString().padLeft(2, '0')}:00",
+      );
+      slots.add(
+        "${(openHour + 1).toString().padLeft(2, '0')}:00 - ${(openHour + 2).toString().padLeft(2, '0')}:00",
+      );
+      return slots;
     }
+
+    int startHour;
+    if (minute <= 30) {
+      startHour = hour;
+    } else {
+      startHour = hour + 1;
+    }
+
+    for (int i = 0; i < 2; i++) {
+      int fromHour = (startHour + i);
+      int toHour = fromHour + 1;
+
+      if (fromHour >= closeHour) {
+        fromHour = openHour + ((fromHour - closeHour) % (closeHour - openHour));
+        toHour = fromHour + 1;
+      }
+
+      slots.add(
+        "${fromHour.toString().padLeft(2, '0')}:00 - ${toHour.toString().padLeft(2, '0')}:00",
+      );
+    }
+
+    return slots;
+  }
+
+  String getDefaultSchedule() {
+    final now = DateTime.now();
+    final hour = now.hour;
+    final minute = now.minute;
+
+    final List<String> slots = [
+      "08:00 - 09:00",
+      "09:00 - 10:00",
+      "10:00 - 11:00",
+      "11:00 - 12:00",
+      "12:00 - 13:00",
+      "13:00 - 14:00",
+      "14:00 - 15:00",
+      "15:00 - 16:00",
+      "16:00 - 17:00",
+      "17:00 - 18:00",
+      "18:00 - 19:00",
+      "19:00 - 20:00",
+      "20:00 - 21:00",
+      "21:00 - 22:00",
+    ];
+
+    int index;
+    if (minute < 30) {
+      index = slots.indexWhere(
+        (slot) => slot.startsWith("${hour.toString().padLeft(2, '0')}:"),
+      );
+    } else {
+      // Skip ke slot berikutnya
+      index = slots.indexWhere(
+        (slot) => slot.startsWith("${(hour + 1).toString().padLeft(2, '0')}:"),
+      );
+    }
+
+    if (index == -1) {
+      index = 0;
+    }
+
+    return slots[index];
   }
 
   @override
   void initState() {
     super.initState();
+    schedules = getScheduleSlots();
+    _selectedSchedule = getDefaultSchedule();
+
     orders = List.from(widget.orders);
     alamatOrders =
         widget.orders.map((order) => order['alamat'].toString()).toSet();
@@ -126,7 +196,14 @@ class _CheckoutPageState extends State<CheckoutPage> {
   // Jika ada lebih dari satu alamat, tampilkan sebagai daftar dengan bullet points
   Widget buildAlamatToko(Set<String> alamatOrders) {
     if (alamatOrders.length == 1) {
-      return Text(alamatOrders.first, style: TextStyle(fontSize: 14));
+      return Text(
+        alamatOrders.first,
+        style: TextStyle(
+          fontFamily: 'Nunito',
+          fontSize: 15,
+          color: Colors.grey.shade700,
+        ),
+      );
     } else {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -135,8 +212,24 @@ class _CheckoutPageState extends State<CheckoutPage> {
             Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text("•  ", style: TextStyle(fontSize: 14)),
-                Expanded(child: Text(alamat, style: TextStyle(fontSize: 14))),
+                Text(
+                  "•  ",
+                  style: TextStyle(
+                    fontFamily: 'Nunito',
+                    fontSize: 15,
+                    color: Colors.grey.shade800,
+                  ),
+                ),
+                Expanded(
+                  child: Text(
+                    alamat,
+                    style: TextStyle(
+                      fontFamily: 'Nunito',
+                      fontSize: 15,
+                      color: Colors.grey.shade800,
+                    ),
+                  ),
+                ),
               ],
             ),
         ],
@@ -144,7 +237,97 @@ class _CheckoutPageState extends State<CheckoutPage> {
     }
   }
 
+  Widget buildTokoInfo(Set<Map<String, String>> tokoOrders) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children:
+          tokoOrders.map((toko) {
+            return Padding(
+              padding: const EdgeInsets.only(bottom: 12),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Icon(Icons.store, color: zelow),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          toko['nama'] ?? '-',
+                          style: const TextStyle(
+                            fontFamily: 'Nunito',
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16,
+                          ),
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          toko['alamat'] ?? '-',
+                          style: const TextStyle(
+                            fontFamily: 'Nunito',
+                            fontSize: 14,
+                          ),
+                        ),
+                        const SizedBox(height: 4),
+                        const Text(
+                          "Buka 08.00 - 21.00",
+                          style: TextStyle(fontSize: 14, fontFamily: 'Nunito'),
+                        ),
+                        const SizedBox(height: 8),
+                        GestureDetector(
+                          onTap: () async {
+                            final tokoDetail = await _tokoService.getTokoById(
+                              toko['idToko'] ?? '',
+                            );
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder:
+                                    (context) =>
+                                        TokoPageUser(tokoData: tokoDetail),
+                              ),
+                            );
+                          },
+                          child: Text(
+                            "Informasi Toko",
+                            style: TextStyle(
+                              color: zelow,
+                              fontWeight: FontWeight.bold,
+                              fontFamily: 'Nunito',
+                              fontSize: 14,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            );
+          }).toList(),
+    );
+  }
+
   void _showOrderTypeModal(BuildContext context) {
+    final tokoOrders = <Map<String, String>>{};
+
+    for (var order in widget.orders) {
+      final idToko = order['idToko']?.toString() ?? '';
+      final nama = order['nama']?.toString() ?? '-';
+      final alamat = order['alamat']?.toString() ?? '-';
+
+      final sudahAda = tokoOrders.any((t) => t['idToko'] == idToko);
+
+      if (!sudahAda) {
+        tokoOrders.add({'idToko': idToko, 'nama': nama, 'alamat': alamat});
+      }
+    }
+
+    final now = DateTime.now();
+    final isTutup = now.hour >= 21;
+    final tanggalBesok = now.add(Duration(days: 1));
+
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -158,240 +341,190 @@ class _CheckoutPageState extends State<CheckoutPage> {
             return Padding(
               padding: MediaQuery.of(context).viewInsets,
               child: Container(
-                padding: EdgeInsets.fromLTRB(20, 15, 20, 40),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // Garis drag indikator
-                    Center(
-                      child: Container(
-                        width: 50,
-                        height: 5,
-                        margin: EdgeInsets.only(bottom: 16),
-                        decoration: BoxDecoration(
-                          color: Colors.grey.shade300,
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                      ),
-                    ),
-                    // Tab Switcher
-                    Row(
+                constraints: BoxConstraints(
+                  maxHeight: MediaQuery.of(context).size.height * 0.9,
+                ),
+                child: SingleChildScrollView(
+                  child: Padding(
+                    padding: EdgeInsets.fromLTRB(20, 15, 20, 40),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        _buildTabButton(
-                          "Pick Up",
-                          _selectedTab,
-                          zelow,
-                          setModalState,
-                        ),
-                        SizedBox(width: 12),
-                        _buildTabButton(
-                          "Delivery",
-                          _selectedTab,
-                          zelow,
-                          setModalState,
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: 24),
-
-                    if (_selectedTab == "Pick Up") ...[
-                      Text(
-                        "Ambil Langsung ke Toko",
-                        style: TextStyle(
-                          fontFamily: 'Nunito',
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      SizedBox(height: 4),
-                      Text(
-                        "Langsung ambil belanjaanmu tanpa perlu menunggu",
-                        style: TextStyle(
-                          fontFamily: 'Nunito',
-                          fontSize: 14,
-                          color: Colors.grey.shade600,
-                        ),
-                      ),
-                      SizedBox(height: 16),
-
-                      // Toko Info
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Icon(Icons.store, color: zelow),
-                          SizedBox(width: 8),
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                // Nama Toko
-                                Text(
-                                  widget.orders.isNotEmpty &&
-                                          widget.orders[0]["nama"] != null
-                                      ? widget.orders[0]["nama"]
-                                      : "-",
-                                  style: TextStyle(
-                                    fontFamily: 'Nunito',
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 16,
-                                  ),
-                                ),
-                                SizedBox(height: 4),
-
-                                // Alamat Toko
-                                Text(
-                                  widget.orders.isNotEmpty &&
-                                          widget.orders[0]["alamat"] != null
-                                      ? widget.orders[0]["alamat"]
-                                      : "-",
-                                  style: TextStyle(
-                                    fontFamily: 'Nunito',
-                                    fontSize: 14,
-                                  ),
-                                ),
-                                SizedBox(height: 4),
-
-                                // buildAlamatToko(alamatOrders),
-                                // SizedBox(height: 4),
-                                Text(
-                                  "Buka 07.00 - 23.00",
-                                  style: TextStyle(
-                                    fontSize: 14,
-                                    fontFamily: 'Nunito',
-                                  ),
-                                ),
-                                SizedBox(height: 8),
-
-                                GestureDetector(
-                                  onTap: () {
-                                    // Navigasi ke detail toko
-                                  },
-                                  child: Text(
-                                    "Informasi Toko",
-                                    style: TextStyle(
-                                      color: zelow,
-                                      fontWeight: FontWeight.bold,
-                                      fontFamily: 'Nunito',
-                                      fontSize: 14,
-                                    ),
-                                  ),
-                                ),
-                              ],
+                        // Garis drag indikator
+                        Center(
+                          child: Container(
+                            width: 50,
+                            height: 5,
+                            margin: EdgeInsets.only(bottom: 16),
+                            decoration: BoxDecoration(
+                              color: Colors.grey.shade300,
+                              borderRadius: BorderRadius.circular(10),
                             ),
                           ),
-                        ],
-                      ),
-                      SizedBox(height: 16),
-
-                      // Jadwal
-                      Container(
-                        padding: EdgeInsets.all(16),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(12),
-                          border: Border.all(color: Colors.grey.shade300),
                         ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                        // Tab Switcher
+                        Row(
                           children: [
-                            Text(
-                              "Jadwal Pengambilan",
-                              style: TextStyle(
-                                fontFamily: 'Nunito',
-                                fontWeight: FontWeight.bold,
-                                fontSize: 18,
-                              ),
+                            _buildTabButton(
+                              "Pick Up",
+                              _selectedTab,
+                              zelow,
+                              setModalState,
                             ),
-                            SizedBox(height: 2),
-                            Text(
-                              "Pilih Jadwal yang Tersedia",
-                              style: TextStyle(
-                                fontSize: 14,
-                                fontFamily: 'Nunito',
-                              ),
-                            ),
-
-                            Divider(height: 20),
-
-                            Text(
-                              "Hari Ini",
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 15,
-                                fontFamily: 'Nunito',
-                              ),
-                            ),
-                            Text(
-                              DateFormat(
-                                "d MMMM yyyy",
-                                'id_ID',
-                              ).format(DateTime.now()),
-                              style: TextStyle(
-                                fontSize: 14,
-                                fontFamily: 'Nunito',
-                              ),
-                            ),
-                            SizedBox(height: 4),
-
-                            Column(
-                              children: [
-                                _buildScheduleRadio(
-                                  "12:00 - 13:00",
-                                  _selectedSchedule,
-                                  zelow,
-                                  setModalState,
-                                ),
-                                _buildScheduleRadio(
-                                  "18:00 - 19:00",
-                                  _selectedSchedule,
-                                  zelow,
-                                  setModalState,
-                                ),
-                              ],
+                            SizedBox(width: 12),
+                            _buildTabButton(
+                              "Delivery",
+                              _selectedTab,
+                              zelow,
+                              setModalState,
                             ),
                           ],
                         ),
-                      ),
-                    ] else ...[
-                      SizedBox(height: 190),
-                      Center(
-                        child: Text(
-                          "Segera Hadir...",
-                          style: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                            fontFamily: 'Nunito',
-                            color: Colors.grey,
-                          ),
-                        ),
-                      ),
-                      SizedBox(height: 190),
-                    ],
-                    SizedBox(height: 36),
+                        SizedBox(height: 24),
 
-                    SizedBox(
-                      width: double.infinity,
-                      child: ElevatedButton(
-                        onPressed: () => Navigator.pop(context),
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: zelow,
-                          padding: EdgeInsets.symmetric(vertical: 14),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(28),
+                        if (_selectedTab == "Pick Up") ...[
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                "Ambil Langsung ke Toko",
+                                style: TextStyle(
+                                  fontFamily: 'Nunito',
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              SizedBox(height: 4),
+                              Text(
+                                "Langsung ambil belanjaanmu tanpa perlu menunggu",
+                                style: TextStyle(
+                                  fontFamily: 'Nunito',
+                                  fontSize: 14,
+                                  color: Colors.grey.shade600,
+                                ),
+                              ),
+                            ],
+                          ),
+                          SizedBox(height: 16),
+
+                          buildTokoInfo(tokoOrders),
+                          SizedBox(height: 4),
+
+                          // Jadwal
+                          Container(
+                            padding: EdgeInsets.all(16),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(12),
+                              border: Border.all(color: Colors.grey.shade300),
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  "Jadwal Pengambilan",
+                                  style: TextStyle(
+                                    fontFamily: 'Nunito',
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 18,
+                                  ),
+                                ),
+                                SizedBox(height: 2),
+                                Text(
+                                  "Pilih Jadwal yang Tersedia",
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    fontFamily: 'Nunito',
+                                  ),
+                                ),
+
+                                Divider(height: 20),
+
+                                Text(
+                                  isTutup
+                                      ? "Toko Tutup, Ambil Besok"
+                                      : "Hari Ini",
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 15,
+                                    fontFamily: 'Nunito',
+                                  ),
+                                ),
+                                Text(
+                                  DateFormat(
+                                    "d MMMM yyyy",
+                                    'id_ID',
+                                  ).format(isTutup ? tanggalBesok : now),
+                                  style: const TextStyle(
+                                    fontSize: 14,
+                                    fontFamily: 'Nunito',
+                                  ),
+                                ),
+                                SizedBox(height: 4),
+
+                                Column(
+                                  children:
+                                      schedules.map((time) {
+                                        return _buildScheduleRadio(
+                                          time,
+                                          _selectedSchedule,
+                                          zelow,
+                                          setModalState,
+                                        );
+                                      }).toList(),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ] else ...[
+                          SizedBox(height: 190),
+                          Center(
+                            child: Text(
+                              "Segera Hadir...",
+                              style: TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                                fontFamily: 'Nunito',
+                                color: Colors.grey,
+                              ),
+                            ),
+                          ),
+                          SizedBox(height: 190),
+                        ],
+                        SizedBox(height: 24),
+
+                        SizedBox(
+                          width: double.infinity,
+                          child: ElevatedButton(
+                            onPressed: () {
+                              setState(() {
+                                _isOrderTypeSelected = true;
+                                _selectedTab = "Pick Up";
+                                _selectedSchedule = _selectedSchedule;
+                              });
+                              Navigator.pop(context);
+                            },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: zelow,
+                              padding: EdgeInsets.symmetric(vertical: 14),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(28),
+                              ),
+                            ),
+                            child: Text(
+                              "Terapkan",
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                                fontFamily: 'Nunito',
+                                color: Colors.white,
+                              ),
+                            ),
                           ),
                         ),
-                        child: Text(
-                          "Terapkan",
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                            fontFamily: 'Nunito',
-                            color: Colors.white,
-                          ),
-                        ),
-                      ),
+                      ],
                     ),
-                  ],
+                  ),
                 ),
               ),
             );
@@ -503,17 +636,9 @@ class _CheckoutPageState extends State<CheckoutPage> {
                 ),
               ),
               SizedBox(height: 4),
-              Text(
-                widget.orders.isNotEmpty && widget.orders[0]["alamat"] != null
-                    ? widget.orders[0]["alamat"]
-                    : "-",
-                style: TextStyle(
-                  fontFamily: 'Nunito',
-                  fontSize: 15,
-                  color: Colors.grey.shade700,
-                ),
-              ),
+              buildAlamatToko(alamatOrders),
               SizedBox(height: 16),
+
               Text(
                 "Tipe Pemesanan",
                 style: TextStyle(
@@ -537,7 +662,9 @@ class _CheckoutPageState extends State<CheckoutPage> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        "Pilih Tipe Pemesanan",
+                        !_isOrderTypeSelected
+                            ? "Pilih Tipe Pemesanan"
+                            : "$_selectedTab $_selectedSchedule",
                         style: TextStyle(
                           fontFamily: 'Nunito',
                           fontWeight: FontWeight.w600,
@@ -550,6 +677,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                 ),
               ),
               SizedBox(height: 20),
+
               Text(
                 "Rincian Pesanan",
                 style: TextStyle(
@@ -575,6 +703,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                     }).toList(),
               ),
               SizedBox(height: 16),
+
               Text(
                 "Ringkasan Pembayaran",
                 style: TextStyle(
@@ -730,6 +859,30 @@ class _CheckoutPageState extends State<CheckoutPage> {
                     Row(
                       children: [
                         Radio(
+                          value: "transfer",
+                          groupValue: _selectedPayment,
+                          activeColor: zelow,
+                          materialTapTargetSize:
+                              MaterialTapTargetSize.shrinkWrap,
+                          onChanged: (val) {
+                            setState(() {
+                              _selectedPayment = val.toString();
+                            });
+                          },
+                        ),
+                        Text(
+                          "Transfer Bank",
+                          style: TextStyle(
+                            fontFamily: "Nunito",
+                            fontSize: 16,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        Radio(
                           value: "cash",
                           groupValue: _selectedPayment,
                           activeColor: zelow,
@@ -743,30 +896,6 @@ class _CheckoutPageState extends State<CheckoutPage> {
                         ),
                         Text(
                           "Cash",
-                          style: TextStyle(
-                            fontFamily: "Nunito",
-                            fontSize: 16,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        Radio(
-                          value: "card",
-                          groupValue: _selectedPayment,
-                          activeColor: zelow,
-                          materialTapTargetSize:
-                              MaterialTapTargetSize.shrinkWrap,
-                          onChanged: (val) {
-                            setState(() {
-                              _selectedPayment = val.toString();
-                            });
-                          },
-                        ),
-                        Text(
-                          "Kartu Debit",
                           style: TextStyle(
                             fontFamily: "Nunito",
                             fontSize: 16,
@@ -797,13 +926,23 @@ class _CheckoutPageState extends State<CheckoutPage> {
             height: 48,
             child: ElevatedButton(
               onPressed: () {
-                _handleCheckout();
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => PesananPage()),
-                );
+                if (!_isOrderTypeSelected) {
+                  _showOrderTypeModal(context);
+                } else {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder:
+                          (context) => PaymentOptionPage(
+                            orders: orders,
+                            subtotal: harga + serviceFee,
+                            selectedPayment: _selectedPayment,
+                            selectedSchedule: _selectedSchedule,
+                          ),
+                    ),
+                  );
+                }
               },
-
               style: ElevatedButton.styleFrom(
                 backgroundColor: zelow,
                 shape: RoundedRectangleBorder(
@@ -814,9 +953,9 @@ class _CheckoutPageState extends State<CheckoutPage> {
                   vertical: 10,
                 ),
               ),
-              child: const Text(
-                "Checkout",
-                style: TextStyle(
+              child: Text(
+                _isOrderTypeSelected ? "Checkout" : "Pilih Tipe Pemesanan",
+                style: const TextStyle(
                   fontFamily: "Nunito",
                   fontSize: 18,
                   fontWeight: FontWeight.bold,

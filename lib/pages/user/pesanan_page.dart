@@ -57,7 +57,7 @@ class _PesananPageState extends State<PesananPage> {
         title: Text(
           "Pesanan Saya",
           style: whiteTextStyle.copyWith(
-            fontSize: MediaQuery.of(context).size.width * 0.05,
+            fontSize: 22,
             fontWeight: FontWeight.bold,
           ),
         ),
