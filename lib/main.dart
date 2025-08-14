@@ -45,7 +45,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      initialRoute: '/home_page_user', // Bisa diganti sesuai kebutuhan
+      initialRoute: '/login_page', 
       debugShowCheckedModeBanner: false,
       theme: ThemeData(fontFamily: 'Nunito'),
       routes: {
