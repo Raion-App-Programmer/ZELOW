@@ -83,5 +83,4 @@ class DefaultFirebaseOptions {
     authDomain: 'zelow-dbf83.firebaseapp.com',
     storageBucket: 'zelow-dbf83.firebasestorage.app',
   );
-
 }
