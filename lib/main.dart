@@ -15,6 +15,7 @@ import 'package:zelow/pages/user/flashsale_page.dart';
 import 'package:zelow/pages/user/pesanan_page.dart';
 import 'package:zelow/pages/user/profile_page.dart';
 import 'package:zelow/pages/user/chat_page.dart';
+import 'package:zelow/pages/user/toko_page_user.dart';
 
 const SUPABASE_URL = 'https://gegrqxsyhqestdtmqadq.supabase.co';
 const SUPABASE_KEY =
@@ -45,7 +46,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      initialRoute: '/login_page', 
+      initialRoute: '/login_page',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(fontFamily: 'Nunito'),
       routes: {
@@ -54,10 +55,11 @@ class MyApp extends StatelessWidget {
         '/home_page_umkm': (context) => HomePageUmkm(),
         '/login_page': (context) => LoginPage(),
         '/flashsale': (context) => FlashsalePage(),
-        '/pesanan': (context) => PesananPage(),
+        '/pesanan': (context) => PesananPage(), 
         '/profile': (context) => ProfilePage(),
+        '/toko': (context) => TokoPageUser(), 
         '/chat': (context) => chatPage(),
-        '/laporan': (context) => IncomeReport(),
+        '/laporan': (context) => IncomeReport(), 
         '/stok': (context) => StokTokoUmkm(),
         '/tambahProduk': (context) => TambahProdukUmkm(),
       },

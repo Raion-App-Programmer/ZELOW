@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:zelow/pages/umkm/stok_toko_umkm.dart';
+import 'package:zelow/pages/umkm/income_report.dart';
 
 import '../../components/constant.dart';
 import '../../services/auth_service.dart';
@@ -30,7 +31,10 @@ class _HomePageUmkmState extends State<HomePageUmkm> {
         title: Text("Home Page Umkm", style: TextStyle(color: black)),
         automaticallyImplyLeading: false,
         actions: [
-          IconButton(onPressed: _tes, icon: Icon(Icons.logout, color: black)),
+          IconButton(
+            onPressed: _tes,
+            icon: Icon(Icons.logout, color: black),
+          ),
         ],
       ),
       body: Center(child: StokPage()),
@@ -46,9 +50,9 @@ class StokPage extends StatelessWidget {
     return Container(
       child: TextButton(
         onPressed: () {
-          Navigator.of(
-            context,
-          ).push(MaterialPageRoute(builder: (context) => StokTokoUmkm()));
+          Navigator.of(context).push(
+            MaterialPageRoute(builder: (context) => StokTokoUmkm()),
+          );
         },
         child: Text('Navigate to Stok Toko UMKM', textAlign: TextAlign.center),
       ),
