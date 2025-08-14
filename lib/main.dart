@@ -15,7 +15,8 @@ import 'package:zelow/pages/user/flashsale_page.dart';
 import 'package:zelow/pages/user/pesanan_page.dart';
 import 'package:zelow/pages/user/profile_page.dart';
 import 'package:zelow/pages/user/chat_page.dart';
-import 'package:zelow/pages/user/toko_page_user.dart';
+import 'package:zelow/pages/user/toko_page.dart';
+import 'package:zelow/models/toko_model.dart';
 
 const SUPABASE_URL = 'https://gegrqxsyhqestdtmqadq.supabase.co';
 const SUPABASE_KEY =
@@ -57,7 +58,10 @@ class MyApp extends StatelessWidget {
         '/flashsale': (context) => FlashsalePage(),
         '/pesanan': (context) => PesananPage(), 
         '/profile': (context) => ProfilePage(),
-        '/toko': (context) => TokoPageUser(), 
+        '/toko': (context) {
+          final tokoData = ModalRoute.of(context)!.settings.arguments as Toko;
+          return TokoPageUser(tokoData: tokoData);
+        },
         '/chat': (context) => chatPage(),
         '/laporan': (context) => IncomeReport(), 
         '/stok': (context) => StokTokoUmkm(),
