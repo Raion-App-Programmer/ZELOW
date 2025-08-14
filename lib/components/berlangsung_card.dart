@@ -41,9 +41,9 @@ class _PesananBerlangsungCardState extends State<PesananBerlangsungCard> {
   }
 
   void _fetchTokoInfo() async {
-    final Toko toko = await _tokoService.getTokoById(widget.idToko);
+    final toko = await _tokoService.getTokoById(widget.idToko);
     setState(() {
-      _namaToko = toko.nama;
+      _namaToko = toko?.nama ?? 'Toko Tidak Ditemukan';
     });
   }
 

@@ -277,17 +277,33 @@ class _CheckoutPageState extends State<CheckoutPage> {
                         const SizedBox(height: 8),
                         GestureDetector(
                           onTap: () async {
-                            final tokoDetail = await _tokoService.getTokoById(
-                              toko['idToko'] ?? '',
-                            );
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder:
-                                    (context) =>
-                                        TokoPageUser(tokoData: tokoDetail),
-                              ),
-                            );
+                            try {
+                              final tokoDetail = await _tokoService.getTokoById(
+                                toko['idToko'] ?? '',
+                              );
+                              if (tokoDetail != null) {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder:
+                                        (context) =>
+                                            TokoPageUser(tokoData: tokoDetail),
+                                  ),
+                                );
+                              } else {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text('Toko tidak ditemukan'),
+                                  ),
+                                );
+                              }
+                            } catch (e) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text('Gagal memuat toko: $e'),
+                                ),
+                              );
+                            }
                           },
                           child: Text(
                             "Informasi Toko",

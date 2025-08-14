@@ -100,7 +100,7 @@ class _StokTokoUmkmState extends State<StokTokoUmkm> {
           ),
           const TambahProduk(),
           const SafeArea(
-            child: Padding(padding: EdgeInsetsGeometry.symmetric(vertical: 15)),
+            child: Padding(padding: EdgeInsets.symmetric(vertical: 15)),
           ),
         ],
       ),
@@ -155,7 +155,7 @@ class ProdukListItem extends StatelessWidget {
     final String title = produk.nama;
     final double price = produk.harga;
     final int stocks = produk.stok;
-    final String produkId = produk.id;
+    final String produkId = produk.idProduk;
     return Padding(
       padding: const EdgeInsets.only(left: 20, top: 14, right: 20),
       child: Container(

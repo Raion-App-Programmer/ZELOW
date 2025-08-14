@@ -77,6 +77,16 @@ class ProdukService {
     }
   }
 
+  Stream<List<Produk>> getProdukByTokoStream(String tokoId) {
+    return _produkCollection
+        .where('id_toko', isEqualTo: tokoId)
+        .snapshots()
+        .map(
+          (snapshot) =>
+              snapshot.docs.map((doc) => Produk.fromFirestore(doc)).toList(),
+        );
+  }
+
   Future<void> addProduct(Produk produk) async {
     try {
       final docRef = _produkCollection.doc();
