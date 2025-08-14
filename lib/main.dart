@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:intl/date_symbol_data_local.dart';
-
 import 'firebase_options.dart';
 import 'package:zelow/pages/splash_page.dart';
 import 'package:zelow/pages/auth/login_page.dart';
@@ -10,12 +9,15 @@ import 'package:zelow/pages/umkm/home_umkm_page.dart';
 import 'package:zelow/pages/umkm/stok_toko_umkm.dart';
 import 'package:zelow/pages/umkm/tambah_produk_umkm.dart';
 import 'package:zelow/pages/umkm/income_report.dart';
+import 'package:zelow/pages/umkm/edit_toko_umkm.dart';
+import 'package:zelow/pages/umkm/profil_penjual_umkm.dart';
 import 'package:zelow/pages/user/home_page_user.dart';
 import 'package:zelow/pages/user/flashsale_page.dart';
 import 'package:zelow/pages/user/pesanan_page.dart';
 import 'package:zelow/pages/user/profile_page.dart';
 import 'package:zelow/pages/user/chat_page.dart';
 import 'package:zelow/pages/user/toko_page.dart';
+import 'package:zelow/pages/user/toko_saya_page.dart';
 import 'package:zelow/models/toko_model.dart';
 
 const SUPABASE_URL = 'https://gegrqxsyhqestdtmqadq.supabase.co';
@@ -47,7 +49,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      initialRoute: '/login_page',
+      initialRoute: '/login_page', // ✅ Pilih login dulu
       debugShowCheckedModeBanner: false,
       theme: ThemeData(fontFamily: 'Nunito'),
       routes: {
@@ -56,16 +58,19 @@ class MyApp extends StatelessWidget {
         '/home_page_umkm': (context) => HomePageUmkm(),
         '/login_page': (context) => LoginPage(),
         '/flashsale': (context) => FlashsalePage(),
-        '/pesanan': (context) => PesananPage(), 
+        '/pesanan': (context) => PesananPage(), // ✅ versi tanpa parameter agar kompatibel
         '/profile': (context) => ProfilePage(),
         '/toko': (context) {
           final tokoData = ModalRoute.of(context)!.settings.arguments as Toko;
           return TokoPageUser(tokoData: tokoData);
         },
         '/chat': (context) => chatPage(),
-        '/laporan': (context) => IncomeReport(), 
+        '/laporan': (context) => IncomeReport(),
         '/stok': (context) => StokTokoUmkm(),
         '/tambahProduk': (context) => TambahProdukUmkm(),
+        '/tokosaya': (context) => TokoSayaPage(),
+        '/edittokosaya': (context) => EditTokoSayaPage(),
+        '/profilpenjualumkm': (context) => ProfilPenjualUmkmPage(),
       },
     );
   }

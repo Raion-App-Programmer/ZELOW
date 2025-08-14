@@ -40,6 +40,12 @@ dev_dependencies:
   flutter_launcher_icons: ^0.13.1
 
 flutter:
+  fonts:
+    - family: nunito  # Nama custom untuk font family
+      fonts:
+        - asset: assets/fonts/Nunito.ttf
+        - asset: assets/fonts/Nunito-Bold.ttf
+          weight: 700
   uses-material-design: true
 
   fonts:
