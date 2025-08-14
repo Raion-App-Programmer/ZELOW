@@ -4,17 +4,15 @@ import '../models/produk_model.dart';
 
 class ProdukService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  final CollectionReference _produkCollection = FirebaseFirestore.instance
-      .collection('produk');
+  final CollectionReference _produkCollection =
+      FirebaseFirestore.instance.collection('produk');
   final TokoServices _tokoService = TokoServices();
 
   Future<List<Produk>> getProdukByToko(String tokoId) async {
     try {
-      QuerySnapshot snapshot =
-          await _firestore
-              .collection('produk')
-              .where('id_toko', isEqualTo: tokoId)
-              .get();
+      QuerySnapshot snapshot = await _produkCollection
+          .where('id_toko', isEqualTo: tokoId)
+          .get();
 
       if (snapshot.docs.isEmpty) {
         print("Tidak ada produk ditemukan untuk toko dengan ID: $tokoId");
@@ -24,23 +22,16 @@ class ProdukService {
       // Ambil objek toko sekali saja
       final toko = await _tokoService.getTokoById(tokoId);
 
-      List<Produk> produkList =
-          snapshot.docs.map((doc) {
-            final produk = Produk.fromFirestore(doc);
-            if (toko != null) {
-              return produk.copyWithToko(toko);
-            }
-            return produk;
-          }).toList();
-
-      return produkList;
+      return snapshot.docs.map((doc) {
+        final produk = Produk.fromFirestore(doc);
+        return toko != null ? produk.copyWithToko(toko) : produk;
+      }).toList();
     } catch (e) {
       print("Error saat mengambil produk by Id Toko: $e");
       return [];
     }
   }
 
-  // fungsi untuk mengambil alamat toko produk
   Future<String> getAlamatTokoByProdukId(String tokoId) async {
     final alamatTokoProduk =
         (await _firestore.collection('toko').doc(tokoId).get())
@@ -56,7 +47,6 @@ class ProdukService {
 
       if (snapshot.docs.isNotEmpty) {
         final produk = Produk.fromFirestore(snapshot.docs.first);
-
         final toko = await _tokoService.getTokoById(produk.idToko);
         return toko != null ? produk.copyWithToko(toko) : produk;
       }
@@ -69,27 +59,18 @@ class ProdukService {
 
   Future<List<Produk>> getProdukRandom({int limit = 10}) async {
     try {
-      QuerySnapshot snapshot = await _firestore.collection('produk').get();
-
+      QuerySnapshot snapshot = await _produkCollection.get();
       print('Total produk ditemukan: ${snapshot.docs.length}');
 
       List<Produk> produkList = [];
-
       for (var doc in snapshot.docs) {
         final produk = Produk.fromFirestore(doc);
-
-        // ambil data toko berdasarkan id_toko
         final toko = await _tokoService.getTokoById(produk.idToko);
-
-        if (toko != null) {
-          produkList.add(produk.copyWithToko(toko));
-        } else {
-          produkList.add(produk); // fallback
-        }
+        produkList.add(toko != null ? produk.copyWithToko(toko) : produk);
       }
 
-      produkList.shuffle(); // acak
-      return produkList.take(limit).toList(); // batasi hasil
+      produkList.shuffle();
+      return produkList.take(limit).toList();
     } catch (e) {
       print('Error mengambil produk random: $e');
       return [];
@@ -98,8 +79,7 @@ class ProdukService {
 
   Future<void> addProduct(Produk produk) async {
     try {
-      final docRef = _firestore.collection('produk').doc();
-
+      final docRef = _produkCollection.doc();
       final productData = {
         'nama': produk.nama,
         'id_toko': produk.idToko,
@@ -112,7 +92,6 @@ class ProdukService {
         'jumlah_disukai': produk.jumlahDisukai,
         'stok': produk.stok,
         'terjual': produk.terjual,
-
         'timestamp': FieldValue.serverTimestamp(),
       };
 
@@ -128,35 +107,48 @@ class ProdukService {
   }
 
   Stream<List<Produk>> streamProdukByToko(String tokoId) {
-    return _firestore
-        .collection('produk')
+    return _produkCollection
         .where('id_toko', isEqualTo: tokoId)
         .snapshots()
-        .map(
-          (snapshot) =>
-              snapshot.docs.map((doc) => Produk.fromFirestore(doc)).toList(),
-        );
+        .asyncMap((snapshot) async {
+          final toko = await _tokoService.getTokoById(tokoId);
+          return snapshot.docs.map((doc) {
+            final produk = Produk.fromFirestore(doc);
+            return toko != null ? produk.copyWithToko(toko) : produk;
+          }).toList();
+        });
   }
 
   Future<void> deleteProduk(String produkId) async {
     try {
-      await _firestore.collection('produk').doc(produkId).delete();
+      await _produkCollection.doc(produkId).delete();
       print('Produk berhasil dihapus');
     } catch (e) {
       print('Error saat menghapus produk: $e');
     }
   }
 
-  Future<void> updateProdukStok(
-    String produkId,
-    String tokoId,
-    int newStock,
-  ) async {
+  Future<void> updateProdukStok(String produkId, int newStock) async {
     try {
-      await _firestore.collection('produk').doc(produkId).update({
-        'stok': newStock,
-      });
+      await _produkCollection.doc(produkId).update({'stok': newStock});
       print('Stok produk berhasil diperbarui');
-    } catch (e) {}
+    } catch (e) {
+      print('Error saat update stok: $e');
+    }
+  }
+
+  Future<void> updateProductStock(String produkId, int amount) async {
+    try {
+      await _produkCollection
+          .doc(produkId)
+          .update({'stok': FieldValue.increment(amount)});
+      print('Stock for product $produkId has been updated by $amount.');
+    } catch (e) {
+      print('Error updating stock: $e');
+    }
+  }
+
+  Future<void> decreaseProductStock(String produkId, int amount) async {
+    await updateProductStock(produkId, -amount);
   }
 }

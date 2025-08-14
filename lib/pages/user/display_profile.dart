@@ -5,32 +5,37 @@ import 'package:zelow/components/constant.dart';
 import 'package:zelow/pages/user/edit_profile.dart';
 import 'package:zelow/pages/auth/login_page.dart';
 
+
 class DisplayProfile extends StatelessWidget {
   final String? gender, birthDate;
-  const DisplayProfile({super.key, this.gender, this.birthDate});
+  const DisplayProfile({
+    super.key,
+    this.gender,
+    this.birthDate
+    });
+  
 
   @override
   Widget build(BuildContext context) {
     final currentUser = FirebaseAuth.instance.currentUser;
 
     if (currentUser == null) {
-      Future.microtask(() {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => LoginPage()),
-        );
-      });
-      return const Scaffold(
-        body: Center(child: Text("User not logged in... redirecting")),
-      );
-    }
+  Future.microtask(() {
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => LoginPage()),
+    );
+  });
+  return const Scaffold(
+    body: Center(child: Text("User not logged in... redirecting")),
+  );
+}
 
     return StreamBuilder<DocumentSnapshot>(
-      stream:
-          FirebaseFirestore.instance
-              .collection('user')
-              .doc(currentUser.uid)
-              .snapshots(),
+      stream: FirebaseFirestore.instance
+          .collection('user')
+          .doc(currentUser.uid)
+          .snapshots(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Scaffold(
@@ -66,7 +71,6 @@ class DisplayProfile extends StatelessWidget {
             ),
             centerTitle: true,
           ),
-          backgroundColor: white,
           body: Center(
             child: Padding(
               padding: EdgeInsets.only(
@@ -94,9 +98,8 @@ class DisplayProfile extends StatelessWidget {
                               width: MediaQuery.of(context).size.width * 0.2,
                               height: MediaQuery.of(context).size.height * 0.1,
                               child: const CircleAvatar(
-                                backgroundImage: AssetImage(
-                                  'assets/images/user.png',
-                                ),
+                                backgroundImage:
+                                    AssetImage('assets/images/user.png'),
                                 backgroundColor: Color(0xffE6F9F1),
                               ),
                             ),
@@ -119,7 +122,9 @@ class DisplayProfile extends StatelessWidget {
                                 Text(email),
                                 const SizedBox(height: 8),
                                 GestureDetector(
-                                  onTap: () {},
+                                  onTap: () {
+                                    
+                                  },
                                   child: Row(
                                     children: [
                                       Image.asset('assets/images/pen.png'),
@@ -127,7 +132,8 @@ class DisplayProfile extends StatelessWidget {
                                       Text(
                                         'Edit profil',
                                         style: greyTextStyle.copyWith(
-                                          decoration: TextDecoration.underline,
+                                          decoration:
+                                              TextDecoration.underline,
                                         ),
                                       ),
                                     ],
@@ -156,8 +162,7 @@ class DisplayProfile extends StatelessWidget {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => const EditProfile(),
-                            ),
+                                builder: (context) => const EditProfile()),
                           );
                         },
                         child: Image.asset('assets/images/pen.png'),
@@ -175,9 +180,7 @@ class DisplayProfile extends StatelessWidget {
                     ),
                     child: Padding(
                       padding: const EdgeInsets.symmetric(
-                        horizontal: 16,
-                        vertical: 12,
-                      ),
+                          horizontal: 16, vertical: 12),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -201,7 +204,9 @@ class DisplayProfile extends StatelessWidget {
                       ),
                       const SizedBox(width: 8),
                       GestureDetector(
-                        onTap: () {},
+                        onTap: () {
+                          
+                        },
                         child: Image.asset('assets/images/pen.png'),
                       ),
                     ],
@@ -215,10 +220,9 @@ class DisplayProfile extends StatelessWidget {
                         borderRadius: BorderRadius.circular(12),
                       ),
                       side: const BorderSide(
-                        color: Color(0xffE6E6E6),
-                        width: 1,
-                        strokeAlign: BorderSide.strokeAlignOutside,
-                      ),
+                          color: Color(0xffE6E6E6),
+                          width: 1,
+                          strokeAlign: BorderSide.strokeAlignOutside),
                     ),
                     onPressed: () {},
                     child: Row(
@@ -247,10 +251,9 @@ class DisplayProfile extends StatelessWidget {
                         borderRadius: BorderRadius.circular(12),
                       ),
                       side: const BorderSide(
-                        color: Color(0xffE6E6E6),
-                        width: 1,
-                        strokeAlign: BorderSide.strokeAlignOutside,
-                      ),
+                          color: Color(0xffE6E6E6),
+                          width: 1,
+                          strokeAlign: BorderSide.strokeAlignOutside),
                     ),
                     onPressed: () {},
                     child: Row(

@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/rendering.dart';
 import 'package:zelow/components/constant.dart';
 import 'package:zelow/components/navbar.dart';
 import 'package:zelow/pages/auth/login_page.dart';
@@ -12,40 +14,40 @@ class ProfilePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final currentUser = FirebaseAuth.instance.currentUser;
-
-    if (currentUser == null) {
-      Future.microtask(() {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => LoginPage()),
-        );
-      });
-      return const Scaffold(
-        body: Center(child: Text("User not logged in... redirecting")),
-      );
-    }
+    
+  if (currentUser == null) {
+  Future.microtask(() {
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => LoginPage()),
+    );
+  });
+  return const Scaffold(
+    body: Center(child: Text("User not logged in... redirecting")),
+  );
+}
 
     return StreamBuilder(
-      stream:
-          FirebaseFirestore.instance
-              .collection('user')
-              .doc(currentUser.uid)
-              .snapshots(),
+      stream: FirebaseFirestore.instance
+        .collection('user')
+        .doc(currentUser.uid)
+        .snapshots(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Scaffold(
-            body: Center(child: CircularProgressIndicator()),
+            body: Center(child: CircularProgressIndicator(),),
           );
-        }
+        } 
         if (!snapshot.hasData || !snapshot.data!.exists) {
-          return const Scaffold(body: Center(child: Text('User not found')));
+          return const Scaffold(
+            body: Center(child: Text('User not found'),),
+          );        
         }
         final userData = snapshot.data!.data() as Map<String, dynamic>;
 
         final String username = userData['username'] ?? 'Unknown';
         final String email = userData['email'] ?? 'No email';
         return Scaffold(
-          backgroundColor: white,
           appBar: AppBar(
             backgroundColor: zelow,
             leading: IconButton(
@@ -55,8 +57,8 @@ class ProfilePage extends StatelessWidget {
             title: Text(
               'Profil',
               style: whiteTextStyle.copyWith(
-                fontSize: 22,
-                fontWeight: FontWeight.bold,
+                fontSize: 20,
+                fontWeight: FontWeight.w700,
               ),
             ),
             centerTitle: true,
@@ -141,9 +143,7 @@ class ProfilePage extends StatelessWidget {
                           ),
                         ],
                       ),
-                      SizedBox(
-                        height: MediaQuery.of(context).size.height * 0.02,
-                      ),
+                      SizedBox(height: MediaQuery.of(context).size.height * 0.02),
                       Text(
                         'Aktivitas',
                         style: blackTextStyle.copyWith(
@@ -153,23 +153,17 @@ class ProfilePage extends StatelessWidget {
                       ),
                       SizedBox(height: 8),
                       IconTextMaker(
-                        leadingIcon: Image.asset(
-                          'assets/images/heart_icon.png',
-                        ),
+                        leadingIcon: Image.asset('assets/images/heart_icon.png'),
                         description: 'Favorit Saya',
                       ),
                       SizedBox(height: 16),
                       IconTextMaker(
-                        leadingIcon: Image.asset(
-                          'assets/images/write_icon.png',
-                        ),
+                        leadingIcon: Image.asset('assets/images/write_icon.png'),
                         description: 'Review Saya',
                       ),
                       SizedBox(height: 16),
                       IconTextMaker(
-                        leadingIcon: Image.asset(
-                          'assets/images/voucher_icon.png',
-                        ),
+                        leadingIcon: Image.asset('assets/images/voucher_icon.png'),
                         description: 'Voucher Saya',
                       ),
                       SizedBox(height: 32),
@@ -182,16 +176,12 @@ class ProfilePage extends StatelessWidget {
                       ),
                       SizedBox(height: 8),
                       IconTextMaker(
-                        leadingIcon: Image.asset(
-                          'assets/images/location_icon.png',
-                        ),
+                        leadingIcon: Image.asset('assets/images/location_icon.png'),
                         description: 'Alamat Saya',
                       ),
                       SizedBox(height: 16),
                       IconTextMaker(
-                        leadingIcon: Image.asset(
-                          'assets/images/security_icon.png',
-                        ),
+                        leadingIcon: Image.asset('assets/images/security_icon.png'),
                         description: 'Keamanan Akun',
                       ),
                       SizedBox(height: 32),
@@ -204,23 +194,17 @@ class ProfilePage extends StatelessWidget {
                       ),
                       SizedBox(height: 8),
                       IconTextMaker(
-                        leadingIcon: Image.asset(
-                          'assets/images/voucher_icon.png',
-                        ),
+                        leadingIcon: Image.asset('assets/images/voucher_icon.png'),
                         description: 'Pengaturan Chat',
                       ),
                       SizedBox(height: 16),
                       IconTextMaker(
-                        leadingIcon: Image.asset(
-                          'assets/images/voucher_icon.png',
-                        ),
+                        leadingIcon: Image.asset('assets/images/voucher_icon.png'),
                         description: 'Pengaturan Notifikasi',
                       ),
                       SizedBox(height: 16),
                       IconTextMaker(
-                        leadingIcon: Image.asset(
-                          'assets/images/voucher_icon.png',
-                        ),
+                        leadingIcon: Image.asset('assets/images/voucher_icon.png'),
                         description: 'Bahasa & Masukan',
                       ),
                       SizedBox(height: 32),
@@ -234,8 +218,9 @@ class ProfilePage extends StatelessWidget {
                                 height: 160,
                                 child: AlertDialog(
                                   shape: RoundedRectangleBorder(
-                                    borderRadius:
-                                        BorderRadiusDirectional.circular(16),
+                                    borderRadius: BorderRadiusDirectional.circular(
+                                      16,
+                                    ),
                                   ),
                                   backgroundColor: Color(0xffFEFEFE),
                                   title: Column(
@@ -263,9 +248,7 @@ class ProfilePage extends StatelessWidget {
                                           Expanded(
                                             child: ElevatedButton(
                                               style: ElevatedButton.styleFrom(
-                                                backgroundColor: Color(
-                                                  0xff06C474,
-                                                ),
+                                                backgroundColor: Color(0xff06C474),
                                                 elevation: 0,
                                                 fixedSize: Size.fromHeight(34),
                                               ),
@@ -275,8 +258,7 @@ class ProfilePage extends StatelessWidget {
                                                   context,
                                                   MaterialPageRoute(
                                                     builder:
-                                                        (context) =>
-                                                            LoginPage(),
+                                                        (context) => LoginPage(),
                                                   ),
                                                   (route) => false,
                                                 );
@@ -322,9 +304,7 @@ class ProfilePage extends StatelessWidget {
                           );
                         },
                         child: IconTextMaker(
-                          leadingIcon: Image.asset(
-                            'assets/images/mdi_logout.png',
-                          ),
+                          leadingIcon: Image.asset('assets/images/mdi_logout.png'),
                           description: 'Keluar',
                         ),
                       ),
@@ -336,7 +316,7 @@ class ProfilePage extends StatelessWidget {
           ),
           bottomNavigationBar: const BottomNav(selectedItem: 4),
         );
-      },
+      }
     );
   }
 }

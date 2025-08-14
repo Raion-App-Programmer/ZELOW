@@ -4,7 +4,7 @@ import 'package:zelow/components/constant.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:zelow/pages/user/display_profile.dart';
 
-class EditProfile extends StatefulWidget {
+class EditProfile extends StatefulWidget{
   const EditProfile({super.key});
 
   @override
@@ -22,7 +22,7 @@ class _EditProfileState extends State<EditProfile> {
     super.initState();
     final user = FirebaseAuth.instance.currentUser;
     nameController = TextEditingController(text: user?.displayName ?? '');
-  }
+   }
 
   @override
   void updateUser() {
@@ -34,16 +34,15 @@ class _EditProfileState extends State<EditProfile> {
     final gender = selectedGender;
     final birthDate = selectedDate;
 
-    // RESUME HERE, U NEED TO GET THE VARIABLES FOR THE TEXTFIELDS
+    // RESUME HERE, U NEED TO GET THE VARIABLES FOR THE TEXTFIELDS 
     // THEN USE UPDATE TO UPDATE THE FIRESTORE
-    userRef
-        .update({'username': name})
-        .then(
-          (value) => print("User updated successfully!"),
-          onError: (e) => print("Error updating user: $e"),
-        );
+    userRef.update({
+      'username': name,
+    }).then(
+      (value) => print("User updated successfully!"),
+      onError: (e) => print("Error updating user: $e"),
+    );
   }
-
   @override
   void dispose() {
     nameController?.dispose();
@@ -59,8 +58,7 @@ class _EditProfileState extends State<EditProfile> {
     );
     if (picked != null && picked != DateTime.now()) {
       setState(() {
-        selectedDate =
-            "${picked.toLocal()}".split(' ')[0]; // Format: YYYY-MM-DD
+        selectedDate = "${picked.toLocal()}".split(' ')[0]; // Format: YYYY-MM-DD
       });
     }
   }
@@ -79,7 +77,7 @@ class _EditProfileState extends State<EditProfile> {
           style: whiteTextStyle.copyWith(
             fontSize: 20,
             fontWeight: FontWeight.w700,
-          ),
+          ), 
         ),
         centerTitle: true,
         actions: [
@@ -87,14 +85,14 @@ class _EditProfileState extends State<EditProfile> {
             onPressed: () async {
               updateUser();
               print('All changes saved!');
-            },
+            }, 
             child: GestureDetector(
               onTap: () {
                 // TODO: implement save function
                 updateUser();
                 print('Attempt to update username successful.');
                 showDialog(
-                  context: context,
+                  context: context, 
                   builder: (BuildContext context) {
                     return SizedBox(
                       width: 353,
@@ -111,18 +109,14 @@ class _EditProfileState extends State<EditProfile> {
                         ),
                       ),
                     );
-                  },
+                  }
                 ).then((_) {
                   Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(
-                      builder:
-                          (context) => DisplayProfile(
-                            gender: selectedGender,
-                            birthDate: selectedDate,
-                          ),
-                    ),
-                  );
+                    context, 
+                    MaterialPageRoute(builder: (context) => DisplayProfile(
+                      gender: selectedGender,
+                      birthDate: selectedDate,
+                    )));
                 });
               },
               child: Text(
@@ -141,38 +135,34 @@ class _EditProfileState extends State<EditProfile> {
         children: [
           Center(
             child: Padding(
-              padding: EdgeInsets.only(
-                top: MediaQuery.of(context).size.height * 0.02,
-              ),
+              padding:  EdgeInsets.only(top: MediaQuery.of(context).size.height * 0.02),
               child: Column(
                 children: [
-                  Center(
-                    // for the container
+                  Center( // for the container
                     child: Container(
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        border: Border.all(color: Color(0xff06C474), width: 1),
-                      ),
-                      child: SizedBox(
-                        width: MediaQuery.of(context).size.width * 0.2,
-                        height: MediaQuery.of(context).size.height * 0.1,
-                        child: CircleAvatar(
-                          backgroundImage: AssetImage('assets/images/user.png'),
-                          backgroundColor: Color(0xffE6F9F1),
-                        ),
-                      ),
-                    ),
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                border: Border.all(
+                                  color: Color(0xff06C474),
+                                  width: 1,
+                                )
+                              ),
+                              child: SizedBox(
+                                width: MediaQuery.of(context).size.width * 0.2,
+                                height: MediaQuery.of(context).size.height * 0.1,
+                                child: CircleAvatar(
+                                  backgroundImage: AssetImage('assets/images/user.png'),
+                                  backgroundColor: Color(0xffE6F9F1),
+                                ),
+                              ),
+                            ),
                   ),
                 ],
               ),
             ),
           ),
           Padding(
-            padding: EdgeInsets.only(
-              top: MediaQuery.of(context).size.width * 0.02,
-              left: MediaQuery.of(context).size.width * 0.06,
-              right: MediaQuery.of(context).size.width * 0.06,
-            ),
+            padding: EdgeInsets.only(top: MediaQuery.of(context).size.width * 0.02, left: MediaQuery.of(context).size.width * 0.06, right: MediaQuery.of(context).size.width * 0.06),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -183,11 +173,11 @@ class _EditProfileState extends State<EditProfile> {
                     fontSize: 14,
                   ),
                 ),
-                SizedBox(height: 8),
+                SizedBox(height: 8,),
                 TextField(
                   controller: nameController,
                   decoration: InputDecoration(
-                    hintText: 'Input Text Here',
+                    hintText: 'Input Text Here', 
                     contentPadding: EdgeInsets.only(left: 16),
                     hintStyle: greyTextStyle.copyWith(
                       fontSize: 14,
@@ -197,11 +187,11 @@ class _EditProfileState extends State<EditProfile> {
                     fillColor: Color(0xffEFEFEF),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(24),
-                      borderSide: BorderSide.none,
+                      borderSide: BorderSide.none
                     ),
                   ),
                 ),
-                SizedBox(height: 9),
+                SizedBox(height: 9,),
                 Text(
                   'Jenis Kelamin',
                   style: blackTextStyle.copyWith(
@@ -209,22 +199,21 @@ class _EditProfileState extends State<EditProfile> {
                     fontSize: 14,
                   ),
                 ),
-                SizedBox(height: 8),
+                SizedBox(height: 8,),
                 DropdownButtonFormField<String>(
                   value: selectedGender,
-                  items:
-                      genderOptions.map((String gender) {
-                        return DropdownMenuItem<String>(
-                          value: gender,
-                          child: Text(
-                            gender,
-                            style: greyTextStyle.copyWith(
-                              fontWeight: FontWeight.w500,
-                              fontSize: 14,
-                            ),
-                          ),
-                        );
-                      }).toList(),
+                  items: genderOptions.map((String gender) {
+                    return DropdownMenuItem<String>(
+                      value: gender, 
+                      child: Text(
+                        gender, 
+                        style: greyTextStyle.copyWith(
+                          fontWeight: FontWeight.w500,
+                          fontSize: 14,
+                        ), 
+                      ),
+                    );
+                  }).toList(),
                   onChanged: (String? newValue) {
                     setState(() {
                       selectedGender = newValue!;
@@ -233,17 +222,14 @@ class _EditProfileState extends State<EditProfile> {
                   decoration: InputDecoration(
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(24),
-                      borderSide: BorderSide.none,
+                      borderSide: BorderSide.none, 
                     ),
                     filled: true,
                     fillColor: Color(0xffEFEFEF),
-                    contentPadding: EdgeInsets.symmetric(
-                      horizontal: 16,
-                      vertical: 12,
-                    ),
+                    contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                   ),
                 ),
-                SizedBox(height: 8),
+                SizedBox(height: 8,),
                 Text(
                   'Tanggal Lahir',
                   style: blackTextStyle.copyWith(
@@ -251,7 +237,7 @@ class _EditProfileState extends State<EditProfile> {
                     fontSize: 14,
                   ),
                 ),
-                SizedBox(height: 8),
+                SizedBox(height: 8,),
                 GestureDetector(
                   onTap: () => _selectDate(context),
                   child: Container(
@@ -267,9 +253,7 @@ class _EditProfileState extends State<EditProfile> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
-                            selectedDate.isEmpty
-                                ? 'Input Date Here'
-                                : selectedDate,
+                            selectedDate.isEmpty ? 'Input Date Here' : selectedDate,
                             style: greyTextStyle.copyWith(
                               fontSize: 14,
                               fontWeight: FontWeight.w500,

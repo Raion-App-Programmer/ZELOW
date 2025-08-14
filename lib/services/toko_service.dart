@@ -1,9 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:zelow/models/toko_model.dart';
-
 import '../models/produk_model.dart';
-
 
 class TokoServices {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -40,23 +38,22 @@ class TokoServices {
     return getTokoList(orderByField: 'jarak', isDecending: false);
   }
 
-
   Future<List<Toko>> getAllTokoPalingLaris() async {
     return getTokoList(orderByField: 'rating', isDecending: true);
   }
 
   Future<List<Toko>> getAllTokoRandom() async {
-    QuerySnapshot querySnapshot = await _firestore.collection(_tokoCollection).get();
-    List<Toko> tokoList = querySnapshot.docs.map((doc) => Toko.fromFirestore(doc)).toList();
+    QuerySnapshot querySnapshot =
+        await _firestore.collection(_tokoCollection).get();
+    List<Toko> tokoList =
+        querySnapshot.docs.map((doc) => Toko.fromFirestore(doc)).toList();
     tokoList.shuffle();
     return tokoList;
   }
-  
-  Future<Toko> getTokoById(String tokoId) async {
-    DocumentSnapshot doc = await _firestore.collection(_tokoCollection)
-        .doc(tokoId)
-        .get();
 
+  Future<Toko?> getTokoById(String tokoId) async {
+    DocumentSnapshot doc =
+        await _firestore.collection(_tokoCollection).doc(tokoId).get();
     return Toko.fromFirestore(doc);
   }
 
@@ -72,40 +69,32 @@ class TokoServices {
       return data['role'];
     }
     return null;
-
   }
 
   Future<String?> getIDToko() async {
     User? user = _auth.currentUser;
-
     String? userID = user?.uid;
-    try {
-      DocumentSnapshot tokoDoc = await _firestore
-          .collection(_tokoCollection)
-          .doc(userID)
-          .get();
 
+    try {
+      DocumentSnapshot tokoDoc =
+          await _firestore.collection(_tokoCollection).doc(userID).get();
       return tokoDoc.id;
     } catch (e) {
-
+      return null;
     }
-
-
   }
 
   Future<Toko?> getTokoByUserID() async {
     String? tokoID = await getIDToko();
-    if(tokoID == null){
+    if (tokoID == null) {
       return null;
     }
     return await getTokoById(tokoID);
   }
 
-  Stream<List<Produk>> getProdukItem(){
-    return _firestore
-        .collection('produk')
-        .snapshots()
-        .map((snapshot) {
+  // Stream produk untuk semua produk (dari HEAD)
+  Stream<List<Produk>> getProdukItem() {
+    return _firestore.collection('produk').snapshots().map((snapshot) {
       return snapshot.docs.map((doc) => Produk.fromFirestore(doc)).toList();
     });
   }
@@ -113,12 +102,12 @@ class TokoServices {
   Future<void> tokoUMKM(Toko toko) async {
     User? currentUser = _auth.currentUser;
     String? userUMKMID = currentUser?.uid;
-    try {
-      final docRef = await _firestore
-          .collection(_tokoCollection)
-          .doc(userUMKMID);
 
-      final Map<String, dynamic>tokoData = {
+    try {
+      final docRef =
+          await _firestore.collection(_tokoCollection).doc(userUMKMID);
+
+      final Map<String, dynamic> tokoData = {
         'id': userUMKMID,
         'nama': toko.nama,
         'gambar': toko.gambar,
@@ -135,7 +124,6 @@ class TokoServices {
       } else {
         await docRef.set(tokoData);
       }
-
     } catch (e) {
       print('Error adding toko: $e');
     }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:badges/badges.dart' as badges;
+import 'package:zelow/pages/umkm/stok_toko_umkm.dart';
 import 'package:zelow/pages/umkm/ulasan_page.dart';
 import 'package:zelow/components/umkm_navbar.dart';
 
@@ -17,7 +18,7 @@ class _HomePageUmkmState extends State<HomePageUmkm> {
     return Scaffold(
       appBar: AppBar(toolbarHeight: MediaQuery.of(context).size.height * 0.001),
       body: SingleChildScrollView(
-        padding: EdgeInsets.symmetric( 
+        padding: EdgeInsets.symmetric(
           vertical: MediaQuery.of(context).size.height * 0.06,
           horizontal: MediaQuery.of(context).size.width * 0.035,
         ),
@@ -39,7 +40,9 @@ class _HomePageUmkmState extends State<HomePageUmkm> {
               ],
             ),
             Container(
-              margin: EdgeInsets.only(top: MediaQuery.of(context).size.height * 0.04,),
+              margin: EdgeInsets.only(
+                top: MediaQuery.of(context).size.height * 0.04,
+              ),
               width: MediaQuery.of(context).size.width,
               padding: EdgeInsets.symmetric(
                 horizontal: MediaQuery.of(context).size.width * 0.035,
@@ -99,7 +102,6 @@ class _HomePageUmkmState extends State<HomePageUmkm> {
                     ],
                   ),
 
-                  
                   Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -217,7 +219,11 @@ class _HomePageUmkmState extends State<HomePageUmkm> {
               children: [
                 GestureDetector(
                   onTap: () {
-                    Navigator.pushReplacementNamed(context, '/stok');
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => const StokTokoUmkm(),
+                      ),
+                    );
                   },
                   child: Stack(
                     alignment: Alignment.center,
@@ -468,7 +474,7 @@ class _HomePageUmkmState extends State<HomePageUmkm> {
             SizedBox(height: 17),
             Image.asset('assets/images/paket_ramadhan.png', height: 194),
 
-            SizedBox(height: MediaQuery.of(context).size.height*0.047),
+            SizedBox(height: MediaQuery.of(context).size.height * 0.047),
             Container(
               width: MediaQuery.of(context).size.width,
               height: 46,
@@ -499,14 +505,10 @@ class _HomePageUmkmState extends State<HomePageUmkm> {
                 ],
               ),
             ),
-
-           
           ],
-          
         ),
-        
       ),
-      bottomNavigationBar:  NavbarBottomUMKM(selectedItem: 0),
+      bottomNavigationBar: NavbarBottomUMKM(selectedItem: 0),
     );
   }
 }
