@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:zelow/components/constant.dart';
+import 'package:zelow/pages/user/home_page_user.dart';
+import 'package:zelow/pages/user/keranjang_page.dart';
 
 class SliderWidget extends StatefulWidget {
   const SliderWidget({super.key});
@@ -24,35 +26,33 @@ class _SliderWidgetState extends State<SliderWidget> {
       children: [
         // Slider Gambar
         Container(
-      decoration: BoxDecoration(
-        border: Border(
-          bottom: BorderSide(color: zelow, width: 3),
-         ), 
-      ),
-        child: SizedBox(
-          height: MediaQuery.of(context).size.height*0.25, // Tinggi slider
-          child: PageView.builder(
-            itemCount: imgList.length,
-            onPageChanged: (index) {
-              setState(() {
-                _currentIndex = index;
-              });
-            },
-            itemBuilder: (context, index) {
-              return ClipRRect(
-                child: Image.asset(
-                  imgList[index],
-                  fit: BoxFit.cover,
-                  width: double.infinity,
-                ),
-              );
-            },
+          decoration: BoxDecoration(
+            border: Border(bottom: BorderSide(color: zelow, width: 3)),
           ),
-        ),
+          child: SizedBox(
+            height: MediaQuery.of(context).size.height * 0.3, // Tinggi slider
+            child: PageView.builder(
+              itemCount: imgList.length,
+              onPageChanged: (index) {
+                setState(() {
+                  _currentIndex = index;
+                });
+              },
+              itemBuilder: (context, index) {
+                return ClipRRect(
+                  child: Image.asset(
+                    imgList[index],
+                    fit: BoxFit.cover,
+                    width: double.infinity,
+                  ),
+                );
+              },
+            ),
+          ),
         ),
 
         Positioned(
-          bottom: 65, 
+          bottom: 50,
           left: 0,
           right: 0,
           child: Container(
@@ -65,7 +65,10 @@ class _SliderWidgetState extends State<SliderWidget> {
                   padding: const EdgeInsets.symmetric(horizontal: 4),
                   child: CircleAvatar(
                     radius: 4,
-                    backgroundColor: _currentIndex == index ? Colors.white : Colors.white.withOpacity(0.5),
+                    backgroundColor:
+                        _currentIndex == index
+                            ? Colors.white
+                            : Colors.white.withOpacity(0.5),
                   ),
                 ),
               ),
@@ -75,19 +78,35 @@ class _SliderWidgetState extends State<SliderWidget> {
 
         // Tombol Notifikasi & Keranjang di Pojok Kanan Atas
         Positioned(
-          top: 20,
-          right: 10,
+          top: 40,
+          right: 16,
           child: Row(
             children: [
-              _buildIconButton(Icons.notifications),
+              _buildIconButton(
+                Icons.notifications,
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => HomePageUser()),
+                  );
+                },
+              ),
               const SizedBox(width: 10),
-              _buildIconButton(Icons.shopping_bag_rounded),
+              _buildIconButton(
+                Icons.shopping_bag_rounded,
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => KeranjangKu()),
+                  );
+                },
+              ),
             ],
           ),
         ),
-         Positioned(
-          top: 20,
-          left: 10,
+        Positioned(
+          top: 40,
+          left: 16,
           child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
             decoration: BoxDecoration(
@@ -98,31 +117,38 @@ class _SliderWidgetState extends State<SliderWidget> {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Icon(Icons.location_on, color: Colors.white), // Ikon lokasi
-                const SizedBox(width: 8),
+                const SizedBox(width: 4),
                 Text(
-                  "Jl. Cibaduyut", // Alamat dummy
-                  style: TextStyle(color: Colors.white, fontSize: MediaQuery.of(context).size.width*0.035),
+                  "Jl. Cibaduyut No. 10", // Alamat dummy
+                  style: TextStyle(
+                    fontFamily: 'Nunito',
+                    color: Colors.white,
+                    fontSize: 15,
+                  ),
                 ),
               ],
             ),
           ),
         ),
+
         // Search Bar Mengambang di Bawah Slider
-        
       ],
     );
   }
 
   // Fungsi untuk membuat tombol bulat putih
-  Widget _buildIconButton(IconData icon) {
-    return Container(
-      width: 40,
-      height: 40,
-      decoration: const BoxDecoration(
-        shape: BoxShape.circle,
-        color: Colors.white,
+  Widget _buildIconButton(IconData icon, {required VoidCallback onPressed}) {
+    return GestureDetector(
+      onTap: onPressed,
+      child: Container(
+        width: 40,
+        height: 40,
+        decoration: const BoxDecoration(
+          shape: BoxShape.circle,
+          color: Colors.white,
+        ),
+        child: Icon(icon, color: zelow), // Ikon hijau
       ),
-      child: Icon(icon, color: zelow), // Ikon hijau
     );
   }
 }

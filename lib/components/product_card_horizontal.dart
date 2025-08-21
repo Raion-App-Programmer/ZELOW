@@ -26,124 +26,172 @@ class DisplayCard extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        width: MediaQuery.of(context).size.width * 0.9, // Lebar card panjang
-        margin: const EdgeInsets.symmetric(vertical: 2, horizontal: 12),
-        padding: const EdgeInsets.all(10),
+        margin: const EdgeInsets.symmetric(vertical: 4, horizontal: 12),
+        padding: const EdgeInsets.all(8),
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: Colors.grey.shade300, width: 1),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.1),
-              blurRadius: 6,
-              spreadRadius: 2,
-              offset: const Offset(0, 2),
+              color: Colors.black.withOpacity(0.02),
+              blurRadius: 2,
+              spreadRadius: 0.4,
+              offset: Offset(0, 1),
             ),
           ],
         ),
         child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Gambar Produk (Kotak di kiri)
+            // Gambar kiri
             ClipRRect(
               borderRadius: BorderRadius.circular(8),
-              child: Image.asset(
+              child: Image.network(
                 imageUrl,
-                height: 80,
-                width: 80,
+                height: 100,
+                width: 100,
                 fit: BoxFit.cover,
+                loadingBuilder: (context, child, loadingProgress) {
+                  if (loadingProgress == null) return child;
+                  return Container(
+                    height: 100,
+                    width: 100,
+                    color: Colors.grey[200],
+                    child: Center(
+                      child: CircularProgressIndicator(
+                        value:
+                            loadingProgress.expectedTotalBytes != null
+                                ? loadingProgress.cumulativeBytesLoaded /
+                                    loadingProgress.expectedTotalBytes!
+                                : null,
+                        color: zelow,
+                      ),
+                    ),
+                  );
+                },
+                errorBuilder: (context, error, stackTrace) {
+                  return ClipRRect(
+                    borderRadius: BorderRadius.circular(8),
+                    child: Image.network(
+                      'https://i.imgur.com/5R1d1XK.jpeg',
+                      height: 100,
+                      width: 100,
+                      fit: BoxFit.cover,
+                    ),
+                  );
+                },
               ),
             ),
-            const SizedBox(width: 10),
 
-            // Informasi Produk
+            const SizedBox(width: 12),
+
+            // Info kanan
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Nama Resto
                   Text(
                     restaurantName,
-                    style: blackTextStyle.copyWith(
-                      fontSize: MediaQuery.of(context).size.width * 0.04,
+                    style: TextStyle(
+                      fontFamily: 'Nunito',
                       fontWeight: FontWeight.bold,
+                      fontSize: 16,
+                      color: Colors.black,
                     ),
                   ),
                   const SizedBox(height: 4),
-
-                  // Deskripsi Singkat
                   Text(
                     description,
-                    style: const TextStyle(
+                    style: TextStyle(
+                      fontFamily: 'Nunito',
                       fontSize: 12,
-                      color: Colors.grey,
+                      color: Colors.grey[600],
                     ),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),
-                  const SizedBox(height: 6),
+                  const SizedBox(height: 8),
 
-                  
-                 Row(
+                  // Row badge
+                  Row(
                     children: [
-                      
+                      // Rating badge
                       Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 8,
+                          vertical: 4,
+                        ),
                         decoration: BoxDecoration(
-                          color: zelow.withOpacity(0.3),
-                          borderRadius: BorderRadius.circular(12),
+                          color: zelow,
+                          borderRadius: BorderRadius.circular(20),
                         ),
                         child: Row(
                           children: [
-                            const Icon(Icons.star, color: Colors.yellow, size: 14),
-                            const SizedBox(width: 4),
+                            const Icon(
+                              Icons.star,
+                              size: 14,
+                              color: Colors.yellow,
+                            ),
+                            const SizedBox(width: 2),
                             Text(
                               rating.toStringAsFixed(1),
-                              style: TextStyle(color: zelow, fontSize: 12),
+                              style: const TextStyle(
+                                fontFamily: 'Nunito',
+                                fontWeight: FontWeight.bold,
+                                fontSize: 10,
+                                color: Colors.white,
+                              ),
                             ),
                           ],
                         ),
                       ),
                       const SizedBox(width: 6),
 
-                     
+                      // Waktu
                       Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
-                        decoration: BoxDecoration(
-                          color: zelow.withOpacity(0.3),
-                          borderRadius: BorderRadius.circular(12),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 8,
+                          vertical: 4,
                         ),
-                        child: Row(
-                          children: [
-                            const SizedBox(width: 4),
-                            Text(
-                              distance,
-                              style: TextStyle(color: zelow, fontSize: 12),
-                            ),
-                          ],
+                        decoration: BoxDecoration(
+                          color: const Color(0xFFE6F9F1),
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        child: Text(
+                          "$estimatedTime min",
+                          style: const TextStyle(
+                            fontFamily: 'Nunito',
+                            fontWeight: FontWeight.bold,
+                            fontSize: 10,
+                            color: Color(0xFF06C474),
+                          ),
                         ),
                       ),
                       const SizedBox(width: 6),
 
-                      
+                      // Jarak
                       Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
-                        decoration: BoxDecoration(
-                          color: zelow.withOpacity(0.3),
-                          borderRadius: BorderRadius.circular(12),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 8,
+                          vertical: 4,
                         ),
-                        child: Row(
-                          children: [
-                            const SizedBox(width: 4),
-                            Text(
-                              estimatedTime,
-                              style:  TextStyle(color: zelow, fontSize: 12),
-                            ),
-                          ],
+                        decoration: BoxDecoration(
+                          color: const Color(0xFFE6F9F1),
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        child: Text(
+                          distance,
+                          style: const TextStyle(
+                            fontFamily: 'Nunito',
+                            fontWeight: FontWeight.bold,
+                            fontSize: 10,
+                            color: Color(0xFF06C474),
+                          ),
                         ),
                       ),
                     ],
                   ),
-
                 ],
               ),
             ),

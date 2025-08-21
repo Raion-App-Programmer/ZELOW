@@ -1,0 +1,5 @@
+{
+  "java.configuration.updateBuildConfiguration": "interactive",
+  "cmake.sourceDirectory": "D:/ZELOW/linux",
+  "cmake.ignoreCMakeListsMissing": true
+}

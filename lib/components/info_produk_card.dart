@@ -5,288 +5,237 @@ class InfoProdukCard extends StatelessWidget {
   final String title;
   final String imageUrl;
   final double rating;
-  final int reviewCount;
+  final int jumlahTerjual;
   final int likeCount;
   final double price;
-  final List<ReviewItem> reviews;
+  final int stok;
+  final int terjual;
+  final double originalPrice;
+  final bool isFlashSale;
   final VoidCallback? onSavePressed;
   final VoidCallback? onSharePressed;
   final VoidCallback? onAddPressed;
+  final VoidCallback? onRemovePressed;
+  final int itemCount;
 
   const InfoProdukCard({
     super.key,
     required this.title,
     required this.imageUrl,
     required this.rating,
-    required this.reviewCount,
+    required this.jumlahTerjual,
     required this.likeCount,
+    required this.itemCount,
     required this.price,
-    this.reviews = const [],
+    required this.stok,
+    required this.terjual,
+    this.originalPrice = 0,
+    this.isFlashSale = false,
     this.onSavePressed,
     this.onSharePressed,
     this.onAddPressed,
+    this.onRemovePressed,
   });
+
+  String formatRupiah(num value) {
+    return 'Rp${value.toInt().toString().replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (m) => '${m[1]}.')}';
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Food Image
-          ClipRRect(
-            borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(16),
-              topRight: Radius.circular(16),
-            ),
-            child: Image.network(
-              imageUrl,
-              height: 200,
-              width: double.infinity,
-              fit: BoxFit.cover,
-            ),
-          ),
-          
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Title
-                Text(
-                  title,
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
+    return Column(
+      children: [
+        // Gambar Produk
+        Image.network(
+          imageUrl,
+          height: 280,
+          width: double.infinity,
+          fit: BoxFit.cover,
+        ),
+        const SizedBox(height: 16),
+
+        // Konten
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                title,
+                style: const TextStyle(
+                  fontFamily: 'Nunito',
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(height: 8),
+
+              Row(
+                children: [
+                  const Icon(Icons.star, color: Colors.amber, size: 24),
+                  const SizedBox(width: 4),
+                  Text(
+                    rating.toStringAsFixed(1),
+                    style: const TextStyle(
+                      fontFamily: 'Nunito',
+                      fontWeight: FontWeight.w600,
+                      fontSize: 20,
+                    ),
                   ),
+                ],
+              ),
+              const SizedBox(height: 6),
+
+              Text(
+                '$jumlahTerjual terjual | Disukai oleh $likeCount',
+                style: const TextStyle(
+                  fontFamily: 'Nunito',
+                  fontWeight: FontWeight.w600,
+                  fontSize: 15,
+                  color: Colors.grey,
                 ),
-                
-                SizedBox(height: 8),
-                
-                // Rating and reviews count
-                Row(
-                  children: [
-                    Icon(Icons.star, color: Colors.amber, size: 18),
-                    SizedBox(width: 4),
-                    Text(
-                      rating.toString(),
-                      style: TextStyle(fontWeight: FontWeight.bold),
-                    ),
-                    SizedBox(width: 8),
-                    Text(
-                      '$reviewCount Disukai oleh $likeCount',
-                      style: TextStyle(
-                        color: Colors.grey[600],
-                        fontSize: 14,
-                      ),
-                    ),
-                  ],
-                ),
-                
-                SizedBox(height: 12),
-                
-                // Price and add button
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      'Rp${price.toInt()}',
-                      style: TextStyle(
-                        color: zelow,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 16,
-                      ),
-                    ),
-                    Container(
-                      decoration: BoxDecoration(
-                        color: zelow,
-                        shape: BoxShape.circle,
-                      ),
-                      child: IconButton(
-                        icon: Icon(Icons.add, color: Colors.white),
-                        onPressed: onAddPressed,
-                        constraints: BoxConstraints(
-                          minHeight: 36,
-                          minWidth: 36,
-                        ),
-                        padding: EdgeInsets.zero,
-                        iconSize: 20,
-                      ),
-                    ),
-                  ],
-                ),
-                
-                SizedBox(height: 12),
-                
-                // Save and share buttons
-                Row(
-                  children: [
-                    OutlinedButton.icon(
-                      onPressed: onSavePressed,
-                      icon: Icon(Icons.favorite_border, size: 18,),
-                      label: Text('Simpan'),
-                      style: OutlinedButton.styleFrom(
-                        foregroundColor: zelow,
-                        side: BorderSide(color: Colors.grey.shade300),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20),
-                        ),
-                      ),
-                    ),
-                    SizedBox(width: 8),
-                    OutlinedButton.icon(
-                      onPressed: onSharePressed,
-                      icon: Icon(Icons.share, size: 18),
-                      label: Text('Bagikan'),
-                      style: OutlinedButton.styleFrom(
-                        foregroundColor: zelow,
-                        side: BorderSide(color: Colors.grey.shade300),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                
-                if (reviews.isNotEmpty) ...[
-                  SizedBox(height: 16),
-                  
-                  // Reviews section
+              ),
+              const SizedBox(height: 8),
+
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        'Kata Mereka',
-                        style: TextStyle(
+                        // Harga diskon
+                        formatRupiah(price),
+                        style: const TextStyle(
+                          fontFamily: 'Nunito',
+                          fontSize: 22,
                           fontWeight: FontWeight.bold,
-                          fontSize: 16,
+                          color: Color(0xFF06C474),
                         ),
                       ),
-                      TextButton(
-                        onPressed: () {},
-                        child: Text(
-                          'Lihat Semua',
-                          style: TextStyle(
-                            color: Colors.green,
-                            fontSize: 14,
+                      const SizedBox(width: 8),
+                      if (isFlashSale)
+                        Text(
+                          // Harga coret
+                          formatRupiah(originalPrice),
+                          style: const TextStyle(
+                            fontFamily: 'Nunito',
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                            color: Colors.grey,
+                            decoration: TextDecoration.lineThrough,
                           ),
                         ),
+                    ],
+                  ),
+
+                  Row(
+                    children: [
+                      if (itemCount > 0)
+                        _buildCircleIcon(
+                          icon: Icons.remove,
+                          onPressed: onRemovePressed,
+                          bgColor: Colors.white,
+                          iconColor: const Color(0xFF06C474),
+                          borderColor: const Color(0xFF06C474),
+                        ),
+                      if (itemCount > 0)
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 8),
+                          child: Text(
+                            itemCount.toString(),
+                            style: const TextStyle(
+                              fontFamily: 'Nunito',
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      _buildCircleIcon(
+                        icon: Icons.add,
+                        onPressed: onAddPressed,
+                        bgColor: const Color(0xFF06C474),
+                        iconColor: Colors.white,
                       ),
                     ],
                   ),
-                  
-                  SizedBox(height: 8),
-                  
-                  // Review items
-                  Row(
-                    children: reviews
-                        .take(2)
-                        .map((review) => Expanded(child: review))
-                        .toList(),
-                  ),
                 ],
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class ReviewItem extends StatelessWidget {
-  final String reviewerName;
-  final String reviewerImageUrl;
-  final double rating;
-
-  const ReviewItem({
-    Key? key,
-    required this.reviewerName,
-    required this.reviewerImageUrl,
-    required this.rating,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(right: 8.0),
-      child: Column(
-        children: [
-          Row(
-            children: [
-              CircleAvatar(
-                radius: 16,
-                backgroundImage: NetworkImage(reviewerImageUrl),
               ),
-              SizedBox(width: 8),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+              const SizedBox(height: 8),
+
+              Row(
                 children: [
-                  Row(
-                    children: List.generate(
-                      5,
-                      (index) => Icon(
-                        index < rating.floor() ? Icons.star : Icons.star_border,
-                        color: Colors.amber,
-                        size: 14,
-                      ),
-                    ),
+                  _buildRoundedOutlinedButton(
+                    icon: Icons.favorite_border,
+                    label: 'Simpan',
+                    onPressed: onSavePressed,
                   ),
-                  Text(
-                    reviewerName,
-                    style: TextStyle(fontSize: 12),
+                  const SizedBox(width: 8),
+                  _buildRoundedOutlinedButton(
+                    icon: Icons.share,
+                    label: 'Bagikan',
+                    onPressed: onSharePressed,
                   ),
                 ],
               ),
             ],
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-// Example usage
-class FoodItemExample extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text("Food Item"),
-        leading: BackButton(),
-      ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: InfoProdukCard(
-            title: "Nasi Padang Ayam Kari",
-            imageUrl: "https://example.com/nasi-padang.jpg",
-            rating: 4.9,
-            reviewCount: 689,
-            likeCount: 342,
-            price: 20000,
-            reviews: [
-              ReviewItem(
-                reviewerName: "Nana Mirdad",
-                reviewerImageUrl: "https://example.com/avatar1.jpg",
-                rating: 5,
-              ),
-              ReviewItem(
-                reviewerName: "Nana Mirdad",
-                reviewerImageUrl: "https://example.com/avatar1.jpg",
-                rating: 5,
-              ),
-            ],
-            onSavePressed: () {},
-            onSharePressed: () {},
-            onAddPressed: () {},
           ),
         ),
+      ],
+    );
+  }
+
+  Widget _buildCircleIcon({
+    required IconData icon,
+    required VoidCallback? onPressed,
+    required Color bgColor,
+    required Color iconColor,
+    Color? borderColor,
+  }) {
+    return Container(
+      width: 36,
+      height: 36,
+      decoration: BoxDecoration(
+        color: bgColor,
+        shape: BoxShape.circle,
+        border:
+            borderColor != null
+                ? Border.all(color: borderColor, width: 2)
+                : null,
+      ),
+      child: IconButton(
+        onPressed: onPressed,
+        icon: Icon(icon, size: 24, color: iconColor),
+        padding: EdgeInsets.zero,
+        splashRadius: 18,
+      ),
+    );
+  }
+
+  Widget _buildRoundedOutlinedButton({
+    required IconData icon,
+    required String label,
+    required VoidCallback? onPressed,
+  }) {
+    return OutlinedButton.icon(
+      onPressed: onPressed,
+      icon: Icon(icon, size: 18, color: Colors.grey.shade700),
+      label: Text(
+        label,
+        style: TextStyle(
+          fontFamily: 'Nunito',
+          fontSize: 14,
+          fontWeight: FontWeight.w600,
+          color: Colors.grey.shade700,
+        ),
+      ),
+      style: OutlinedButton.styleFrom(
+        backgroundColor: Colors.white,
+        foregroundColor: Colors.grey.shade700,
+        side: BorderSide(color: Colors.grey.shade300),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+        minimumSize: const Size(0, 36),
+        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
       ),
     );
   }

@@ -1,10 +1,10 @@
 import 'dart:async';
-import 'dart:math';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:zelow/pages/auth/verification_page.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 
 class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -99,6 +99,7 @@ class AuthService {
           'username': username,
           'role': role,
           'isVerified': false,
+          'userId': user.uid,
         });
 
         if (context.mounted) {
@@ -178,7 +179,7 @@ class AuthService {
     });
   }
 
-  Future<void> sendPasswordResetOTP(
+  Future<void> sendPasswordResetEmail(
     String email,
     Function(String) onError,
     Function(bool) onLoading,
@@ -197,56 +198,10 @@ class AuthService {
         return;
       }
 
-      String otpCode = (Random().nextInt(900000) + 100000).toString();
-
-      await _firestore.collection('password_reset').doc(email).set({
-        'otp': otpCode,
-        'expiresAt': DateTime.now().add(Duration(minutes: 5)),
-      });
-
-      print("OTP untuk reset password: $otpCode");
-
+      await _auth.sendPasswordResetEmail(email: email);
       onLoading(false);
     } catch (e) {
-      onError('Gagal mengirim OTP: $e');
-      onLoading(false);
-    }
-  }
-
-  Future<bool> verifyOTP(String email, String enteredOTP) async {
-    var otpDoc = await _firestore.collection('password_reset').doc(email).get();
-
-    if (!otpDoc.exists) return false;
-
-    String savedOTP = otpDoc.get('otp');
-    DateTime expiresAt = otpDoc.get('expiresAt').toDate();
-
-    if (savedOTP == enteredOTP && DateTime.now().isBefore(expiresAt)) {
-      return true;
-    }
-
-    return false;
-  }
-
-  Future<void> resetPassword(
-    String email,
-    String newPassword,
-    Function(String) onError,
-    Function(bool) onLoading,
-  ) async {
-    try {
-      onLoading(true);
-
-      User? user = _auth.currentUser;
-
-      if (user != null) {
-        await user.updatePassword(newPassword);
-        onLoading(false);
-      } else {
-        onError("User tidak ditemukan atau belum login.");
-      }
-    } catch (e) {
-      onError("Gagal mengubah password: $e");
+      onError('Gagal mengirim email reset password: $e');
       onLoading(false);
     }
   }
@@ -260,6 +215,150 @@ class AuthService {
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(SnackBar(content: Text('Error signing out: $e')));
+    }
+  }
+
+  Future<void> signInWithGoogle(
+    BuildContext context,
+    Function(String) onError,
+    Function(bool) onLoading,
+  ) async {
+    onLoading(true);
+    try {
+      final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+      if (googleUser == null) {
+        onLoading(false);
+        return; // user batal login
+      }
+
+      final GoogleSignInAuthentication googleAuth =
+          await googleUser.authentication;
+
+      final credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth.accessToken,
+        idToken: googleAuth.idToken,
+      );
+
+      UserCredential userCredential = await _auth.signInWithCredential(
+        credential,
+      );
+      User? user = userCredential.user;
+
+      if (user != null) {
+        // Cek apakah user sudah ada di firestore
+        DocumentSnapshot userDoc =
+            await _firestore.collection('user').doc(user.uid).get();
+
+        if (!userDoc.exists) {
+          // Kalau belum ada, buat dokumen baru dengan default role user
+          await _firestore.collection('user').doc(user.uid).set({
+            'email': user.email,
+            'fullname': user.displayName ?? '',
+            'username': user.email?.split('@')[0] ?? '',
+            'role': 'user',
+            'isVerified': user.emailVerified,
+          });
+        }
+
+        // Ambil role dari firestore
+        userDoc = await _firestore.collection('user').doc(user.uid).get();
+        String role = userDoc.get('role');
+
+        if (context.mounted) {
+          if (role == 'user') {
+            Navigator.pushReplacementNamed(context, '/home_page_user');
+          } else if (role == 'umkm') {
+            Navigator.pushReplacementNamed(context, '/home_page_umkm');
+          } else {
+            onError('Role tidak dikenali');
+          }
+        }
+      }
+    } catch (e) {
+      if (context.mounted) {
+        onError('Error login dengan Google: $e');
+      }
+    } finally {
+      if (context.mounted) {
+        onLoading(false);
+      }
+    }
+  }
+
+  Future<void> signInWithFacebook(
+    BuildContext context,
+    Function(String) onError,
+    Function(bool) onLoading,
+  ) async {
+    onLoading(true);
+    try {
+      // Lakukan login dengan Facebook
+      final LoginResult result = await FacebookAuth.instance.login(
+        permissions: ['email', 'public_profile'], // Izin yang dibutuhkan
+      );
+
+      if (result.status == LoginStatus.success) {
+        // Dapatkan access token
+        final AccessToken? accessToken = result.accessToken;
+        if (accessToken == null) {
+          onLoading(false);
+          onError('Gagal mendapatkan token Facebook');
+          return;
+        }
+
+        // Buat credential untuk Firebase
+        final OAuthCredential credential = FacebookAuthProvider.credential(
+          accessToken.tokenString,
+        );
+
+        // Login ke Firebase dengan credential
+        UserCredential userCredential = await _auth.signInWithCredential(
+          credential,
+        );
+        User? user = userCredential.user;
+
+        if (user != null) {
+          // Cek apakah user sudah ada di Firestore
+          DocumentSnapshot userDoc =
+              await _firestore.collection('user').doc(user.uid).get();
+
+          if (!userDoc.exists) {
+            // Jika belum ada, buat dokumen baru dengan default role 'user'
+            await _firestore.collection('user').doc(user.uid).set({
+              'email': user.email ?? '',
+              'fullname': user.displayName ?? '',
+              'username': user.email?.split('@')[0] ?? '',
+              'role': 'user',
+              'isVerified': user.emailVerified,
+            });
+          }
+
+          // Ambil role dari Firestore
+          userDoc = await _firestore.collection('user').doc(user.uid).get();
+          String role = userDoc.get('role');
+
+          if (context.mounted) {
+            if (role == 'user') {
+              Navigator.pushReplacementNamed(context, '/home_page_user');
+            } else if (role == 'umkm') {
+              Navigator.pushReplacementNamed(context, '/home_page_umkm');
+            } else {
+              onError('Role tidak dikenali');
+            }
+          }
+        }
+      } else {
+        onLoading(false);
+        onError('Login Facebook dibatalkan atau gagal: ${result.message}');
+      }
+    } catch (e) {
+      if (context.mounted) {
+        onError('Error login dengan Facebook: $e');
+      }
+    } finally {
+      if (context.mounted) {
+        onLoading(false);
+      }
     }
   }
 }

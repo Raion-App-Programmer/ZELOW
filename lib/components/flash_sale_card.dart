@@ -10,14 +10,14 @@ class FlashCard extends StatelessWidget {
   final VoidCallback onTap;
 
   const FlashCard({
-    Key? key,
+    super.key,
     required this.imageUrl,
     required this.title,
     required this.price,
     required this.stock,
     required this.sold,
     required this.onTap,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -26,78 +26,125 @@ class FlashCard extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        width: 120, 
-        margin: const EdgeInsets.symmetric(vertical: 6, horizontal: 3),
-        padding: const EdgeInsets.all(6),
+        width: 155,
+        margin: const EdgeInsets.symmetric(horizontal: 4),
+        padding: const EdgeInsets.all(8),
         decoration: BoxDecoration(
           color: Colors.white,
-          borderRadius: BorderRadius.circular(8),
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: Colors.grey.shade300, width: 1),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.05),
-              blurRadius: 4,
-              spreadRadius: 1,
-              offset: const Offset(0, 2),
+              color: Colors.black.withOpacity(0.02),
+              blurRadius: 2,
+              spreadRadius: 0.4,
+              offset: Offset(0, 1),
             ),
           ],
         ),
+
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisSize: MainAxisSize.min, 
           children: [
-            // **Gambar Produk (Dikecilin)**
             ClipRRect(
-              borderRadius: BorderRadius.circular(6),
-              child: Image.asset(
+              borderRadius: BorderRadius.circular(8),
+              child: Image.network(
                 imageUrl,
-                height: 80, 
+                height: 110,
                 width: double.infinity,
                 fit: BoxFit.cover,
+
+                loadingBuilder: (
+                  BuildContext context,
+                  Widget child,
+                  ImageChunkEvent? loadingProgress,
+                ) {
+                  if (loadingProgress == null) return child;
+                  return Container(
+                    height: 110,
+                    width: double.infinity,
+                    color: Colors.grey[200],
+                    child: Center(
+                      child: CircularProgressIndicator(
+                        value:
+                            loadingProgress.expectedTotalBytes != null
+                                ? loadingProgress.cumulativeBytesLoaded /
+                                    loadingProgress.expectedTotalBytes!
+                                : null,
+                        color: zelow,
+                      ),
+                    ),
+                  );
+                },
+
+                errorBuilder: (
+                  BuildContext context,
+                  Object exception,
+                  StackTrace? stackTrace,
+                ) {
+                  return Container(
+                    height: 110,
+                    width: double.infinity,
+                    color: Colors.grey[300],
+                    child: Icon(
+                      Icons.broken_image_outlined,
+                      color: Colors.grey[600],
+                      size: 40,
+                    ),
+                  );
+                },
               ),
             ),
             const SizedBox(height: 6),
-
-            // **Nama Produk**
             Text(
               title,
               style: blackTextStyle.copyWith(
-                fontSize: 10, 
+                fontSize: 13,
                 fontWeight: FontWeight.bold,
               ),
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
             ),
             const SizedBox(height: 4),
-
-            // **Harga Produk**
             Text(
               price,
               style: greenTextStyle.copyWith(
-                fontSize: 10, 
+                fontSize: 13,
                 fontWeight: FontWeight.bold,
               ),
             ),
-            const SizedBox(height: 4),
-
-            // **Progress Bar (Lebih kecil)**
-            ClipRRect(
-              borderRadius: BorderRadius.circular(6),
-              child: LinearProgressIndicator(
-                value: progress,
-                backgroundColor: Colors.grey[300],
-                color: zelow,
-                minHeight: 6, 
+            const SizedBox(height: 8),
+            Container(
+              height: 14,
+              decoration: BoxDecoration(
+                color: Colors.red.withOpacity(0.25),
+                borderRadius: BorderRadius.circular(20),
               ),
-            ),
-            const SizedBox(height: 2),
-
-            // **Stok Flash Sale**
-            Text(
-              "Stok: $sold/$stock",
-              style: const TextStyle(
-                fontSize: 9,
-                fontWeight: FontWeight.w500,
-                color: Colors.black54,
+              child: Stack(
+                children: [
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(20),
+                    child: LinearProgressIndicator(
+                      value: progress,
+                      backgroundColor: Colors.red.withOpacity(0.25),
+                      valueColor: const AlwaysStoppedAnimation<Color>(
+                        Colors.red,
+                      ),
+                      minHeight: 16,
+                    ),
+                  ),
+                  Center(
+                    child: Text(
+                      '$sold TERJUAL',
+                      style: const TextStyle(
+                        fontFamily: 'Nunito',
+                        color: Colors.white,
+                        fontSize: 9,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
           ],

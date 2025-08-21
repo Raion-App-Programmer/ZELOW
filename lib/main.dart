@@ -1,38 +1,76 @@
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:intl/date_symbol_data_local.dart';
+import 'firebase_options.dart';
+import 'package:zelow/pages/splash_page.dart';
 import 'package:zelow/pages/auth/login_page.dart';
-import 'package:zelow/pages/umkm/home_page_umkm.dart';
-import 'package:zelow/pages/user/flashsale_page.dart';
+import 'package:zelow/pages/umkm/home_umkm_page.dart';
+import 'package:zelow/pages/umkm/stok_toko_umkm.dart';
+import 'package:zelow/pages/umkm/tambah_produk_umkm.dart';
+import 'package:zelow/pages/umkm/income_report.dart';
+import 'package:zelow/pages/umkm/edit_toko_umkm.dart';
+import 'package:zelow/pages/umkm/profil_penjual_umkm.dart';
 import 'package:zelow/pages/user/home_page_user.dart';
-import 'package:zelow/pages/user/infoproduk_page.dart';
+import 'package:zelow/pages/user/flashsale_page.dart';
 import 'package:zelow/pages/user/pesanan_page.dart';
 import 'package:zelow/pages/user/profile_page.dart';
+import 'package:zelow/pages/user/chat_page.dart';
+import 'package:zelow/pages/user/toko_page.dart';
+import 'package:zelow/pages/user/toko_saya_page.dart';
+import 'package:zelow/models/toko_model.dart';
 
-import 'pages/splash_page.dart';
+const SUPABASE_URL = 'https://gegrqxsyhqestdtmqadq.supabase.co';
+const SUPABASE_KEY =
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdlZ3JxeHN5aHFlc3RkdG1xYWRxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTMwMTE4NTMsImV4cCI6MjA2ODU4Nzg1M30.fN53ULmrrSKJGbrj_w1AqtD2nneVKThP1elhF7v3sso';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
+
+  // Inisialisasi Firebase
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+
+  // Inisialisasi format tanggal Indonesia
+  await initializeDateFormatting('id_ID', null);
+
+  // Inisialisasi Supabase
+  await Supabase.initialize(
+    url: SUPABASE_URL,
+    anonKey: SUPABASE_KEY,
+    debug: true,
+  );
+
   runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      initialRoute: '/splash',
+      initialRoute: '/login_page', // ✅ Pilih login dulu
       debugShowCheckedModeBanner: false,
+      theme: ThemeData(fontFamily: 'Nunito'),
       routes: {
         '/splash': (context) => SplashPage(),
         '/home_page_user': (context) => HomePageUser(),
         '/home_page_umkm': (context) => HomePageUmkm(),
         '/login_page': (context) => LoginPage(),
         '/flashsale': (context) => FlashsalePage(),
-        '/pesanan': (context) => PesananPage(orders: [],),
-        '/profile': (context)=> ProfilePage(),
+        '/pesanan': (context) => PesananPage(), // ✅ versi tanpa parameter agar kompatibel
+        '/profile': (context) => ProfilePage(),
+        '/toko': (context) {
+          final tokoData = ModalRoute.of(context)!.settings.arguments as Toko;
+          return TokoPageUser(tokoData: tokoData);
+        },
+        '/chat': (context) => chatPage(),
+        '/laporan': (context) => IncomeReport(),
+        '/stok': (context) => StokTokoUmkm(),
+        '/tambahProduk': (context) => TambahProdukUmkm(),
+        '/tokosaya': (context) => TokoSayaPage(),
+        '/edittokosaya': (context) => EditTokoSayaPage(),
+        '/profilpenjualumkm': (context) => ProfilPenjualUmkmPage(),
       },
     );
   }

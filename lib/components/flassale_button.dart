@@ -14,41 +14,41 @@ class FlashSaleBoxButton extends StatelessWidget {
     required this.text,
     required this.onPressed,
     required this.isSelected,
-    this.width = 80, // Default width
+    this.width = 80,
   });
 
   @override
   Widget build(BuildContext context) {
+    const Color selectedBg = Color(0xFFE6F9F1);
+    final Color iconColor = isSelected ? zelow : Colors.grey;
+
     return GestureDetector(
       onTap: onPressed,
       child: Container(
-        width: width, // Dynamic width based on parameter
+        width: width,
         height: 90,
-        margin: EdgeInsets.only(right: 8),
-        padding:  EdgeInsets.symmetric(vertical: 2),
+        margin: const EdgeInsets.only(right: 8),
+        padding: const EdgeInsets.symmetric(vertical: 4),
         decoration: BoxDecoration(
-          color: zelow.withOpacity(0.3),
+          color: selectedBg,
           borderRadius: BorderRadius.circular(12),
         ),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            Icon(
-              icon,
-              color: isSelected ? zelow : Colors.grey,
-              size: 28,
-            ),
-            const SizedBox(height: 6),
+            Icon(icon, color: iconColor, size: 32),
             SizedBox(
               width: double.infinity,
               child: Text(
                 text,
                 textAlign: TextAlign.center,
                 style: TextStyle(
+                  fontFamily: 'Nunito',
                   fontSize: 12,
-                  fontWeight: FontWeight.w500,
-                  color: isSelected ? zelow : Colors.grey,
+                  fontWeight: FontWeight.bold,
+                  color: iconColor,
                 ),
+
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
               ),

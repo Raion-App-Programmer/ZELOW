@@ -1,101 +1,131 @@
 import 'package:flutter/material.dart';
 import 'package:zelow/components/constant.dart';
+import 'package:zelow/models/toko_model.dart';
+import 'package:zelow/services/toko_service.dart';
+import 'package:zelow/utils/format_mata_uang.dart';
 
-class PesananBerlangsungCard extends StatelessWidget {
-  final int orderNumber;
-  final String orderDate;
+class PesananBerlangsungCard extends StatefulWidget {
+  final String idPesanan;
+  final String tanggalPesanan;
+  final String namaProduk;
+  final int quantity;
+  final double hargaSatuan;
+  final String status;
+  final String idToko;
+  final String gambar;
 
   const PesananBerlangsungCard({
-    Key? key,
-    required this.orderNumber,
-    required this.orderDate,
-  }) : super(key: key);
+    super.key,
+    required this.idPesanan,
+    required this.tanggalPesanan,
+    required this.namaProduk,
+    required this.quantity,
+    required this.hargaSatuan,
+    required this.status,
+    required this.idToko,
+    required this.gambar,
+  });
+
+  @override
+  State<PesananBerlangsungCard> createState() => _PesananBerlangsungCardState();
+}
+
+class _PesananBerlangsungCardState extends State<PesananBerlangsungCard> {
+  final _tokoService = TokoServices();
+  String _namaToko = '';
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchTokoInfo();
+  }
+
+  void _fetchTokoInfo() async {
+    final toko = await _tokoService.getTokoById(widget.idToko);
+    setState(() {
+      _namaToko = toko?.nama ?? 'Toko Tidak Ditemukan';
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+      padding: EdgeInsets.all(2),
+      margin: EdgeInsets.symmetric(horizontal: 8, vertical: 6),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(10),
+        borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withOpacity(0.1),
             spreadRadius: 1,
-            blurRadius: 3,
-            offset: const Offset(0, 1),
+            blurRadius: 5,
+            offset: const Offset(0, 2),
           ),
         ],
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          // Header row with order number and date
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                // Order number at top left
                 Text(
-                  '#$orderNumber',
+                  '#${widget.idPesanan}',
                   style: greenTextStyle.copyWith(
-                    fontSize: 10,
+                    fontSize: 12,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                
-                // Order date at top right
                 Text(
-                  orderDate,
+                  widget.tanggalPesanan,
                   style: greyTextStyle.copyWith(
-                    fontSize: 10,
+                    color: Colors.grey,
+                    fontSize: 13,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
               ],
             ),
           ),
-          
-          // Card content
+
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Food image (smaller)
+              const SizedBox(width: 12),
               ClipRRect(
-                borderRadius: const BorderRadius.only(
-                  bottomLeft: Radius.circular(10),
-                ),
+                borderRadius: const BorderRadius.all(Radius.circular(8)),
                 child: Image.network(
-                  'https://picsum.photos/200/200', // Placeholder image
-                  width: 100,
-                  height: 100,
+                  widget.gambar,
+                  width: 95,
+                  height: 95,
                   fit: BoxFit.cover,
                 ),
               ),
-
-              // Food details
+              const SizedBox(width: 6),
               Expanded(
                 child: Padding(
-                  padding: const EdgeInsets.all(8),
+                  padding: const EdgeInsets.fromLTRB(8, 0, 8, 12),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      // Restaurant name with store icon
                       Row(
                         children: [
-                           Icon(
+                          Icon(
                             Icons.storefront_rounded,
-                            size: 14,
+                            size: 16,
                             color: zelow,
                           ),
                           const SizedBox(width: 4),
                           Expanded(
-                            child:  Text(
-                              'Masakan Padang Roda Dua, Bendungan Sutami',
+                            child: Text(
+                              _namaToko,
                               style: blackTextStyle.copyWith(
-                               
+                                fontFamily: 'Nunito',
                                 fontSize: 14,
+                                fontWeight: FontWeight.w600,
                               ),
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
@@ -103,67 +133,53 @@ class PesananBerlangsungCard extends StatelessWidget {
                           ),
                         ],
                       ),
-                      
-                      // Food item name
-                       Padding(
+                      Padding(
                         padding: EdgeInsets.only(top: 4, bottom: 4),
                         child: Text(
-                          'Nasi Padang Rendang + Telor',
+                          widget.namaProduk,
                           style: blackTextStyle.copyWith(
-                            fontSize: 12,
-                            fontWeight: FontWeight.bold
+                            fontSize: 14,
+                            fontWeight: FontWeight.bold,
                           ),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                         ),
                       ),
-                      
-                      // Quantity
+                      const SizedBox(height: 4),
                       Text(
-                        '1x',
+                        '${widget.quantity}x',
                         style: TextStyle(
-                          color: black,
-                          fontSize: 12,
-                          fontWeight: FontWeight.w500,
+                          color: Colors.grey,
+                          fontSize: 14,
+                          fontWeight: FontWeight.bold,
                         ),
                       ),
-                      
-                      // Prices
-                      const SizedBox(height: 6),
                       Row(
                         children: [
                           Text(
-                            'Rp10.000',
+                            FormatMataUang.formatRupiah(widget.hargaSatuan, 0),
                             style: greenTextStyle.copyWith(
                               fontWeight: FontWeight.bold,
-                              fontSize: 14,
-                              
-                            ),
-                          ),
-                          const SizedBox(width: 4),
-                          Text(
-                            'Rp12.500',
-                            style: TextStyle(
-                              fontSize: 10,
-                              color: Colors.grey,
-                              decoration: TextDecoration.lineThrough,
-                              decorationThickness: 1.5,
+                              fontSize: 15,
                             ),
                           ),
                         ],
                       ),
-                      
-                      // Status - moved to a separate row below prices
-                      const SizedBox(height: 4),
+
+                      const SizedBox(height: 6),
                       Align(
                         alignment: Alignment.bottomRight,
                         child: Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 6,
+                            vertical: 2,
+                          ),
                           child: Text(
-                            'Menunggu Konfirmasi',
+                            widget.status,
                             style: greyTextStyle.copyWith(
-                              fontSize: MediaQuery.of(context).size.width * 0.03,
-                              fontWeight: FontWeight.w500,
+                              fontSize: 13,
+                              fontFamily: 'Nunito',
+                              fontWeight: FontWeight.w600,
                             ),
                           ),
                         ),
