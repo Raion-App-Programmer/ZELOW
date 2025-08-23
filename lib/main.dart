@@ -49,7 +49,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      initialRoute: '/login_page', // ✅ Pilih login dulu
+      initialRoute: '/splash',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(fontFamily: 'Nunito'),
       routes: {
@@ -58,7 +58,7 @@ class MyApp extends StatelessWidget {
         '/home_page_umkm': (context) => HomePageUmkm(),
         '/login_page': (context) => LoginPage(),
         '/flashsale': (context) => FlashsalePage(),
-        '/pesanan': (context) => PesananPage(), // ✅ versi tanpa parameter agar kompatibel
+        '/pesanan': (context) => PesananPage(),
         '/profile': (context) => ProfilePage(),
         '/toko': (context) {
           final tokoData = ModalRoute.of(context)!.settings.arguments as Toko;

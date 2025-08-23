@@ -48,6 +48,7 @@ class ProfilePage extends StatelessWidget {
         final String username = userData['username'] ?? 'Unknown';
         final String email = userData['email'] ?? 'No email';
         return Scaffold(
+          backgroundColor: white,
           appBar: AppBar(
             backgroundColor: zelow,
             leading: IconButton(
@@ -57,7 +58,7 @@ class ProfilePage extends StatelessWidget {
             title: Text(
               'Profil',
               style: whiteTextStyle.copyWith(
-                fontSize: 20,
+                fontSize: 22,
                 fontWeight: FontWeight.w700,
               ),
             ),
